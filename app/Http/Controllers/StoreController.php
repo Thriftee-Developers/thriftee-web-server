@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Hash;
 class StoreController extends Controller
 {
     //
+    function getStores()
+    {
+        return "A";
+    }
+
     function addStore(Request $req)
     {
         $store = new Store;
