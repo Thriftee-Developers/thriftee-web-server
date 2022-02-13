@@ -11,7 +11,7 @@ class StoreController extends Controller
     //
     function getStores()
     {
-        return "A";
+        return "Stores";
     }
 
     function addStore(Request $req)
