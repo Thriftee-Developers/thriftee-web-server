@@ -21,3 +21,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //Stores
 Route::get('/store/get', [StoreController::class, 'getStores']);
 Route::post('/store/add', [StoreController::class, 'addStore']);
+Route::post('/store/delete', [StoreController::class, 'deleteStore']);
