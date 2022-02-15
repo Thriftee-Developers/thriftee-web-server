@@ -17,15 +17,15 @@ class StoreController extends Controller
     function addStore(Request $req)
     {
         $store = new Store;
-        $store -> uuid = $req -> input('uuid');
-        $store -> store_id = $req -> input('store_id');
-        $store -> store_name = $req -> input('store_name');
-        $store -> contact_no = $req -> input('contact_no');
-        $store -> email = $req -> input('email');
-        $store -> province = $req -> input('province');
-        $store -> municipality = $req -> input('municipality');
-        $store -> barangay = $req -> input('barangay');
-        $store -> street = $req -> input('street');
+        $store -> uuid = $req -> uuid;
+        $store -> store_id = $req -> store_id;
+        $store -> store_name = $req -> store_name;
+        $store -> contact_no = $req -> contact_no;
+        $store -> email = $req -> email;
+        $store -> province = $req -> province;
+        $store -> municipality = $req -> municipality;
+        $store -> barangay = $req ->barangay;
+        $store -> street = $req -> street;
         $store -> image_uri = '';
         $store -> password = '';
         $store -> status = 0;
@@ -35,13 +35,39 @@ class StoreController extends Controller
 
         //$store -> password = Hash::make($req -> input('password'));
 
-        $store -> save();
-        return true;
+        $error = "";
+
+        if($this -> checkEmail($req -> email))
+        {
+            if($this -> checkContactNo($req -> contact_no))
+            {
+                $store -> save();
+            }
+            else
+            {
+                $error = "Contact number is already registered";
+            }
+        }
+        else
+        {
+            $error = "Email is already registered";
+        }
+
+        return $error;
     }
 
-    function checkEmail($email) {
-        $store = Store::where('email', $email);
-        return $store;
+    function checkEmail($email)
+    {
+        $store = Store::where('email', $email)->get();
+        if(count($store) > 0) return false;
+        else return true;
+    }
+
+    function checkContactNo($contact_no)
+    {
+        $store = Store::where('contact_no', $contact_no)->get();
+        if(count($store) > 0) return false;
+        else return true;
     }
 
 
