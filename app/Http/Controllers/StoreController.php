@@ -11,7 +11,7 @@ class StoreController extends Controller
     //
     function getStores()
     {
-        $result = Store::where()->get();
+        $result = Store::all();
         return $result;
     }
 
