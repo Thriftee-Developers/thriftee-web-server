@@ -47,7 +47,7 @@ class StoreController extends Controller
 
     function deleteStore(Request $req)
     {
-        $store = Store::where('email', $req->email)->first();
+        $store = Store::where('email', $req->email)->get();
         return $store;
     }
 }
