@@ -49,7 +49,7 @@ class StoreController extends Controller
     {
         $email = $req -> input('email');
         $store = Store::where('email', $email);
-        //$store -> delete();
+        $store -> delete();
         return $store;
     }
 }
