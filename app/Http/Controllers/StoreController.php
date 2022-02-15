@@ -45,12 +45,12 @@ class StoreController extends Controller
             }
             else
             {
-                $error = "Contact number is already registered";
+                $error = "Contact number is already registered!";
             }
         }
         else
         {
-            $error = "Email is already registered";
+            $error = "Email is already registered!";
         }
 
         return $error;
@@ -69,7 +69,6 @@ class StoreController extends Controller
         if(count($store) > 0) return false;
         else return true;
     }
-
 
     function deleteStore(Request $req)
     {
