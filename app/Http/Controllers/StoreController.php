@@ -11,7 +11,8 @@ class StoreController extends Controller
     //
     function getStores()
     {
-        return "Stores";
+        $result = Store::where()->get();
+        return $result;
     }
 
     function addStore(Request $req)
