@@ -47,8 +47,8 @@ class StoreController extends Controller
 
     function deleteStore(Request $req)
     {
-        $uuid = $req -> input('uuid');
-        $store = Store::where('uuid', $uuid);
+        $email = $req -> input('email');
+        $store = Store::where('email', $email);
         //$store -> delete();
         return $store;
     }
