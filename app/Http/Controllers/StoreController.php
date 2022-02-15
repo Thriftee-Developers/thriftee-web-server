@@ -18,13 +18,18 @@ class StoreController extends Controller
     {
         $store = new Store;
         $store -> uuid = $req -> input('uuid');
-        $store -> store_name = $req -> input('store_name');
-        $store -> image_uri = $req -> input('image_uri');
-        $store -> description = $req -> input('description');
+        $store -> store_id = $req -> input('store_id');
+        $store -> contact_no = $req -> input('contact_no');
+        $store -> email = $req -> input('email');
+        $store -> province = $req -> input('province');
+        $store -> municipality = $req -> input('municipality');
+        $store -> barangay = $req -> input('barangay');
+        $store -> street = $req -> input('street');
+        $store -> image_uri = '';
+        $store -> password = '';
+        //$store -> password = Hash::make($req -> input('password'));
 
-        $store -> username = $req -> input('username');
-        $store -> password = Hash::make($req -> input('password'));
         $store -> save();
-        return $store;
+        return true;
     }
 }
