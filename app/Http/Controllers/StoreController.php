@@ -28,6 +28,14 @@ class StoreController extends Controller
         $store -> street = $req -> input('street');
         $store -> image_uri = '';
         $store -> password = '';
+
+
+        $store -> status = 0;
+
+        // -1 = terminated
+        // 0 = pending(newly created), need to activate or add password
+        // 1 = active
+
         //$store -> password = Hash::make($req -> input('password'));
 
         $store -> save();
