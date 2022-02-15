@@ -49,7 +49,7 @@ class StoreController extends Controller
     {
         $uuid = $req -> input('uuid');
         $store = Store::where('uuid', $uuid);
-        //$store -> delete();
+        $store -> delete();
         return $store;
     }
 }
