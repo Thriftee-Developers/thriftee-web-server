@@ -39,10 +39,17 @@ class StoreController extends Controller
         return true;
     }
 
+    function checkEmail($email) {
+        $store = Store::where('email', $email);
+        return $store;
+    }
+
+
     function deleteStore(Request $req)
     {
         $uuid = $req -> input('uuid');
         $store = Store::where('uuid', $uuid);
-        $store -> delete();
+        //$store -> delete();
+        return $store;
     }
 }
