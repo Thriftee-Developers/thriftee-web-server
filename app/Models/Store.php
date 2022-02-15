@@ -10,4 +10,9 @@ class Store extends Model
     use HasFactory;
 
     public $incrementing = false;
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
 }
