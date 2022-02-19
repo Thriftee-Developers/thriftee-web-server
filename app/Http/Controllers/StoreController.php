@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Store;
 use Illuminate\Support\Facades\Hash;
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 class StoreController extends Controller
 {
     //
@@ -18,18 +21,18 @@ class StoreController extends Controller
     function addStore(Request $req)
     {
         $store = new Store;
-        $store -> uuid = $req -> uuid;
-        $store -> store_id = $req -> store_id;
-        $store -> store_name = $req -> store_name;
-        $store -> contact_no = $req -> contact_no;
-        $store -> email = $req -> email;
-        $store -> province = $req -> province;
-        $store -> municipality = $req -> municipality;
-        $store -> barangay = $req ->barangay;
-        $store -> street = $req -> street;
-        $store -> image_uri = '';
-        $store -> password = '';
-        $store -> status = 0;
+        $store->uuid = $req->uuid;
+        $store->store_id = $req->store_id;
+        $store->store_name = $req->store_name;
+        $store->contact_no = $req->contact_no;
+        $store->email = $req->email;
+        $store->province = $req->province;
+        $store->municipality = $req->municipality;
+        $store->barangay = $req->barangay;
+        $store->street = $req->street;
+        $store->image_uri = '';
+        $store->password = '';
+        $store->status = 0;
         // -1 = terminated
         // 0 = pending(newly created), need to activate or add password
         // 1 = active
@@ -38,11 +41,14 @@ class StoreController extends Controller
 
         $error = "";
 
-        if($this -> checkEmail($req -> email))
+        if($this -> checkEmail($req->email))
         {
-            if($this -> checkContactNo($req -> contact_no))
+            if($this -> checkContactNo($req->contact_no))
             {
-                $store -> save();
+                $error = $this -> sendCompletionLink($req->uuid, $req->email);
+                if($error == "") {
+                    $store -> save();
+                }
             }
             else
             {
@@ -69,6 +75,53 @@ class StoreController extends Controller
         $store = Store::where('contact_no', $contact_no)->get();
         if(count($store) > 0) return false;
         else return true;
+    }
+
+
+    function resendCompletionLink(Request $req)
+    {
+        $error = $this -> sendCompletionLink($req->uuid, $req->email);
+        return $error;
+    }
+
+    function sendCompletionLink($uuid, $email)
+    {
+        require base_path("vendor/autoload.php");
+
+        $mail = new PHPMailer(true);
+        $emailFrom = 'admin@thriftee.com';
+        $link = 'http://localhost:3000'.'/store/account/completion?='.$uuid;
+
+        try
+        {
+            //Recipients
+            $mail->setFrom($emailFrom, 'Thriftee');
+            $mail->addAddress($email);
+
+            //Content
+            $mail->isHTML(true);                                  //Set email format to HTML
+            $mail->Subject = 'Store Account Completion';
+            $mail->Body    = 'Hi!<br>
+                            Please click the link below to complete the creation of your store account for <h1>Thriftee</h1>.<br>
+                            <h1>'.$link.'</h1>';
+
+            $mail->AltBody = 'Hi! Please click the link to complete the creation of your store account for Thriftee.'.$link;
+
+            if($mail->send())
+            {
+                return "";
+            }
+            else
+            {
+                return "Email not send";
+            }
+
+
+        }
+        catch (Exception $e)
+        {
+            return $e;
+        }
     }
 
     function deleteStore(Request $req)
