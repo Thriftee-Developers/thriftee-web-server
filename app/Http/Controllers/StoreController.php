@@ -90,7 +90,7 @@ class StoreController extends Controller
 
         $mail = new PHPMailer(true);
         $emailFrom = 'admin@thriftee.com';
-        $link = 'http://localhost:3000'.'/store/account/completion?='.$uuid;
+        $link = 'http://localhost:3000'.'/store/account/completion?store='.$uuid;
 
         try
         {
