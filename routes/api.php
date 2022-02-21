@@ -3,6 +3,11 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StoreController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductConditionController;
+use App\Http\Controllers\ProductCategoryController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ConditionController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -23,3 +28,26 @@ Route::get('/store/get', [StoreController::class, 'getStores']);
 Route::post('/store/add', [StoreController::class, 'addStore']);
 Route::post('/store/delete', [StoreController::class, 'deleteStore']);
 Route::post('/store/resend_completion_link', [StoreController::class, 'resendCompletionLink']);
+
+//Products
+Route::get('/product/get',[ProductController::class, 'getAllProducts']);
+Route::post('/product/add', [ProductController::class, 'addProduct']);
+Route::post('/product/delete', [ProductController::class, 'deleteProduct']);
+
+//Product Condition
+Route::get('/productcondition/get',[ProductConditionController::class, 'getProductCondition']);
+Route::post('/productcondition/add', [ProductConditionController::class, 'addProductCondition']);
+Route::post('/productcondition/delete', [ProductConditionController::class, 'deleteProductCondition']);
+//Product Category
+Route::get('/productcategory/get',[ProductCategoryController::class, 'getProductCategory']);
+Route::post('/productcategory/add', [ProductCategoryController::class, 'addProductCategory']);
+Route::post('/productcategory/delete', [ProductCategoryController::class, 'deleteProductCategory']);
+
+//Condition
+Route::get('/category/get',[CategoryController::class, 'getCategories']);
+Route::post('/category/add', [CategoryController::class, 'addCategory']);
+Route::post('/category/delete', [CategoryController::class, 'deleteCategory']);
+//Category
+Route::get('/condition/get',[ConditionController::class, 'getConditions']);
+Route::post('/condition/add', [ConditionController::class, 'addCondition']);
+Route::post('/condition/delete', [ConditionController::class, 'deleteCondition']);
