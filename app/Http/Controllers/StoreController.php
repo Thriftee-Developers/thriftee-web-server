@@ -126,7 +126,7 @@ class StoreController extends Controller
 
     function login(Request $req)
     {
-        $store = Store::where([['email', $req->email], ['status', 1]])->first();
+        $store = Store::where('email', $req->email)->first();
         if($store)
         {
 
