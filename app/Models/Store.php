@@ -18,4 +18,8 @@ class Store extends Model
         'created_at',
         'status'
     ];
+
+    protected $fillable = [
+        'password',
+    ];
 }
