@@ -143,7 +143,7 @@ class StoreController extends Controller
             // if($result && $store->status == 0) {
             //     $result = $store->update(['status' => 1]);
             // }
-            return $result;
+            return $store->status;
         }
         else{
             return ["error" => "Store not found!"];
