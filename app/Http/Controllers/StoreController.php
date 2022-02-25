@@ -127,7 +127,7 @@ class StoreController extends Controller
     function login(Request $req)
     {
         $store = Store::where([['email', $req->email], ['status', 1]])->first();
-        if(!$store->status == 1 || !$store || !Hash::check($req->password, $store->password)) {
+        if(!$store || !Hash::check($req->password, $store->password)) {
            return ["error" => "Incorrect email or password!"];
         }
         return $store;
