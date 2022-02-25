@@ -31,6 +31,7 @@ Route::post('/store/resend_completion_link', [StoreController::class, 'resendCom
 Route::post('/store/login', [StoreController::class, 'login']);
 Route::post('/store/update_password', [StoreController::class, 'updatePassword']);
 Route::post('/store/check_password', [StoreController::class, 'checkPassword']);
+Route::post('/store/get_status', [StoreController::class, 'getStatus']);
 
 //Products
 Route::get('/product/get',[ProductController::class, 'getAllProducts']);

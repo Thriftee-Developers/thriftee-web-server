@@ -155,6 +155,13 @@ class StoreController extends Controller
         return true;
     }
 
+    function getStatus(Request $req)
+    {
+        $store = Store::where('uuid', $req->uuid)->first();
+
+        return $store->status;
+    }
+
     function deleteStore(Request $req)
     {
         $result = Store::where('uuid', $req->uuid)->delete();
