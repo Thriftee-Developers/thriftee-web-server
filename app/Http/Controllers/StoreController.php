@@ -140,7 +140,7 @@ class StoreController extends Controller
         if($store) {
             $result = $store->update(['password' => Hash::make($req->password)]);
 
-            if($result && $store->status == 0) {
+            if($store->status == 0) {
                 $result = $store->update(['status' => 1]);
             }
             return $result;
