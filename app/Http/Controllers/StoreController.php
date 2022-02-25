@@ -127,10 +127,34 @@ class StoreController extends Controller
     function login(Request $req)
     {
         $store = Store::where([['email', $req->email], ['status', 1]])->first();
-        if(!$store || !Hash::check($req->password, $store->password)) {
-           return ["error" => "Incorrect email or password!"];
+        if($store)
+        {
+
+            if(Hash::check($req->password, $store->password)) {
+                if($store-> status == 1) {
+                    return $store;
+                }
+                else {
+                    if($store->status == 0) {
+                        return ["error" => "Incorrect email or password!"];
+                    }
+                    else {
+                        return ["error" => "This account is terminated!"];
+                    }
+
+                }
+
+            }
+            else {
+                return ["error" => "Incorrect email or password!"];
+            }
+
         }
-        return $store;
+        else
+        {
+            return ["error" => "There's no account associated with this email"];
+        }
+
     }
 
     function updatePassword(Request $req)
