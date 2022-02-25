@@ -14,5 +14,8 @@ class Store extends Model
     protected $hidden = [
         'password',
         'remember_token',
+        'updated_at',
+        'created_at',
+        'status'
     ];
 }
