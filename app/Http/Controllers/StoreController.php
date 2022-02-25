@@ -135,14 +135,24 @@ class StoreController extends Controller
 
     function updatePassword(Request $req)
     {
-        $store = Store::where('uuid', $req->uuid)
-                    ->update(['password' => Hash::make($req->password)]);
+        $store = Store::where('uuid', $req->uuid)->first();
+
+        if($store) {
+            $result = $store->update(['password' => Hash::make($req->password)]);
+            return $result;
+        }
+        else{
+            return ["error" => "Store not found!"];
+        }
     }
 
     function checkPassword(Request $req)
     {
-        $store = Store::where('email', $req->email)->first();
-
+        $store = Store::where('uuid', $req->uuid)->first();
+        if(!Hash::check($req->password, $store->password)) {
+           return ["error" => "Incorrect password!"];
+        }
+        return true;
     }
 
     function deleteStore(Request $req)
