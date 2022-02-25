@@ -142,6 +142,9 @@ class StoreController extends Controller
             if($result && $store->status == 0) {
                 $result = $store->update(['status' => 1]);
             }
+            else{
+                return ["error" => "Error updating password!"];
+            }
             return $result;
         }
         else{
