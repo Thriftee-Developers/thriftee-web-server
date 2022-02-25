@@ -124,6 +124,27 @@ class StoreController extends Controller
         }
     }
 
+    function login(Request $req)
+    {
+        $store = Store::where('email', $req->email)->first();
+        if(!$store && !Hash::check($req->password, $store->password)) {
+           return ["error" => "Incorrect email or password!"];
+        }
+        return $store;
+    }
+
+    function updatePassword(Request $req)
+    {
+        $store = Store::where('uuid', $req->uuid)
+                    ->update(['password' => Hash::make($req->password)]);
+    }
+
+    function checkPassword(Request $req)
+    {
+        $store = Store::where('email', $req->email)->first();
+
+    }
+
     function deleteStore(Request $req)
     {
         $result = Store::where('uuid', $req->uuid)->delete();
