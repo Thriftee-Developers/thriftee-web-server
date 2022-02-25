@@ -23,5 +23,12 @@ class Store extends Model
     protected $fillable = [
         'password',
         'status',
+        'contact_no',
+        'email',
+        'country',
+        'state',
+        'municipality',
+        'street',
+        'image_uri'
     ];
 }

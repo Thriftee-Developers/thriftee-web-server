@@ -26,9 +26,9 @@ class StoreController extends Controller
         $store->store_name = $req->store_name;
         $store->contact_no = $req->contact_no;
         $store->email = $req->email;
-        $store->province = $req->province;
+        $store->country = $req->country;
+        $store->state = $req->state;
         $store->municipality = $req->municipality;
-        $store->barangay = $req->barangay;
         $store->street = $req->street;
         $store->image_uri = '';
         $store->password = '';
