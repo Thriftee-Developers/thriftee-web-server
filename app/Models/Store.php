@@ -21,6 +21,7 @@ class Store extends Model
     ];
 
     protected $fillable = [
-        'password'
+        'password',
+        'status'
     ];
 }
