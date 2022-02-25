@@ -90,7 +90,7 @@ class StoreController extends Controller
 
         $mail = new PHPMailer(true);
         $emailFrom = 'admin@thriftee.com';
-        $link = 'http://localhost:3000'.'/store/account/completion?store='.$uuid;
+        $link = 'http://localhost:3000'.'/store/account_completion?'.$uuid;
 
         try
         {
@@ -127,7 +127,7 @@ class StoreController extends Controller
     function login(Request $req)
     {
         $store = Store::where('email', $req->email)->first();
-        if(!$store || !Hash::check($req->password, $store->password)) {
+        if(!$store->status == 1 || !$store || !Hash::check($req->password, $store->password)) {
            return ["error" => "Incorrect email or password!"];
         }
         return $store;
