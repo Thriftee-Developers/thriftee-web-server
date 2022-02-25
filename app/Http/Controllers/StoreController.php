@@ -138,12 +138,12 @@ class StoreController extends Controller
         $store = Store::where('uuid', $req->uuid)->first();
 
         if($store) {
-            $result = $store->update(['password' => Hash::make($req->password), 'status' => 1]);
+            //$result = $store->update(['password' => Hash::make($req->password)]);
             $result = $store->update(['status' => 1]);
             // if($result && $store->status == 0) {
             //     $result = $store->update(['status' => 1]);
             // }
-            return $store->status;
+            return $result;
         }
         else{
             return ["error" => "Store not found!"];
