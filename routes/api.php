@@ -28,6 +28,7 @@ Route::get('/store/get', [StoreController::class, 'getStores']);
 Route::post('/store/add', [StoreController::class, 'addStore']);
 Route::post('/store/delete', [StoreController::class, 'deleteStore']);
 Route::post('/store/resend_completion_link', [StoreController::class, 'resendCompletionLink']);
+Route::post('/store/login', [StoreController::class, 'login']);
 
 //Products
 Route::get('/product/get',[ProductController::class, 'getAllProducts']);
