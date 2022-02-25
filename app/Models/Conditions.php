@@ -8,5 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Conditions extends Model
 {
     use HasFactory;
+
+    protected $primaryKey = 'uuid';
+    public $incrementing = false;
     public $timestamps = false;
 }

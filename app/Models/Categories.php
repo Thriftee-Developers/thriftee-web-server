@@ -9,5 +9,7 @@ class Categories extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'uuid';
+    public $incrementing = false;
     public $timestamps = false;
 }

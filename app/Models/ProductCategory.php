@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class ProductCategory extends Model
 {
     use HasFactory;
+
+    protected $primaryKey = 'uuid';
+    public $incrementing = false;
+
     public $timestamps = false;
 
     protected $table="productcategories";

@@ -9,6 +9,7 @@ class Store extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'uuid';
     public $incrementing = false;
 
     protected $hidden = [
@@ -20,6 +21,6 @@ class Store extends Model
     ];
 
     protected $fillable = [
-        'password',
+        'password'
     ];
 }
