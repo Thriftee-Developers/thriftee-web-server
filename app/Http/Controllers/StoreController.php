@@ -168,7 +168,7 @@ class StoreController extends Controller
                     $result = $store->update(['status' => 1]);
                 }
                 else{
-                    return ["error" => "Error updating password!"];
+                    return ["error" => "Error updating status!"];
                 }
 
             }
