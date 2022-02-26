@@ -166,10 +166,15 @@ class StoreController extends Controller
             if($result) {
                 if($store->status == 0) {
                     $result = $store->update(['status' => 1]);
+
+                    if(!$result){
+                        return ["error" => "Error updating status!"];
+                    }
                 }
-                else{
-                    return ["error" => "Error updating status!"];
+                else {
+                    return $result;
                 }
+
 
             }
             else{
