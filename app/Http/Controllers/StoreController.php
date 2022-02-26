@@ -163,8 +163,14 @@ class StoreController extends Controller
 
         if($store) {
             $result = $store->update(['password' => Hash::make($req->password)]);
-            if($result && $store->status == 0) {
-                $result = $store->update(['status' => 1]);
+            if($result) {
+                if($store->status == 0) {
+                    $result = $store->update(['status' => 1]);
+                }
+                else{
+                    return ["error" => "Error updating password!"];
+                }
+
             }
             else{
                 return ["error" => "Error updating password!"];
