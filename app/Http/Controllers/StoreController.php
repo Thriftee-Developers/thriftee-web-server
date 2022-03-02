@@ -162,25 +162,46 @@ class StoreController extends Controller
         $store = Store::where('uuid', $req->uuid)->first();
 
         if($store) {
-            $result = $store->update(['password' => Hash::make($req->password)]);
-            if($result) {
-                if($store->status == 0) {
-                    $result = $store->update(['status' => 1]);
+            //New Account
+            if($store->status == 0) {
+                //Update password
+                $result = $store->update(['password' => Hash::make($req->password)]);
 
-                    if(!$result){
+                if($result) {
+                    //Update status
+                    $result = $store->update(['status' => 1]);
+                    if($result){
+                        return $result;
+                    }
+                    else {
                         return ["error" => "Error updating status!"];
+                    }
+
+                }
+                else{
+                    return ["error" => "Error updating password!"];
+                }
+            }
+
+            //Old Account
+            else {
+
+                //Check current password
+                if(Hash::check($req->password, $store->password)) {
+
+                    //Update password
+                    $result = $store->update(['password' => Hash::make($req->password)]);
+                    if($result){
+                        return $result;
+                    }
+                    else {
+                        return ["error" => "Error updating password!"];
                     }
                 }
                 else {
-                    return $result;
+                    return ["error" => "Incorrect password!"];
                 }
-
-
             }
-            else{
-                return ["error" => "Error updating password!"];
-            }
-            return $result;
         }
         else{
             return ["error" => "Store not found!"];
