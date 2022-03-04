@@ -20,6 +20,13 @@ class ProductController extends Controller
         $product->name=$req->name;
         $product->description=$req->description;
 
+        // if($req->hasFile('image')) {
+        //     $req->validate([
+        //         'image' => 'mimes:jpeg,bmp,png' // Only allow .jpg, .bmp and .png file types.
+        //     ]);
+
+        //     $req->file->store('product', 'public');
+        // }
 
         if($this->checkProductID($req->product_id)){
             $product->save();
