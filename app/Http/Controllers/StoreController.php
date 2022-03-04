@@ -12,9 +12,15 @@ use PHPMailer\PHPMailer\Exception;
 class StoreController extends Controller
 {
     //
-    function getStores()
+    function getAllStores()
     {
         $result = Store::all();
+        return $result;
+    }
+
+    function getStore(Request $req)
+    {
+        $result = Store::where('uuid',$req->uuid)->first();
         return $result;
     }
 
