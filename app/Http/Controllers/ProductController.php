@@ -44,8 +44,8 @@ class ProductController extends Controller
         return $result;
     }
 
-    function checkProductID(Request $req){
-        $product = Product::where("product_id", $req->product_id)->get();
+    function checkProductID($product_id){
+        $product = Product::where("product_id", $product_id)->get();
         if(count($product) > 0 ) return false;
         return true;
     }
