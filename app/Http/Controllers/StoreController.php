@@ -241,7 +241,7 @@ class StoreController extends Controller
     {
         $store = Store::where('uuid', $req->uuid)->first();
         $result = $store->update([
-            'name' => $req->name,
+            'store_name' => $req->store_name,
             'phone_code' => $req->phone_code,
             'contact_no' => $req->contact_no,
             'country' => $req->country,
