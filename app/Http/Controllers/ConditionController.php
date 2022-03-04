@@ -7,9 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Conditions;
 class ConditionController extends Controller
 {
-    //
-    function getConditions(Request $req){
-        $result = Categories::where("uuid", $req->$uuid)->get();
+    function getConditions(){
+        $result = Conditions::all();
         return $result;
     }
 

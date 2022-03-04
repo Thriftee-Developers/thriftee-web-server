@@ -7,9 +7,8 @@ use App\Models\Categories;
 
 class CategoryController extends Controller
 {
-    //
-    function getCategories(Request $req){
-        $result = Categories::where("uuid", $req->$uuid)->get();
+    function getCategories(){
+        $result = Categories::all();
         return $result;
     }
 

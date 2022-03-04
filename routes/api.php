@@ -53,6 +53,7 @@ Route::post('/productcategory/delete', [ProductCategoryController::class, 'delet
 Route::get('/category/all',[CategoryController::class, 'getCategories']);
 Route::post('/category/add', [CategoryController::class, 'addCategory']);
 Route::post('/category/delete', [CategoryController::class, 'deleteCategory']);
+
 //Category
 Route::get('/condition/all',[ConditionController::class, 'getConditions']);
 Route::post('/condition/add', [ConditionController::class, 'addCondition']);
