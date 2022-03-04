@@ -21,8 +21,10 @@ class Store extends Model
     ];
 
     protected $fillable = [
+        'store_name',
         'password',
         'status',
+        'phone_code',
         'contact_no',
         'email',
         'country',
