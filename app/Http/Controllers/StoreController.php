@@ -30,6 +30,7 @@ class StoreController extends Controller
         $store->uuid = $req->uuid;
         $store->store_id = $req->store_id;
         $store->store_name = $req->store_name;
+        $store->phone_code = $req->phone_code;
         $store->contact_no = $req->contact_no;
         $store->email = $req->email;
         $store->country = $req->country;
@@ -240,12 +241,13 @@ class StoreController extends Controller
     {
         $store = Store::where('uuid', $req->uuid)->first();
         $result = $store->update([
-            'name' => $req->name, 
+            'name' => $req->name,
+            'phone_code' => $req->phone_code,
             'contact_no' => $req->contact_no,
-            'country' => $req->country, 
-            'state' => $req->state, 
-            'city' => $req->city, 
-            'street' => $req->street, 
+            'country' => $req->country,
+            'state' => $req->state,
+            'city' => $req->city,
+            'street' => $req->street,
         ]);
     }
 }
