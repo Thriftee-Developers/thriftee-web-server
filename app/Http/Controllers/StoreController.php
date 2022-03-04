@@ -34,7 +34,7 @@ class StoreController extends Controller
         $store->email = $req->email;
         $store->country = $req->country;
         $store->state = $req->state;
-        $store->municipality = $req->municipality;
+        $store->city = $req->city;
         $store->street = $req->street;
         $store->image_uri = '';
         $store->password = '';
@@ -234,5 +234,18 @@ class StoreController extends Controller
     {
         $result = Store::where('uuid', $req->uuid)->delete();
         return $result;
+    }
+
+    function updateStore(Request $req)
+    {
+        $store = Store::where('uuid', $req->uuid)->first();
+        $result = $store->update([
+            'name' => $req->name, 
+            'contact_no' => $req->contact_no,
+            'country' => $req->country, 
+            'state' => $req->state, 
+            'city' => $req->city, 
+            'street' => $req->street, 
+        ]);
     }
 }

@@ -26,6 +26,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //Stores
 Route::get('/store/all', [StoreController::class, 'getAllStores']);
 Route::post('/store/get', [StoreController::class, 'getStore']);
+Route::post('/store/update', [StoreController::class, 'updateStore']);
 Route::post('/store/add', [StoreController::class, 'addStore']);
 Route::post('/store/delete', [StoreController::class, 'deleteStore']);
 Route::post('/store/resend_completion_link', [StoreController::class, 'resendCompletionLink']);

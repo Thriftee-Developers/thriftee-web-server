@@ -20,9 +20,10 @@ class ProductController extends Controller
         $product->name=$req->name;
         $product->description=$req->description;
 
-        $error = "";
+
         if($this->checkProductID($req->product_id)){
             $product->save();
+            $error = "success";
         }
         else{
             $error = "The product ID is not unique.";
