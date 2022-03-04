@@ -12,6 +12,11 @@ class ProductController extends Controller
         return $result;
     }
 
+    function getStoreProducts(Request $req){
+        $result = Product::where('store', $req->store)->get();
+        return $result;
+    }
+
     function addProduct(Request $req){
         $product = new Product;
         $product->uuid=$req->uuid;
