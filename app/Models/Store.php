@@ -29,7 +29,7 @@ class Store extends Model
         'email',
         'country',
         'state',
-        'municipality',
+        'city',
         'street',
         'image_uri'
     ];
