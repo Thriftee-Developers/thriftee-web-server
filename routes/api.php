@@ -65,6 +65,7 @@ Route::post('/condition/delete', [ConditionController::class, 'deleteCondition']
 
 //Media
 Route::post('/media/upload', [MediaController::class, 'uploadFiles']);
+Route::post('/media/upload_product_images', [MediaController::class, 'uploadProductImages']);
 
 //Bidding
 Route::post('/bidding/add', [BiddingController::class, 'addBidding']);
