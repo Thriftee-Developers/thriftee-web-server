@@ -24,12 +24,12 @@ class MediaController extends Controller
                     $result = Storage::disk(['drivers' => 'local', 'root' => $folder])
                         ->put($file->getClientOriginalName(), file_get_contents($file));
 
-                    array_push($paths, $result);
+                    $paths[] = $result;
                 }
             }
         }
         else {
-            $paths = $req->file;
+            $paths = "No files";
         }
 
         return $paths;
