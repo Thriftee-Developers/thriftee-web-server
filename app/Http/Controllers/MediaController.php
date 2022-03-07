@@ -18,14 +18,18 @@ class MediaController extends Controller
         }
 
         if($req->hasFile('media')) {
-            $paths = $files;
+
             if(!empty($files)) {
+                $paths = array();
                 foreach($files as $file) {
                     $result = Storage::disk(['drivers' => 'local', 'root' => $folder])
                         ->put($file->getClientOriginalName(), file_get_contents($file));
 
-                    //$paths[] = $result;
+                    $paths[] = $result;
                 }
+            }
+            else {
+                $paths = "Empty files";
             }
         }
         else {
