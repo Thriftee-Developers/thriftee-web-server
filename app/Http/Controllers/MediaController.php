@@ -18,7 +18,7 @@ class MediaController extends Controller
         }
 
         if($req->hasFile('media')) {
-            $paths = array();
+            $paths = count($files);
             if(!empty($files)) {
                 foreach($files as $file) {
                     $result = Storage::disk(['drivers' => 'local', 'root' => $folder])
