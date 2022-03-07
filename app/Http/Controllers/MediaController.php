@@ -17,14 +17,19 @@ class MediaController extends Controller
             Storage::makeDirectory($folder, 0775, true, true);
         }
 
-        $paths = array();
-        if(!empty($files)) {
-            foreach($files as $file) {
-                $result = Storage::disk(['drivers' => 'local', 'root' => $folder])
-                    ->put($file->getClientOriginalName(), file_get_contents($file));
+        if($req->hasFile('file')) {
+            $paths = array();
+            if(!empty($files)) {
+                foreach($files as $file) {
+                    $result = Storage::disk(['drivers' => 'local', 'root' => $folder])
+                        ->put($file->getClientOriginalName(), file_get_contents($file));
 
-                array_push($paths, $result);
+                    array_push($paths, $result);
+                }
             }
+        }
+        else {
+            $paths = 'No files';
         }
 
         return $paths;
