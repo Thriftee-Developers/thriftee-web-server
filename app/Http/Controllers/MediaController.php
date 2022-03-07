@@ -29,7 +29,7 @@ class MediaController extends Controller
             }
         }
         else {
-            $paths = 'No files';
+            $paths = $req->file;
         }
 
         return $paths;
