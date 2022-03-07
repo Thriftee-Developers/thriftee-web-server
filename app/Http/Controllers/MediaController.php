@@ -24,7 +24,7 @@ class MediaController extends Controller
 
                 $file = $files[$i];
                 $result = $file->storeAs($folder, $req->product_uuid."_".(string)$i);
-                $paths[$i] = $result;
+                $paths[] = $result;
             }
         }
         else {
