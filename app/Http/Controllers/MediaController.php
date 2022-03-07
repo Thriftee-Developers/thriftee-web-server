@@ -19,12 +19,11 @@ class MediaController extends Controller
         $files = $req->allFiles();
         if(count($files) > 0) {
             $paths = array();
-
-            for($i = 0; $i < count($files); $i++) {
-
-                $file = $files[$i];
+            $i = 0;
+            foreach($files as $file) {
                 $result = $file->storeAs($folder, $req->product_uuid."_".(string)$i);
                 $paths[] = $result;
+                $i++;
             }
         }
         else {
