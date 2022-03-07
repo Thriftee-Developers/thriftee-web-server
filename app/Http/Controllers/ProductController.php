@@ -59,7 +59,12 @@ class ProductController extends Controller
         // else{
         //     $error = "The product ID is not unique.";
         // }
-        return $req->categories;
+
+        $res = "";
+        foreach($req->categories as $category) {
+            $res = $res."===".$category;
+        }
+        return $res;
     }
 
     function deleteProduct(Request $req)
