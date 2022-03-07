@@ -10,6 +10,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ConditionController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\BiddingController;
+use App\Http\Controllers\CustomerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -75,3 +76,10 @@ Route::get('/bidding/all', [BiddingController::class, 'getAllBidding']);
 Route::get('/bidding/get', [BiddingController::class, 'getBidding']);
 Route::get('/bidding/by_product', [BiddingController::class, 'getBiddingByProduct']);
 Route::get('/bidding/by_store', [BiddingController::class, 'getBiddingByStore']);
+
+//Customers
+Route::post('/customer/add', [CustomerController::class, 'addCustomer']);
+Route::post('/customer/update', [CustomerController::class, 'updateCustomer']);
+Route::post('/customer/update_password', [CustomerController::class, 'updatePassword']);
+Route::get('/customer/get', [CustomerController::class, 'getCustomerByUUID']);
+Route::get('/customer/by_email', [CustomerController::class, 'getCustomerByEmail']);
