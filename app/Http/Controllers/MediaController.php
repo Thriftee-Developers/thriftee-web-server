@@ -17,24 +17,18 @@ class MediaController extends Controller
         }
 
         $files = $req->file('media');
-        if($req->media->hasFile('media')) {
+        if($req->hasFile('media')) {
+            $paths = array();
+            //$paths = $files->storeAs($folder, $files->getClientOriginalName());
+            foreach($files as $file) {
+                $result = $file->storeAs($folder, $file->getClientOriginalName());
+                // $result = Storage::disk([
+                //     public_path('storage') => storage_path('app/public'),
+                //     public_path('images') => storage_path('app/images')
+                // ])
+                // ->put($file->getClientOriginalName(), file_get_contents($file));
 
-            if(!empty($files)) {
-                $paths = array();
-                //$paths = $files->storeAs($folder, $files->getClientOriginalName());
-                foreach($files as $file) {
-                    $result = $file->storeAs($folder, $file->getClientOriginalName());
-                    // $result = Storage::disk([
-                    //     public_path('storage') => storage_path('app/public'),
-                    //     public_path('images') => storage_path('app/images')
-                    // ])
-                    // ->put($file->getClientOriginalName(), file_get_contents($file));
-
-                    $paths[] = $result;
-                }
-            }
-            else {
-                $paths = "Empty files";
+                $paths[] = $result;
             }
         }
         else {
