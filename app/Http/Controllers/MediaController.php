@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Storage;
 class MediaController extends Controller
 {
     //
-    function uploadProductImage(Request $req)
+    function uploadProductImages(Request $req)
     {
         $folder = 'public/'.$req->folder_name;
 

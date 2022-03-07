@@ -47,6 +47,7 @@ Route::post('/product/delete', [ProductController::class, 'deleteProduct']);
 Route::get('/productcondition/all',[ProductConditionController::class, 'getProductCondition']);
 Route::post('/productcondition/add', [ProductConditionController::class, 'addProductCondition']);
 Route::post('/productcondition/delete', [ProductConditionController::class, 'deleteProductCondition']);
+
 //Product Category
 Route::get('/productcategory/all',[ProductCategoryController::class, 'getProductCategory']);
 Route::post('/productcategory/add', [ProductCategoryController::class, 'addProductCategory']);
@@ -63,4 +64,4 @@ Route::post('/condition/add', [ConditionController::class, 'addCondition']);
 Route::post('/condition/delete', [ConditionController::class, 'deleteCondition']);
 
 //Media
-Route::post('/media/upload_product_images', [MediaController::class, 'uploadFiles']);
+Route::post('/media/upload_product_images', [MediaController::class, 'uploadProductImages']);
