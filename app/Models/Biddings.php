@@ -8,8 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Biddings extends Model
 {
     use HasFactory;
-
-    public $timestamps = false;
     protected $primaryKey = 'uuid';
     public $incrementing = false;
 
@@ -19,7 +17,6 @@ class Biddings extends Model
         "claim",
         "start_time",
         "end_time",
-        "created_at",
         "status"
     ];
 }

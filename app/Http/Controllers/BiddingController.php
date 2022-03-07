@@ -17,8 +17,13 @@ class BiddingController extends Controller
         return $result;
     }
 
-    function getAllBiddingByProduct(Request $req){
+    function getBiddingByProduct(Request $req){
         $result = Biddings::where("product", $req->product)->get();
+        return $result;
+    }
+
+    function getBiddingByStore(Request $req){
+        $result = Biddings::join("product","uuid", "=", $req->product)->where("store", $req->storeUUID)->get();
         return $result;
     }
     
@@ -31,7 +36,6 @@ class BiddingController extends Controller
         $bidding->claim=$req->claim;
         $bidding->start_time=$req->start_time;
         $bidding->end_time=$req->end_time;
-        $bidding->created_at=$req->created_at;
         $bidding->status=$req->status;
         
         $bidding->save();
@@ -47,7 +51,6 @@ class BiddingController extends Controller
                 "claim" => $req->claim,
                 "start_time" => $req->start_time,
                 "end_time" => $req->end_time,
-                "created_at" => $req->created_at,
                 "status" => $req->status,
             ]);
         
