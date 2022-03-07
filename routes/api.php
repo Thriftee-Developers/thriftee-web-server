@@ -9,6 +9,7 @@ use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ConditionController;
 use App\Http\Controllers\MediaController;
+use App\Http\Controllers\BiddingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,13 +45,13 @@ Route::post('/product/store', [ProductController::class, 'getStoreProducts']);
 Route::post('/product/delete', [ProductController::class, 'deleteProduct']);
 
 //Product Condition
-Route::get('/productcondition/all',[ProductConditionController::class, 'getProductCondition']);
-Route::post('/productcondition/add', [ProductConditionController::class, 'addProductCondition']);
-Route::post('/productcondition/delete', [ProductConditionController::class, 'deleteProductCondition']);
+Route::get('/product_condition/all',[ProductConditionController::class, 'getProductCondition']);
+Route::post('/product_condition/add', [ProductConditionController::class, 'addProductCondition']);
+Route::post('/product_condition/delete', [ProductConditionController::class, 'deleteProductCondition']);
 //Product Category
-Route::get('/productcategory/all',[ProductCategoryController::class, 'getProductCategory']);
-Route::post('/productcategory/add', [ProductCategoryController::class, 'addProductCategory']);
-Route::post('/productcategory/delete', [ProductCategoryController::class, 'deleteProductCategory']);
+Route::get('/product_category/all',[ProductCategoryController::class, 'getProductCategory']);
+Route::post('/product_category/add', [ProductCategoryController::class, 'addProductCategory']);
+Route::post('/product_category/delete', [ProductCategoryController::class, 'deleteProductCategory']);
 
 //Condition
 Route::get('/category/all',[CategoryController::class, 'getCategories']);
@@ -64,3 +65,7 @@ Route::post('/condition/delete', [ConditionController::class, 'deleteCondition']
 
 //Media
 Route::post('/media/upload', [MediaController::class, 'uploadFiles']);
+
+//Bidding
+Route::post('/bidding/add', [BiddingController::class, 'addBidding']);
+Route::post('/bidding/update', [BiddingController::class, 'updateBidding']);
