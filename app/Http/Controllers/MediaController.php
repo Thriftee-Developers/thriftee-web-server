@@ -21,7 +21,9 @@ class MediaController extends Controller
             $paths = array();
             $i = 0;
             foreach($files as $file) {
-                $result = $file->storeAs($folder, $req->product_uuid."_".(string)$i);
+                $extension = $file->getClientOriginalExtension();
+                $filename = $req->product_uuid ."_" . (string) $i;
+                $result = $file->storeAs($folder, $filename.".".$extension);
                 $paths[] = $result;
                 $i++;
             }
