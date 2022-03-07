@@ -8,6 +8,8 @@ use App\Http\Controllers\ProductConditionController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ConditionController;
+use App\Http\Controllers\ImageController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -59,3 +61,6 @@ Route::post('/category/delete', [CategoryController::class, 'deleteCategory']);
 Route::get('/condition/all',[ConditionController::class, 'getConditions']);
 Route::post('/condition/add', [ConditionController::class, 'addCondition']);
 Route::post('/condition/delete', [ConditionController::class, 'deleteCondition']);
+
+//Images
+Route::post('/image/upload', [ImageController::class, 'uploadImages']);
