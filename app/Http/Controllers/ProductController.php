@@ -19,53 +19,50 @@ class ProductController extends Controller
     }
 
     function addProduct(Request $req){
-        // $product = new Product;
-        // $product->uuid=Str::uuid();
-        // $product->store=$req->store;
-        // $product->product_id=$req->product_id;
-        // $product->name=$req->name;
-        // $product->description=$req->description;
+        $product = new Product;
+        $product->uuid=Str::uuid();
+        $product->store=$req->store;
+        $product->product_id=$req->product_id;
+        $product->name=$req->name;
+        $product->description=$req->description;
 
-        // if($this->checkProductID($req->product_id)){
-        //     if($product->save()) {
-        //         $conditionCtrl = new ConditionController();
-        //         $conditionCtrl->addProductCondition($product->uuid, $req->condition);
+        if($this->checkProductID($req->product_id)){
+            if($product->save()) {
+                $conditionCtrl = new ConditionController();
+                $conditionCtrl->addProductCondition($product->uuid, $req->condition);
 
-        //         $categoryCtrl = new CategoryController();
-        //         foreach($req->categories as $category) {
-        //             $categoryCtrl->addProductCategory($product->uuid, $category);
-        //         }
+                $categoryCtrl = new CategoryController();
+                $categories = json_decode($req->categories);
+                foreach($categories as $category) {
+                    $categoryCtrl->addProductCategory($product->uuid, $category);
+                }
 
-        //         $tagCtrl = new TagController();
-        //         foreach($req->tags as $tag) {
-        //             $tagCtrl->addProductTag($product->uuid, $tag);
-        //         }
+                $tagCtrl = new TagController();
+                foreach($req->tags as $tag) {
+                    $tagCtrl->addProductTag($product->uuid, $tag);
+                }
 
-        //         $mediaCtrl = new MediaController();
-        //         $images = $req->allFiles();
-        //         $mediaCtrl->uploadProductImages($images, $product->uuid);
+                $mediaCtrl = new MediaController();
+                $images = $req->allFiles();
+                $mediaCtrl->uploadProductImages($images, $product->uuid);
 
-        //         $biddingCtrl = new BiddingController();
-        //         $req->product = $product->uuid;
-        //         $biddingCtrl->addBidding($req);
+                $biddingCtrl = new BiddingController();
+                $req->product = $product->uuid;
+                $biddingCtrl->addBidding($req);
 
-        //         $error = "success";
-        //     }
-        //     else {
-        //         $error = "Error saving product";
-        //     }
+                $error = "success";
+            }
+            else {
+                $error = "Error saving product";
+            }
 
-        // }
-        // else{
-        //     $error = "The product ID is not unique.";
-        // }
-
-        $res = "";
-        $categories = json_decode($req->categories);
-        foreach($categories as $category) {
-            $res = $res."===".$category;
         }
-        return $res;
+        else{
+            $error = "The product ID is not unique.";
+        }
+
+
+        return $error;
     }
 
     function deleteProduct(Request $req)
