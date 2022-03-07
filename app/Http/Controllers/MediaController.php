@@ -10,18 +10,17 @@ class MediaController extends Controller
     //
     function uploadFiles(Request $req)
     {
-        $files = $req->media->file('media');
+
         $folder = 'public/'.$req->folder_name;
 
         if(!Storage::exists($folder)) {
             Storage::makeDirectory($folder, 0775, true, true);
         }
 
-        if($req->media->hasFile('media')) {
-
+        if($req->hasFile('media')) {
+            $files = $req->allFiles('media');
             if(!empty($files)) {
                 $paths = array();
-                //$paths = $files->storeAs($folder, $files->getClientOriginalName());
                 foreach($files as $file) {
                     $result = $file->storeAs($folder, $file->getClientOriginalName());
                     // $result = Storage::disk([
