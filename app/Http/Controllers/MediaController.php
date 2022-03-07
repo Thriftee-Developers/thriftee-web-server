@@ -22,11 +22,12 @@ class MediaController extends Controller
             if(!empty($files)) {
                 $paths = array();
                 foreach($files as $file) {
-                    $result = Storage::disk([
-                        public_path('storage') => storage_path('app/public'),
-                        public_path('images') => storage_path('app/images')
-                    ])
-                    ->put($file->getClientOriginalName(), file_get_contents($file));
+                    $result = $file->storeAs($folder, $file->getClientOriginalName());
+                    // $result = Storage::disk([
+                    //     public_path('storage') => storage_path('app/public'),
+                    //     public_path('images') => storage_path('app/images')
+                    // ])
+                    // ->put($file->getClientOriginalName(), file_get_contents($file));
 
                     $paths[] = $result;
                 }
