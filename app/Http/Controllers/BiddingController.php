@@ -35,6 +35,7 @@ class BiddingController extends Controller
         $bidding->minimum=$req->minimum;
         $bidding->increment=$req->increment;
         $bidding->claim=$req->claim;
+        $bidding->created_at=$req->created_at;
         $bidding->start_time=$req->start_time;
         $bidding->end_time=$req->end_time;
         $bidding->status=0;
