@@ -16,18 +16,12 @@ class MediaController extends Controller
             Storage::makeDirectory($folder, 0775, true, true);
         }
 
-        $files = $req->allFiles('media');
-        if($req->hasFile('media')) {
+        $files = $req->allFiles();
+        if(count($files) > 0) {
             $paths = array();
-            //$paths = $files->storeAs($folder, $files->getClientOriginalName());
+
             foreach($files as $file) {
                 $result = $file->storeAs($folder, $file->getClientOriginalName());
-                // $result = Storage::disk([
-                //     public_path('storage') => storage_path('app/public'),
-                //     public_path('images') => storage_path('app/images')
-                // ])
-                // ->put($file->getClientOriginalName(), file_get_contents($file));
-
                 $paths[] = $result;
             }
         }
