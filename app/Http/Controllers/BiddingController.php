@@ -7,10 +7,23 @@ use App\Models\Biddings;
 
 class BiddingController extends Controller
 {
-    //
+    function getAllBidding(){
+        $result =  Biddings::all();
+        return $result;
+    }
+
+    function getBidding(Request $req){
+        $result = Biddings::where("uuid", $req->uuid)->first();
+        return $result;
+    }
+
+    function getAllBiddingByProduct(Request $req){
+        $result = Biddings::where("product", $req->product)->get();
+        return $result;
+    }
+    
     function addBidding(Request $req){
         $bidding = new Biddings();
-        // echo $req;
         $bidding->uuid=$req->uuid;
         $bidding->product=$req->product;
         $bidding->minimum=$req->minimum;

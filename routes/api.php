@@ -70,3 +70,6 @@ Route::post('/media/upload_product_images', [MediaController::class, 'uploadProd
 //Bidding
 Route::post('/bidding/add', [BiddingController::class, 'addBidding']);
 Route::post('/bidding/update', [BiddingController::class, 'updateBidding']);
+Route::get('/bidding/all', [BiddingController::class, 'getAllBidding']);
+Route::get('/bidding/by_product', [BiddingController::class, 'getAllBiddingByProduct']);
+Route::get('/bidding/get', [BiddingController::class, 'getBidding']);
