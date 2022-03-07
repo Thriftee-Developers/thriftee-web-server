@@ -25,17 +25,31 @@ class ProductController extends Controller
         $product->name=$req->name;
         $product->description=$req->description;
 
-        // if($req->hasFile('image')) {
-        //     $req->validate([
-        //         'image' => 'mimes:jpeg,bmp,png' // Only allow .jpg, .bmp and .png file types.
-        //     ]);
-
-        //     $req->file->store('product', 'public');
-        // }
-
         if($this->checkProductID($req->product_id)){
-            $product->save();
-            $error = "success";
+            if($product->save()) {
+                $conditionCtrl = new ConditionController();
+                $conditionCtrl->addProductCondition($product->uuid, $req->condition);
+
+                $categoryCtrl = new CategoryController();
+                foreach($req->categories as $category) {
+                    $categoryCtrl->addProductCategory($product->uuid, $category);
+                }
+
+                $tagCtrl = new TagController();
+                foreach($req->tags as $tag) {
+                    $tagCtrl->addProductTag($product->uuid, $tag);
+                }
+
+                $mediaCtrl = new MediaController();
+                $images = $req->allFiles();
+                $mediaCtrl->uploadProductImages($images, $product->uuid);
+
+                $error = "success";
+            }
+            else {
+                $error = "Error saving product";
+            }
+
         }
         else{
             $error = "The product ID is not unique.";

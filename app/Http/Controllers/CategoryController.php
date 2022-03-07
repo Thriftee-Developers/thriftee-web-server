@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Categories;
+use App\Models\ProductCategory;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -26,6 +28,15 @@ class CategoryController extends Controller
             $error="The categoriy is exisitng.";
         }
         return $error;
+    }
+
+    function addProductCategory($product, $category){
+        $productCategory = new ProductCategory();
+        $productCategory->uuid = Str::uuid();
+        $productCategory->product = $product;
+        $productCategory->product_category = $category;
+
+        return  $productCategory->save();
     }
 
     function checkExistingCategory(Request $req){
