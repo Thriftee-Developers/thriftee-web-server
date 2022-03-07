@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ProductImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class MediaController extends Controller
 {
@@ -17,22 +19,34 @@ class MediaController extends Controller
         }
 
         $files = $req->allFiles();
+
         if(count($files) > 0) {
-            $paths = array();
             $i = 0;
             foreach($files as $file) {
                 $extension = $file->getClientOriginalExtension();
                 $filename = $req->product_uuid ."_" . (string) $i;
                 $result = $file->storeAs($folder, $filename.".".$extension);
-                $paths[] = $result;
                 $i++;
+
+                $productImage = new ProductImage();
+                $productImage->uuid = Str::uuid()->toString();
+                $productImage->product = $req->product_uuid;
+                $productImage->path = $result;
+                $productImage->save();
+
             }
+            return "success";
         }
         else {
-            $paths = "No files";
+            return "No files";
         }
 
-        return $paths;
+    }
+
+    function getProductImages (Request $req) {
+        return ProductImage::where('product', $req->product_uuid)
+            ->orderBy('name','asc')
+            ->get();
     }
 
 }
