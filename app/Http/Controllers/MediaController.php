@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-class ImageController extends Controller
+class MediaController extends Controller
 {
     //
-    function uploadImages(Request $req)
+    function uploadFiles(Request $req)
     {
         $files = $req->file('file');
         $folder = public_path('../public/storage/'.$req->folder_name.'/');

@@ -62,5 +62,5 @@ Route::get('/condition/all',[ConditionController::class, 'getConditions']);
 Route::post('/condition/add', [ConditionController::class, 'addCondition']);
 Route::post('/condition/delete', [ConditionController::class, 'deleteCondition']);
 
-//Images
-Route::post('/image/upload', [ImageController::class, 'uploadImages']);
+//Media
+Route::post('/media/upload', [MediaController::class, 'uploadImages']);
