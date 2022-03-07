@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Storage;
 class MediaController extends Controller
 {
     //
-    function uploadFiles(Request $req)
+    function uploadProductImage(Request $req)
     {
         $folder = 'public/'.$req->folder_name;
 
@@ -20,9 +20,11 @@ class MediaController extends Controller
         if(count($files) > 0) {
             $paths = array();
 
-            foreach($files as $file) {
-                $result = $file->storeAs($folder, $file->getClientOriginalName());
-                $paths[] = $result;
+            for($i = 0; $i < count($files); $i++) {
+
+                $file = $files[$i];
+                $result = $file->storeAs($folder, $req->product_uuid."_".(string)$i);
+                $paths[$i] = $result;
             }
         }
         else {
@@ -31,4 +33,5 @@ class MediaController extends Controller
 
         return $paths;
     }
+
 }
