@@ -8,7 +8,7 @@ use App\Http\Controllers\ProductConditionController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ConditionController;
-use App\Http\Controllers\ImageController;
+use App\Http\Controllers\MediaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,4 +63,4 @@ Route::post('/condition/add', [ConditionController::class, 'addCondition']);
 Route::post('/condition/delete', [ConditionController::class, 'deleteCondition']);
 
 //Media
-Route::post('/media/upload', [MediaController::class, 'uploadImages']);
+Route::post('/media/upload', [MediaController::class, 'uploadFiles']);
