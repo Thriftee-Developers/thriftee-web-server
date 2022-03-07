@@ -23,7 +23,7 @@ class BiddingController extends Controller
     }
 
     function getBiddingByStore(Request $req){
-        $result = Biddings::join("product","uuid", "=", $req->product)->where("store", $req->storeUUID)->get();
+        $result = Biddings::join("products","biddings.product", "=", "products.uuid")->where("store", $req->uuid)->get();
         return $result;
     }
     
