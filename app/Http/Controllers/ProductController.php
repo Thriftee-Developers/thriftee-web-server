@@ -44,6 +44,10 @@ class ProductController extends Controller
                 $images = $req->allFiles();
                 $mediaCtrl->uploadProductImages($images, $product->uuid);
 
+                $biddingCtrl = new BiddingController();
+                $req->product = $product->uuid;
+                $biddingCtrl->addBidding($req);
+
                 $error = "success";
             }
             else {
