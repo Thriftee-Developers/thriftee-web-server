@@ -26,6 +26,7 @@ class TagController extends Controller
         $productTag->uuid = Str::uuid();
         $productTag->product = $product;
         $productTag->product_tag = $tag->uuid;
+        $productTag->save();
 
     }
 
