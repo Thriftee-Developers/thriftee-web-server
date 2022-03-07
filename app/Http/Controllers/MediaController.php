@@ -16,7 +16,7 @@ class MediaController extends Controller
             Storage::makeDirectory($folder, 0775, true, true);
         }
 
-        $files = $req->file('media');
+        $files = $req->allFiles('media');
         if($req->hasFile('media')) {
             $paths = array();
             //$paths = $files->storeAs($folder, $files->getClientOriginalName());
