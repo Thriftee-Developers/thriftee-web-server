@@ -12,4 +12,6 @@ class ProductTag extends Model
     protected $primaryKey = "uuid";
     public $incrementing = false;
     public $timestamps = false;
+
+    protected $table="producttags";
 }
