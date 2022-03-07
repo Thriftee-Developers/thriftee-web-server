@@ -8,25 +8,30 @@ use Illuminate\Support\Facades\Storage;
 class MediaController extends Controller
 {
     //
-    function uploadFiles(Request $req)
+    function uploadProductImages(Request $req)
     {
-        $files = $req->file('file');
         $folder = 'public/'.$req->folder_name;
 
         if(!Storage::exists($folder)) {
             Storage::makeDirectory($folder, 0775, true, true);
         }
 
-        $paths = array();
-        if(!empty($files)) {
-            foreach($files as $file) {
-                $result = Storage::disk(['drivers' => 'local', 'root' => $folder])
-                    ->put($file->getClientOriginalName(), file_get_contents($file));
+        $files = $req->allFiles();
+        if(count($files) > 0) {
+            $paths = array();
 
-                array_push($paths, $result);
+            for($i = 0; $i < count($files); $i++) {
+
+                $file = $files[$i];
+                $result = $file->storeAs($folder, $req->product_uuid."_".(string)$i);
+                $paths[] = $result;
             }
+        }
+        else {
+            $paths = "No files";
         }
 
         return $paths;
     }
+
 }
