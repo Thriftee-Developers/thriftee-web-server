@@ -12,4 +12,6 @@ class ProductImage extends Model
     protected $primaryKey = 'uuid';
     public $incrementing = false;
     public $timestamps = false;
+
+    protected $table="productimages";
 }
