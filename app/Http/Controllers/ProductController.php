@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -19,7 +20,7 @@ class ProductController extends Controller
 
     function addProduct(Request $req){
         $product = new Product;
-        $product->uuid=$req->uuid;
+        $product->uuid=Str::uuid();
         $product->store=$req->store;
         $product->product_id=$req->product_id;
         $product->name=$req->name;
@@ -43,6 +44,10 @@ class ProductController extends Controller
                 $mediaCtrl = new MediaController();
                 $images = $req->allFiles();
                 $mediaCtrl->uploadProductImages($images, $product->uuid);
+
+                $biddingCtrl = new BiddingController();
+                $req->product = $product->uuid;
+                $biddingCtrl->addBidding($req);
 
                 $error = "success";
             }

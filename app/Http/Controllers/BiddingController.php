@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Biddings;
+use Illuminate\Support\Str;
 
 class BiddingController extends Controller
 {
@@ -26,25 +27,26 @@ class BiddingController extends Controller
         $result = Biddings::join("products","biddings.product", "=", "products.uuid")->where("store", $req->uuid)->get();
         return $result;
     }
-    
+
     function addBidding(Request $req){
         $bidding = new Biddings();
-        $bidding->uuid=$req->uuid;
+        $bidding->uuid=Str::uuid();
         $bidding->product=$req->product;
         $bidding->minimum=$req->minimum;
         $bidding->increment=$req->increment;
         $bidding->claim=$req->claim;
+        $bidding->created_at=$req->created_at;
         $bidding->start_time=$req->start_time;
         $bidding->end_time=$req->end_time;
-        $bidding->status=$req->status;
-        
+        $bidding->status=0;
+
         $bidding->save();
         return "success";
     }
 
     function updateBidding(Request $req){
         $bidding = Biddings::where('uuid',$req->uuid)->first();
-        
+
             $result = $bidding->update([
                 "minimum" => $req->minimum,
                 "increment" => $req->increment,
@@ -53,6 +55,6 @@ class BiddingController extends Controller
                 "end_time" => $req->end_time,
                 "status" => $req->status,
             ]);
-        
+
     }
 }
