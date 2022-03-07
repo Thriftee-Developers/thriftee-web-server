@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Conditions;
+use App\Models\ProductCondition;
+use Illuminate\Support\Str;
+
 class ConditionController extends Controller
 {
     function getConditions(){
@@ -26,6 +29,15 @@ class ConditionController extends Controller
             $error="The condition is exisitng.";
         }
         return $error;
+    }
+
+    function addProductCondition($product, $condition){
+        $productCondition = new ProductCondition();
+        $productCondition->uuid = Str::uuid();
+        $productCondition->product = $product;
+        $productCondition->product_condition = $condition;
+
+        return $productCondition->save();
     }
 
     function checkExistingCondition(Request $req){
