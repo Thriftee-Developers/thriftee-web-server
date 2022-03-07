@@ -61,7 +61,8 @@ class ProductController extends Controller
         // }
 
         $res = "";
-        foreach($req->categories as $category) {
+        $categories = json_decode($req->categories);
+        foreach($categories as $category) {
             $res = $res."===".$category;
         }
         return $res;
