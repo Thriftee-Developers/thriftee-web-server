@@ -38,7 +38,8 @@ class ProductController extends Controller
                 }
 
                 $tagCtrl = new TagController();
-                foreach($req->tags as $tag) {
+                $tags = json_decode($req->tags);
+                foreach($tags as $tag) {
                     $tagCtrl->addProductTag($product->uuid, $tag);
                 }
 
