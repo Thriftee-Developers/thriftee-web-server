@@ -32,12 +32,14 @@ class ProductController extends Controller
                 $conditionCtrl->addProductCondition($product->uuid, $req->condition);
 
                 $categoryCtrl = new CategoryController();
-                foreach($req->categories as $category) {
+                $categories = json_decode($req->categories);
+                foreach($categories as $category) {
                     $categoryCtrl->addProductCategory($product->uuid, $category);
                 }
 
                 $tagCtrl = new TagController();
-                foreach($req->tags as $tag) {
+                $tags = json_decode($req->tags);
+                foreach($tags as $tag) {
                     $tagCtrl->addProductTag($product->uuid, $tag);
                 }
 
@@ -59,6 +61,8 @@ class ProductController extends Controller
         else{
             $error = "The product ID is not unique.";
         }
+
+
         return $error;
     }
 

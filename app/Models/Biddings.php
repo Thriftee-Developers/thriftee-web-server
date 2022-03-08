@@ -10,6 +10,7 @@ class Biddings extends Model
     use HasFactory;
     protected $primaryKey = 'uuid';
     public $incrementing = false;
+    public $timestamps = false;
 
     protected $fillable = [
         "minimum",
