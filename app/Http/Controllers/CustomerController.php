@@ -26,15 +26,70 @@ class CustomerController extends Controller
         $customer->password = Hash::make($req->password);
         $customer->status = 0;
 
-        if ($this->checkEmail($req->email)) {
-            if ($this->checkContactNo($req->email)) {
-                $customer->save();
-                return ["success" => "Customer added successfully"];
-            } else {
-                return ["warning" => "Contact number is already registered!"];
+        if($this -> checkEmail($req->email))
+        {
+            if($this -> checkContactNo($req->contact_no))
+            {
+                $error = $this -> sendEmailVerification($req->uuid, $req->email);
+                if($error == "") {
+                    $customer -> save();
+                    return ["success" => "Customer added successfully."];
+                }
+                return ["error" => $error];
             }
-        } else {
-            return ["warning" => "Email is already registered"];
+            else
+            {
+                return ["warning"=>"Contact number is already registered!"];
+            }
+        }
+        else
+        {
+            return ["warning" => "Email is already registered!."];
+        }
+    }
+    function resendEmailVerification(Request $req)
+    {
+        $error = $this -> sendEmailVerification($req->uuid, $req->email);
+        return $error;
+    }
+
+    function sendEmailVerification($uuid, $email)
+    {
+        require base_path("vendor/autoload.php");
+
+        $mail = new PHPMailer(true);
+        $emailFrom = 'admin@thriftee.com';
+        $link = 'http://localhost:3000'.'/store/account_completion?'.$uuid;
+
+        try
+        {
+            //Recipients
+            $mail->setFrom($emailFrom, 'Thriftee');
+            $mail->addAddress($email);
+
+            //Content
+            $mail->isHTML(true);                                  //Set email format to HTML
+            $mail->Subject = 'Customer Account Completion';
+            $mail->Body    = 'Hi!<br>
+                            Please click the link below to complete the creation of your store account for <h1>Thriftee</h1>.<br>
+                            <h1>'.$link.'</h1>';
+
+            $mail->AltBody = 'Hi! Please click the link to complete the creation of your store account for Thriftee.'.$link;
+
+            if($mail->send())
+            {
+                return "";
+            }
+            else
+            {
+                return "Email not send";
+            }
+
+
+        }
+        catch (Exception $e)
+        {
+            return $e;
         }
     }
 
@@ -137,5 +192,10 @@ class CustomerController extends Controller
     function getCustomerByEmail(Request $req){
         $result = Customer::where("email", $req->email)->first();
         return $result;
+    }
+
+    function getStatus(Request $req){
+        $result = Customer::where("uuid", $req->uuid)->first();
+        return $result->status;
     }
 }

@@ -78,12 +78,13 @@ Route::get('/bidding/get', [BiddingController::class, 'getBidding']);
 Route::get('/bidding/by_product', [BiddingController::class, 'getBiddingByProduct']);
 Route::get('/bidding/by_store', [BiddingController::class, 'getBiddingByStore']);
 
-//Customers
+//Customer
 Route::post('/customer/register', [CustomerController::class, 'addCustomer']);
 Route::post('/customer/update', [CustomerController::class, 'updateCustomer']);
 Route::post('/customer/update_password', [CustomerController::class, 'updatePassword']);
 Route::get('/customer/get', [CustomerController::class, 'getCustomerByUUID']);
 Route::get('/customer/by_email', [CustomerController::class, 'getCustomerByEmail']);
+Route::get('/customer/status', [CustomerController::class, 'getStatus']);
 
 //Bid
 Route::post('/bid/add', [BidController::class, 'addBid']);
