@@ -27,6 +27,10 @@ class MediaController extends Controller
         }
     }
 
+    function deleteAllProductImages() {
+        Storage::disk('public')->delete('images/product');
+    }
+
     function uploadProductImages($images, $product_uuid)
     {
         $path = 'images/product/'.$product_uuid;
