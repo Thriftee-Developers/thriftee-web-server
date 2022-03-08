@@ -13,7 +13,7 @@ class MediaController extends Controller
     function makeDirectory(Request $req)
     {
         $folder = 'public/'.$req->folder_name;
-        if(!Storage::exists($folder)) {
+        if(!Storage::disk($folder)) {
             $result = Storage::disk('public')->makeDirectory($folder, 0777);
             if($result) {
                 return ["success" => "success"];
@@ -30,10 +30,9 @@ class MediaController extends Controller
     function uploadProductImages($images, $product_uuid)
     {
         $path = 'images/product/'.$product_uuid;
-        $folder = 'public/'.$path;
 
-        if(!Storage::exists($folder)) {
-            Storage::makeDirectory($folder, 0755);
+        if(!Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->makeDirectory($path, 0755);
         }
 
         if(count($images) > 0) {
@@ -41,6 +40,7 @@ class MediaController extends Controller
             foreach($images as $file) {
                 $extension = $file->getClientOriginalExtension();
                 $filename = $product_uuid ."_" . (string) $i;
+                $folder = 'public/'.$path;
                 $file->storeAs($folder, $filename.".".$extension);
                 $i++;
 
