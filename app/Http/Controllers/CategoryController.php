@@ -9,8 +9,13 @@ use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
-    function getCategories(){
+    function getAllCategory(){
         $result = Categories::all();
+        return $result;
+    }
+
+    function getCategory(Request $req){
+        $result = Categories::where("uuid", $req->uuid)->first();
         return $result;
     }
 

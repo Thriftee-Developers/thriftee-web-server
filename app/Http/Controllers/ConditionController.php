@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Conditions;
-use App\Models\ProductCondition;
 use Illuminate\Support\Str;
 
 class ConditionController extends Controller
@@ -14,9 +13,9 @@ class ConditionController extends Controller
         $result = Conditions::all();
         return $result;
     }
-    
-    function getConditionByProduct(Request $req){
-        $result = ProductCondition::where("product", $req->product)->get();
+
+    function getCondition(Request $req){
+        $result = Conditions::where("uuid", $req->uuid)->first();
         return $result;
     }
 

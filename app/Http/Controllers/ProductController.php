@@ -6,6 +6,13 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use Illuminate\Support\Str;
 
+use App\Models\Bid;
+use App\Models\Biddings;
+use App\Models\ProductCategory;
+use App\Models\ProductCondition;
+use App\Models\ProductImage;
+use App\Models\Tag;
+
 class ProductController extends Controller
 {
     function getAllProducts(){
@@ -20,6 +27,11 @@ class ProductController extends Controller
 
     function getProductByID(Request $req){
         $result = Product::where("product_id", $req->product_id)->first();
+        return $result;
+    }
+
+    function getConditionByProduct(Request $req){
+        $result = Product::join("productconditions", "productconditions.product","=","products.uuid")->where("product", $req->product)->get();
         return $result;
     }
 
@@ -77,6 +89,25 @@ class ProductController extends Controller
     {
         $result = Product::where('uuid', $req->uuid)->delete();
         return $result;
+    }
+
+    function deleteAllProduct(){
+        $result = Bid::truncate();
+        if($result == ""){
+            $result = Biddings::truncate();
+            if($result == ""){
+                $result = ProductCategory::truncate();
+                if($result == ""){
+                    $result = ProductCondition::truncate();
+                    if($result == ""){
+                        $result = ProductImage::truncate();
+                        if($result == ""){
+
+                        }
+                    }
+                }
+            }
+        }
     }
 
     function checkProductID($product_id){
