@@ -73,8 +73,9 @@ class StoreController extends Controller
 
     function checkEmail($email)
     {
-        $store = Store::where('email', $email)->get();
-        if(count($store) > 0) return false;
+        $customer = Customer::where('email', $email)->get();
+        $store = Store::where("email", $email)->get();
+        if (count($customer) > 0 || count($store) > 0) return false;
         else return true;
     }
 

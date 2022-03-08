@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\Customer;
+use App\Models\Store;
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 use Illuminate\Support\Str;
 
 class CustomerController extends Controller
@@ -96,7 +101,8 @@ class CustomerController extends Controller
     function checkEmail($email)
     {
         $customer = Customer::where('email', $email)->get();
-        if (count($customer) > 0) return false;
+        $store = Store::where("email", $email)->get();
+        if (count($customer) > 0 || count($store) > 0) return false;
         else return true;
     }
 
@@ -123,9 +129,7 @@ class CustomerController extends Controller
                     else {
                         return ["error" => "This account is terminated!"];
                     }
-
                 }
-
             }
             else {
                 return ["error" => "Incorrect email or password!"];
