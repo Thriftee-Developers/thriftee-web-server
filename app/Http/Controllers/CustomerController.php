@@ -16,10 +16,9 @@ class CustomerController extends Controller
         $customer->lname = $req->lname;
         $customer->fname = $req->fname;
         $customer->email = $req->email;
-        $customer->email = $req->email;
+        $customer->contact_no = $req->contact_no;
         $customer->province = $req->province;
         $customer->municipality = $req->municipality;
-        $customer->barangay = $req->barangay;
         $customer->barangay = $req->barangay;
         $customer->street = $req->street;
         $customer->profile_uri = "";

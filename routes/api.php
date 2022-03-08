@@ -11,6 +11,7 @@ use App\Http\Controllers\ConditionController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\BiddingController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\BidController;
 
 /*
 |--------------------------------------------------------------------------
@@ -78,8 +79,14 @@ Route::get('/bidding/by_product', [BiddingController::class, 'getBiddingByProduc
 Route::get('/bidding/by_store', [BiddingController::class, 'getBiddingByStore']);
 
 //Customers
-Route::post('/customer/add', [CustomerController::class, 'addCustomer']);
+Route::post('/customer/register', [CustomerController::class, 'addCustomer']);
 Route::post('/customer/update', [CustomerController::class, 'updateCustomer']);
 Route::post('/customer/update_password', [CustomerController::class, 'updatePassword']);
 Route::get('/customer/get', [CustomerController::class, 'getCustomerByUUID']);
 Route::get('/customer/by_email', [CustomerController::class, 'getCustomerByEmail']);
+
+//Bid
+Route::post('/bid/add', [BidController::class, 'addBid']);
+Route::get('/bid/highest', [BidController::class, 'getHighestBidByProduct']);
+Route::get('/bid/by_product', [BidController::class, 'getBidByProduct']);
+Route::get('/bid/by_customer_product', [BidController::class, 'getBidByProductAndCustomer']);
