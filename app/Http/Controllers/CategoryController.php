@@ -20,14 +20,12 @@ class CategoryController extends Controller
         $categories->name=$req->name;
         $categories->description=$req->description;
 
-        $error="";
-
         if($this->checkExistingCategory($req)){
             $categories->save();
+            return ["success" => "success"];
         }else{
-            $error="The categoriy is exisitng.";
+            return ["error" => "The category is exisitng."];
         }
-        return $error;
     }
 
     function addProductCategory($product, $category){
@@ -36,7 +34,7 @@ class CategoryController extends Controller
         $productCategory->product = $product;
         $productCategory->product_category = $category;
 
-        return  $productCategory->save();
+        return $productCategory->save();
     }
 
     function checkExistingCategory(Request $req){

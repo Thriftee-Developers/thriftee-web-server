@@ -41,7 +41,7 @@ class BiddingController extends Controller
         $bidding->status=0;
 
         $bidding->save();
-        return "success";
+        return ["success" => "success"];
     }
 
     function updateBidding(Request $req){
@@ -55,6 +55,6 @@ class BiddingController extends Controller
                 "end_time" => $req->end_time,
                 "status" => $req->status,
             ]);
-
+        return ["success" => "success"];
     }
 }

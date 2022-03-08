@@ -25,10 +25,10 @@ class ConditionController extends Controller
 
         if($this->checkExistingCondition($req)){
             $conditions->save();
+            return ["success" => "success"];
         }else{
-            $error="The condition is exisitng.";
+            return ["error" => "The condition is exisitng."];
         }
-        return $error;
     }
 
     function addProductCondition($product, $condition){

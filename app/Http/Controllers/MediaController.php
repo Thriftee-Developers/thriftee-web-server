@@ -33,10 +33,10 @@ class MediaController extends Controller
                 $productImage->save();
 
             }
-            return "success";
+            return ["success" => "success"];
         }
         else {
-            return "No files";
+            return ["error" => "No files."];
         }
 
     }

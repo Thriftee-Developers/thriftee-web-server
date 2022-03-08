@@ -13,6 +13,11 @@ class ProductController extends Controller
         return $result;
     }
 
+    function getProduct(Request $req){
+        $result = Product::where("uuid", $req->uuid)->get();
+        return $result;
+    }
+
     function getStoreProducts(Request $req){
         $result = Product::where('store', $req->store)->get();
         return $result;
@@ -51,19 +56,16 @@ class ProductController extends Controller
                 $req->product = $product->uuid;
                 $biddingCtrl->addBidding($req);
 
-                $error = "success";
+                return ["success" => "success"];
             }
             else {
-                $error = "Error saving product";
+                return ["error" => "Error saving product."];
             }
 
         }
         else{
-            $error = "The product ID is not unique.";
+            return ["error" => "The product ID is not unique."];
         }
-
-
-        return $error;
     }
 
     function deleteProduct(Request $req)

@@ -47,8 +47,6 @@ class StoreController extends Controller
 
         //$store -> password = Hash::make($req -> input('password'));
 
-        $error = "";
-
         if($this -> checkEmail($req->email))
         {
             if($this -> checkContactNo($req->contact_no))
@@ -56,19 +54,18 @@ class StoreController extends Controller
                 $error = $this -> sendCompletionLink($req->uuid, $req->email);
                 if($error == "") {
                     $store -> save();
+                    return ["success" => "success"];
                 }
             }
             else
             {
-                $error = "Contact number is already registered!";
+                return ["error" => "Contact number is already registered!"];
             }
         }
         else
         {
-            $error = "Email is already registered!";
+            return ["error" => "Email is already registered!"];
         }
-
-        return $error;
     }
 
     function checkEmail($email)
