@@ -30,11 +30,6 @@ class ProductController extends Controller
         return $result;
     }
 
-    function getConditionByProduct(Request $req){
-        $result = Product::join("productconditions", "productconditions.product","=","products.uuid")->where("product", $req->product)->get();
-        return $result;
-    }
-
     function getStoreProducts(Request $req){
         $result = Product::where('store', $req->store)->get();
         return $result;
