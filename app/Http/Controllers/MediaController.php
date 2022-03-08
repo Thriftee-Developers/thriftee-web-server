@@ -14,7 +14,7 @@ class MediaController extends Controller
     {
         $folder = 'public/'.$req->folder_name;
         if(!Storage::exists($folder)) {
-            $result = Storage::makeDirectory($folder, $req->permission, true);
+            $result = Storage::disk('public')->makeDirectory($folder, 0777);
             if($result) {
                 return ["success" => "success"];
             }
