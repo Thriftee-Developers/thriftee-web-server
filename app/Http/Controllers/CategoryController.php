@@ -43,7 +43,10 @@ class CategoryController extends Controller
     }
 
     function getCategoryByProduct(Request $req){
-        $result = ProductCategory::where("product", $req->product)->get();
+        $result = ProductCategory::
+            join('categories','productcategories.product_category','=','categories.uuid')
+            ->where("product", $req->product)
+            ->get();
         return $result;
     }
 

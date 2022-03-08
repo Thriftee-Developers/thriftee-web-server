@@ -48,7 +48,7 @@ Route::post('/product/add', [ProductController::class, 'addProduct']);
 Route::post('/product/store', [ProductController::class, 'getStoreProducts']);
 Route::post('/product/delete', [ProductController::class, 'deleteProduct']);
 Route::post('/product/category', [CategoryController::class, 'getCategoryByProduct']);
-Route::post('/product/condition', [ProductController::class, 'getConditionByProduct']);
+Route::post('/product/condition', [ConditionController::class, 'getConditionByProduct']);
 
 //Product Condition
 // Route::get('/product_condition/all',[ProductConditionController::class, 'getProductCondition']);
