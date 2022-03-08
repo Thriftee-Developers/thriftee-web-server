@@ -10,10 +10,10 @@ use Illuminate\Support\Str;
 class MediaController extends Controller
 {
     //
-    function makeDirectory($folderName)
+    function makeDirectory(Request $req)
     {
-        if(!Storage::exists($folderName)) {
-            $result = Storage::makeDirectory($folderName, 0755);
+        if(!Storage::exists($req->folder_name)) {
+            $result = Storage::makeDirectory($req->folder_name, 0755);
             if($result) {
                 return ["success" => "success"];
             }
