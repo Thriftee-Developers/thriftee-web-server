@@ -59,7 +59,7 @@ class CustomerController extends Controller
 
         $mail = new PHPMailer(true);
         $emailFrom = 'admin@thriftee.com';
-        $link = 'http://localhost:3000'.'/store/account_completion?'.$uuid;
+        $link = 'http://localhost:3000'.'/customer/account_completion?'.$uuid;
 
         try
         {
@@ -71,10 +71,10 @@ class CustomerController extends Controller
             $mail->isHTML(true);                                  //Set email format to HTML
             $mail->Subject = 'Customer Account Completion';
             $mail->Body    = 'Hi!<br>
-                            Please click the link below to complete the creation of your store account for <h1>Thriftee</h1>.<br>
+                            Please click the link below to complete the creation of your customer account for <h1>Thriftee</h1>.<br>
                             <h1>'.$link.'</h1>';
 
-            $mail->AltBody = 'Hi! Please click the link to complete the creation of your store account for Thriftee.'.$link;
+            $mail->AltBody = 'Hi! Please click the link to complete the creation of your customer account for Thriftee.'.$link;
 
             if($mail->send())
             {
@@ -105,6 +105,38 @@ class CustomerController extends Controller
         $customer = Customer::where('email', $email)->get();
         if (count($customer) > 0) return false;
         else return true;
+    }
+    function login(Request $req)
+    {
+        $customer = Customer::where('email', $req->email)->first();
+        if($customer)
+        {
+
+            if(Hash::check($req->password, $customer->password)) {
+                if($customer-> status == 1) {
+                    return $customer;
+                }
+                else {
+                    if($customer->status == 0) {
+                        return ["error" => "Incorrect email or password!"];
+                    }
+                    else {
+                        return ["error" => "This account is terminated!"];
+                    }
+
+                }
+
+            }
+            else {
+                return ["error" => "Incorrect email or password!"];
+            }
+
+        }
+        else
+        {
+            return ["error" => "There's no account associated with this email"];
+        }
+
     }
 
     function updatePassword(Request $req)
