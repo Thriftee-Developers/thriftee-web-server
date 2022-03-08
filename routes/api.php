@@ -83,6 +83,7 @@ Route::post('/bidding/update', [BiddingController::class, 'updateBidding']);
 Route::get('/bidding/all', [BiddingController::class, 'getAllBidding']);
 Route::post('/bidding/get', [BiddingController::class, 'getBidding']);
 Route::post('/bidding/by_product', [BiddingController::class, 'getBiddingByProduct']);
+Route::post('/bidding/latest_by_product', [BiddingController::class, 'getLatestBiddingByProduct']);
 Route::post('/bidding/by_store', [BiddingController::class, 'getBiddingByStore']);
 
 //Customer

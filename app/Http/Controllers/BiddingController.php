@@ -23,6 +23,15 @@ class BiddingController extends Controller
         return $result;
     }
 
+    function getLatestBiddingByProduct(Request $req){
+        $result = Biddings::
+            where("product", $req->product)
+            ->orderBy('created_at','desc')
+            ->first();
+        return $result;
+    }
+
+
     function getBiddingByStore(Request $req){
         $result = Biddings::join("products","biddings.product", "=", "products.uuid")->where("store", $req->uuid)->get();
         return $result;
