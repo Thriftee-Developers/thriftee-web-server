@@ -33,7 +33,7 @@ class CustomerController extends Controller
                 $error = $this -> sendEmailVerification($req->uuid, $req->email);
                 if($error == "") {
                     $customer -> save();
-                    return ["success" => "Customer added successfully."];
+                    return ["success" => "success"];
                 }
                 return ["error" => $error];
             }
