@@ -43,6 +43,7 @@ Route::post('/store/get_status', [StoreController::class, 'getStatus']);
 //Products
 Route::get('/product/all',[ProductController::class, 'getAllProducts']);
 Route::get('/product/get', [ProductController::class, 'getProduct']);
+Route::get('/product/id', [ProductController::class, 'getProductByID']);
 Route::post('/product/add', [ProductController::class, 'addProduct']);
 Route::post('/product/store', [ProductController::class, 'getStoreProducts']);
 Route::post('/product/delete', [ProductController::class, 'deleteProduct']);
