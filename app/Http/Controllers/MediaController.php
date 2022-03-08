@@ -29,6 +29,7 @@ class MediaController extends Controller
                 $productImage = new ProductImage();
                 $productImage->uuid = Str::uuid()->toString();
                 $productImage->product = $product_uuid;
+                $productImage->name = $filename;
                 $productImage->path = $result;
                 $productImage->save();
 
@@ -43,7 +44,7 @@ class MediaController extends Controller
 
     function getProductImages (Request $req) {
         return ProductImage::where('product', $req->product_uuid)
-            ->orderBy('name','asc')
+            ->orderBy('path','asc')
             ->get();
     }
 

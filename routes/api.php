@@ -42,8 +42,8 @@ Route::post('/store/get_status', [StoreController::class, 'getStatus']);
 
 //Products
 Route::get('/product/all',[ProductController::class, 'getAllProducts']);
-Route::get('/product/get', [ProductController::class, 'getProduct']);
-Route::get('/product/id', [ProductController::class, 'getProductByID']);
+Route::post('/product/get', [ProductController::class, 'getProduct']);
+Route::post('/product/id', [ProductController::class, 'getProductByID']);
 Route::post('/product/add', [ProductController::class, 'addProduct']);
 Route::post('/product/store', [ProductController::class, 'getStoreProducts']);
 Route::post('/product/delete', [ProductController::class, 'deleteProduct']);
@@ -76,22 +76,22 @@ Route::post('/media/get_product_images', [MediaController::class, 'getProductIma
 Route::post('/bidding/add', [BiddingController::class, 'addBidding']);
 Route::post('/bidding/update', [BiddingController::class, 'updateBidding']);
 Route::get('/bidding/all', [BiddingController::class, 'getAllBidding']);
-Route::get('/bidding/get', [BiddingController::class, 'getBidding']);
-Route::get('/bidding/by_product', [BiddingController::class, 'getBiddingByProduct']);
-Route::get('/bidding/by_store', [BiddingController::class, 'getBiddingByStore']);
+Route::post('/bidding/get', [BiddingController::class, 'getBidding']);
+Route::post('/bidding/by_product', [BiddingController::class, 'getBiddingByProduct']);
+Route::post('/bidding/by_store', [BiddingController::class, 'getBiddingByStore']);
 
 //Customer
 Route::post('/customer/register', [CustomerController::class, 'addCustomer']);
 Route::post('/customer/update', [CustomerController::class, 'updateCustomer']);
 Route::post('/customer/update_password', [CustomerController::class, 'updatePassword']);
-Route::get('/customer/get', [CustomerController::class, 'getCustomerByUUID']);
-Route::get('/customer/by_email', [CustomerController::class, 'getCustomerByEmail']);
-Route::get('/customer/status', [CustomerController::class, 'getStatus']);
+Route::post('/customer/get', [CustomerController::class, 'getCustomerByUUID']);
+Route::post('/customer/by_email', [CustomerController::class, 'getCustomerByEmail']);
+Route::post('/customer/status', [CustomerController::class, 'getStatus']);
 Route::post('/customer/login', [CustomerController::class, 'login']);
 
 //Bid
 Route::post('/bid/add', [BidController::class, 'addBid']);
-Route::get('/bid/highest', [BidController::class, 'getHighestBidByProduct']);
-Route::get('/bid/by_customer', [BidController::class, 'getAllBidByCustomer']);
-Route::get('/bid/by_product', [BidController::class, 'getBidByProduct']);
-Route::get('/bid/by_customer_product', [BidController::class, 'getBidByProductAndCustomer']);
+Route::post('/bid/highest', [BidController::class, 'getHighestBidByProduct']);
+Route::post('/bid/by_customer', [BidController::class, 'getAllBidByCustomer']);
+Route::post('/bid/by_product', [BidController::class, 'getBidByProduct']);
+Route::post('/bid/by_customer_product', [BidController::class, 'getBidByProductAndCustomer']);
