@@ -39,12 +39,12 @@ class CustomerController extends Controller
             }
             else
             {
-                return ["warning"=>"Contact number is already registered!"];
+                return ["error"=>"Contact number is already registered!"];
             }
         }
         else
         {
-            return ["warning" => "Email is already registered!."];
+            return ["error" => "Email is already registered!."];
         }
     }
     function resendEmailVerification(Request $req)
