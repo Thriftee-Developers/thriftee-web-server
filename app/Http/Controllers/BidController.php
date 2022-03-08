@@ -19,7 +19,7 @@ class BidController extends Controller
         $bid->date=$req->date;
 
         $bid->save();
-        return ["success"=>"Bid added successfully."];
+        return ["success"=>"success"];
     }
 
     function getAllBidByCustomer(Request $req){

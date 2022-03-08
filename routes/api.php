@@ -85,6 +85,7 @@ Route::post('/customer/update_password', [CustomerController::class, 'updatePass
 Route::get('/customer/get', [CustomerController::class, 'getCustomerByUUID']);
 Route::get('/customer/by_email', [CustomerController::class, 'getCustomerByEmail']);
 Route::get('/customer/status', [CustomerController::class, 'getStatus']);
+Route::post('/customer/login', [CustomerController::class, 'login']);
 
 //Bid
 Route::post('/bid/add', [BidController::class, 'addBid']);
