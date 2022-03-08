@@ -12,8 +12,9 @@ class MediaController extends Controller
     //
     function makeDirectory(Request $req)
     {
-        if(!Storage::exists($req->folder_name)) {
-            $result = Storage::makeDirectory($req->folder_name, 0755);
+        $folder = 'public/'.$req->folder_name;
+        if(!Storage::exists($folder)) {
+            $result = Storage::makeDirectory($folder, 0644);
             if($result) {
                 return ["success" => "success"];
             }
