@@ -37,6 +37,11 @@ class CategoryController extends Controller
         return $productCategory->save();
     }
 
+    function getCategoryByProduct(Request $req){
+        $result = ProductCategory::where("product", $req->product)->get();
+        return $result;
+    }
+
     function checkExistingCategory(Request $req){
         $categories = Categories::where("name", $req->name)->get();
         if(count($categories) > 0) return false;

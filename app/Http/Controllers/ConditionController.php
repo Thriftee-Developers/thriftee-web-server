@@ -14,6 +14,11 @@ class ConditionController extends Controller
         $result = Conditions::all();
         return $result;
     }
+    
+    function getConditionByProduct(Request $req){
+        $result = ProductCondition::where("product", $req->product)->get();
+        return $result;
+    }
 
     function addCondition(Request $req){
         $conditions = new Conditions();
