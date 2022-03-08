@@ -16,7 +16,7 @@ class MediaController extends Controller
         $folder = 'public/'.$path;
 
         if(!Storage::exists($folder)) {
-            Storage::makeDirectory($folder, 0755, true, true);
+            Storage::makeDirectory($folder);
         }
 
         if(count($images) > 0) {
