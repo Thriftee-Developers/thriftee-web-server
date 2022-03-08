@@ -10,13 +10,29 @@ use Illuminate\Support\Str;
 class MediaController extends Controller
 {
     //
+    function makeDirectory($folderName)
+    {
+        if(!Storage::exists($folderName)) {
+            $result = Storage::makeDirectory($folderName, 0755);
+            if($result) {
+                return ["success" => "success"];
+            }
+            else {
+                return ["error" => "Error"];
+            }
+        }
+        else {
+            return ["error" => "Folder already existed"];
+        }
+    }
+
     function uploadProductImages($images, $product_uuid)
     {
         $path = 'images/product/'.$product_uuid;
         $folder = 'public/'.$path;
 
         if(!Storage::exists($folder)) {
-            Storage::makeDirectory($folder);
+            Storage::makeDirectory($folder, 0755);
         }
 
         if(count($images) > 0) {
