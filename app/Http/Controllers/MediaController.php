@@ -31,7 +31,7 @@ class MediaController extends Controller
                 $productImage->uuid = Str::uuid()->toString();
                 $productImage->product = $product_uuid;
                 $productImage->name = $filename;
-                $productImage->path = $path;
+                $productImage->path = $path."/".$filename.".".$extension;
                 $productImage->save();
 
             }
