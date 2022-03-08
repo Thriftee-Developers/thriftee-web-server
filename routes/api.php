@@ -100,3 +100,6 @@ Route::post('/bid/highest', [BidController::class, 'getHighestBidByProduct']);
 Route::post('/bid/by_customer', [BidController::class, 'getAllBidByCustomer']);
 Route::post('/bid/by_product', [BidController::class, 'getBidByProduct']);
 Route::post('/bid/by_customer_product', [BidController::class, 'getBidByProductAndCustomer']);
+
+//Dummy Route
+Route::get('/product/delete_all', [ProductController::class, 'deleteAllProduct']);

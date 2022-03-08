@@ -11,7 +11,9 @@ use App\Models\Biddings;
 use App\Models\ProductCategory;
 use App\Models\ProductCondition;
 use App\Models\ProductImage;
-use App\Models\Tag;
+use App\Models\ProductTag;
+
+use DB;
 
 class ProductController extends Controller
 {
@@ -21,7 +23,7 @@ class ProductController extends Controller
     }
 
     function getProduct(Request $req){
-        $result = Product::where("uuid", $req->uuid)->get();
+        $result = Product::where("uuid", $req->uuid)->first();
         return $result;
     }
 
@@ -87,17 +89,29 @@ class ProductController extends Controller
     }
 
     function deleteAllProduct(){
-        $result = Bid::truncate();
-        if($result == ""){
-            $result = Biddings::truncate();
-            if($result == ""){
-                $result = ProductCategory::truncate();
-                if($result == ""){
-                    $result = ProductCondition::truncate();
-                    if($result == ""){
-                        $result = ProductImage::truncate();
-                        if($result == ""){
-
+        $result = Bid::query()->delete();
+        if($result != ""){
+            echo "Bid Deleted!";
+            $result = Biddings::query()->delete();
+            if($result != ""){
+                echo "Biddings Deleted";
+                $result = ProductCategory::query()->delete();
+                if($result != ""){
+                    echo "ProductCategory Deleted!";
+                    $result = ProductCondition::query()->delete();
+                    if($result != ""){
+                        echo "ProductCondition Deleted!";
+                        $result = ProductImage::query()->delete();
+                        if($result != ""){
+                            echo "ProductImage Deleted!";
+                            $result = ProductTag::query()->delete();
+                            if($result != ""){
+                                echo "ProductTag Deleted!";
+                                $result = Product::query()->delete();
+                                if($result!=""){
+                                    echo "Prodyct Deleted!";
+                                }
+                            }
                         }
                     }
                 }
