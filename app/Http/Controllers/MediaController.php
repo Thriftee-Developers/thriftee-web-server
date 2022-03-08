@@ -12,7 +12,7 @@ class MediaController extends Controller
     //
     function uploadProductImages($images, $product_uuid)
     {
-        $folder = 'public/images/product/'.$product_uuid;
+        $folder = 'images/product/'.$product_uuid;
 
         if(!Storage::exists($folder)) {
             Storage::makeDirectory($folder, 0775, true, true);
