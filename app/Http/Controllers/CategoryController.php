@@ -16,7 +16,7 @@ class CategoryController extends Controller
 
     function addCategory(Request $req){
         $categories = new Categories();
-        $categories->uuid=$req->uuid;
+        $categories->uuid=Str::uuid();
         $categories->name=$req->name;
         $categories->description=$req->description;
 

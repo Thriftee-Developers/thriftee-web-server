@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+use Illuminate\Support\Str;
 
 class StoreController extends Controller
 {
@@ -27,7 +28,7 @@ class StoreController extends Controller
     function addStore(Request $req)
     {
         $store = new Store;
-        $store->uuid = $req->uuid;
+        $store->uuid = Str::uuid();
         $store->store_id = $req->store_id;
         $store->store_name = $req->store_name;
         $store->phone_code = $req->phone_code;

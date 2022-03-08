@@ -17,7 +17,7 @@ class ConditionController extends Controller
 
     function addCondition(Request $req){
         $conditions = new Conditions();
-        $conditions->uuid=$req->uuid;
+        $conditions->uuid=Str::uuid();
         $conditions->name=$req->name;
         $conditions->description=$req->description;
 

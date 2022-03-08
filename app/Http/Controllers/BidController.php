@@ -38,7 +38,7 @@ class BidController extends Controller
         $result = Bid::join("biddings", "bids.bidding", "=", "biddings.uuid")
             ->where("product", $req->product)
             ->orderBy("amount","desc")
-            ->get();
+            ->first();
         return $result; 
     }
 

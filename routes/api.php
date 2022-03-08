@@ -47,14 +47,14 @@ Route::post('/product/store', [ProductController::class, 'getStoreProducts']);
 Route::post('/product/delete', [ProductController::class, 'deleteProduct']);
 
 //Product Condition
-Route::get('/product_condition/all',[ProductConditionController::class, 'getProductCondition']);
+// Route::get('/product_condition/all',[ProductConditionController::class, 'getProductCondition']);
 //Route::post('/product_condition/add', [ProductConditionController::class, 'addProductCondition']);
-Route::post('/product_condition/delete', [ProductConditionController::class, 'deleteProductCondition']);
+// Route::post('/product_condition/delete', [ProductConditionController::class, 'deleteProductCondition']);
 
 //Product Category
-Route::get('/product_category/all',[ProductCategoryController::class, 'getProductCategory']);
-Route::post('/product_category/add', [ProductCategoryController::class, 'addProductCategory']);
-Route::post('/product_category/delete', [ProductCategoryController::class, 'deleteProductCategory']);
+// Route::get('/product_category/all',[ProductCategoryController::class, 'getProductCategory']);
+// Route::post('/product_category/add', [ProductCategoryController::class, 'addProductCategory']);
+// Route::post('/product_category/delete', [ProductCategoryController::class, 'deleteProductCategory']);
 
 //Condition
 Route::get('/category/all',[CategoryController::class, 'getCategories']);
@@ -88,5 +88,6 @@ Route::get('/customer/by_email', [CustomerController::class, 'getCustomerByEmail
 //Bid
 Route::post('/bid/add', [BidController::class, 'addBid']);
 Route::get('/bid/highest', [BidController::class, 'getHighestBidByProduct']);
+Route::get('/bid/by_customer', [BidController::class, 'getAllBidByCustomer']);
 Route::get('/bid/by_product', [BidController::class, 'getBidByProduct']);
 Route::get('/bid/by_customer_product', [BidController::class, 'getBidByProductAndCustomer']);

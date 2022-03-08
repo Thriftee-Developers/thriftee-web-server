@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\Customer;
+use Illuminate\Support\Str;
 
 class CustomerController extends Controller
 {
@@ -12,17 +13,17 @@ class CustomerController extends Controller
     function addCustomer(Request $req)
     {
         $customer = new Customer();
-        $customer->uuid = $req->uuid;
+        $customer->uuid = Str::uuid();
         $customer->lname = $req->lname;
         $customer->fname = $req->fname;
         $customer->email = $req->email;
-        $customer->contact_no = $req->contact_no;
-        $customer->province = $req->province;
-        $customer->municipality = $req->municipality;
-        $customer->barangay = $req->barangay;
-        $customer->street = $req->street;
+        $customer->contact_no = "";
+        $customer->province = "";
+        $customer->municipality = "";
+        $customer->barangay = "";
+        $customer->street = "";
         $customer->profile_uri = "";
-        $customer->password = "";
+        $customer->password = Hash::make($req->password);
         $customer->status = 0;
 
         if ($this->checkEmail($req->email)) {
