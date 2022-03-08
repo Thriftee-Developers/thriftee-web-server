@@ -12,7 +12,8 @@ class MediaController extends Controller
     //
     function uploadProductImages($images, $product_uuid)
     {
-        $folder = 'images/product/'.$product_uuid;
+        $path = 'images/product/'.$product_uuid;
+        $folder = 'public/'.$path;
 
         if(!Storage::exists($folder)) {
             Storage::makeDirectory($folder, 0775, true, true);
@@ -23,14 +24,14 @@ class MediaController extends Controller
             foreach($images as $file) {
                 $extension = $file->getClientOriginalExtension();
                 $filename = $product_uuid ."_" . (string) $i;
-                $result = $file->storeAs($folder, $filename.".".$extension);
+                $file->storeAs($folder, $filename.".".$extension);
                 $i++;
 
                 $productImage = new ProductImage();
                 $productImage->uuid = Str::uuid()->toString();
                 $productImage->product = $product_uuid;
                 $productImage->name = $filename;
-                $productImage->path = $result;
+                $productImage->path = $path;
                 $productImage->save();
 
             }
