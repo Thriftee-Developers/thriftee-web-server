@@ -67,7 +67,7 @@ Route::post('/category/delete', [CategoryController::class, 'deleteCategory']);
 Route::post('/category/get', [CategoryController::class, 'getCategory']);
 
 //Category
-Route::get('/condition/all',[ConditionController::class, 'getAllCondition']);
+Route::get('/condition/all',[ConditionController::class, 'getAllConditions']);
 Route::post('/condition/add', [ConditionController::class, 'addCondition']);
 Route::post('/condition/delete', [ConditionController::class, 'deleteCondition']);
 Route::post('/condition/get', [ConditionController::class, 'getCondition']);
@@ -83,6 +83,7 @@ Route::post('/bidding/update', [BiddingController::class, 'updateBidding']);
 Route::get('/bidding/all', [BiddingController::class, 'getAllBidding']);
 Route::post('/bidding/get', [BiddingController::class, 'getBidding']);
 Route::post('/bidding/by_product', [BiddingController::class, 'getBiddingByProduct']);
+Route::post('/bidding/latest_by_product', [BiddingController::class, 'getLatestBiddingByProduct']);
 Route::post('/bidding/by_store', [BiddingController::class, 'getBiddingByStore']);
 
 //Customer

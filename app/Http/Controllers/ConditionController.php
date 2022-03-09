@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 
 class ConditionController extends Controller
 {
-    function getConditions(){
+    function getAllConditions(){
         $result = Conditions::all();
         return $result;
     }
