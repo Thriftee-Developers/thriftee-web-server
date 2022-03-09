@@ -102,5 +102,10 @@ Route::post('/bid/by_customer', [BidController::class, 'getAllBidByCustomer']);
 Route::post('/bid/by_product', [BidController::class, 'getBidByProduct']);
 Route::post('/bid/by_customer_product', [BidController::class, 'getBidByProductAndCustomer']);
 
+//Rating
+Route::post('/rating/add', [RatingController::class, 'addRating']);
+Route::post('/rating/by_store', [RatingController::class, 'getRatingByStore']);
+Route::post('/rating/by_customer_store', [RatingController::class, 'getRatingByCustomerAndStore']);
+
 //Dummy Route
 Route::get('/product/delete_all', [ProductController::class, 'deleteAllProduct']);
