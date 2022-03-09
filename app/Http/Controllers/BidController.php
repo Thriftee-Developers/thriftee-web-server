@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Bid;
+use App\Models\Biddings;
 use Illuminate\Support\Str;
 
 class BidController extends Controller
@@ -17,11 +18,25 @@ class BidController extends Controller
         $bid->customer=$req->customer;
         $bid->amount=$req->amount;
         $bid->date=$req->date;
-
-        $bid->save();
-        return ["success"=>"success"];
+        $result = Biddings::where("uuid",$req->bidding)->first();
+        $highestBid = Bid::orderBy("amount","desc")->first()->amount;
+        if($highestBid!=""){
+            if($req->amount >= ($highestBid + $result->increment)){
+                $bid->save();
+                return ["success"=>"success"];
+            }else{
+                return ["error"=>"Not enough bid amount."];
+            }
+        }else{
+            if($req->amount >= ($result->minimum)){
+                $bid->save();
+                return ["success"=>"success"];
+            }else{
+                return ["error" => "Bid Failed! Not Enough bid."];
+            }
+        }
     }
-
+            
     function getAllBidByCustomer(Request $req){
         $result = Bid::where("customer",$req->customer)->get();
         return $result;
