@@ -36,6 +36,11 @@ class BidController extends Controller
             }
         }
     }
+
+    function getTotalNumberOfBids(){
+        $result = Bid::get()->count();
+        return $result;
+    }
             
     function getAllBidByCustomer(Request $req){
         $result = Bid::where("customer",$req->customer)->get();
