@@ -101,7 +101,7 @@ Route::post('/bid/highest', [BidController::class, 'getHighestBidByProduct']);
 Route::post('/bid/by_customer', [BidController::class, 'getAllBidByCustomer']);
 Route::post('/bid/by_product', [BidController::class, 'getBidByProduct']);
 Route::post('/bid/by_customer_product', [BidController::class, 'getBidByProductAndCustomer']);
-Route::get('/bid/total_number_of_bids', [BidController::class, 'getTotalNumberOfBids']);
+Route::post('/bid/total_number_of_bids', [BidController::class, 'getTotalNumberOfBids']);
 
 //Rating
 Route::post('/rating/add', [RatingController::class, 'addRating']);

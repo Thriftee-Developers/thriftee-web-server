@@ -37,8 +37,8 @@ class BidController extends Controller
         }
     }
 
-    function getTotalNumberOfBids(){
-        $result = Bid::get()->count();
+    function getTotalNumberOfBids(Request $req){
+        $result = Bid::where("bidding", $req->bidding)->get()->count();
         return $result;
     }
             
