@@ -193,10 +193,10 @@ class StoreController extends Controller
             else {
 
                 //Check current password
-                if(Hash::check($req->password, $store->password)) {
+                if(Hash::check($req->current_password, $store->password)) {
 
                     //Update password
-                    $result = $store->update(['password' => Hash::make($req->password)]);
+                    $result = $store->update(['password' => Hash::make($req->new_password)]);
                     if($result){
                         return $result;
                     }
