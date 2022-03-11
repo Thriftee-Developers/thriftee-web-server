@@ -173,10 +173,10 @@ class CustomerController extends Controller
             else {
 
                 //Check current password
-                if(Hash::check($req->password, $customer->password)) {
+                if(Hash::check($req->current_password, $customer->password)) {
 
                     //Update password
-                    $result = $customer->update(['password' => Hash::make($req->password)]);
+                    $result = $customer->update(['password' => Hash::make($req->new_password)]);
                     if($result){
                         return $result;
                     }
