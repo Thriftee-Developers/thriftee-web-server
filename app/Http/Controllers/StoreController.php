@@ -52,7 +52,7 @@ class StoreController extends Controller
         {
             if($this -> checkContactNo($req->contact_no))
             {
-                $error = $this -> sendCompletionLink($req->uuid, $req->email);
+                $error = $this -> sendCompletionLink($store->uuid, $req->email);
                 if($error == "") {
                     $store -> save();
                     return ["success" => "success"];
