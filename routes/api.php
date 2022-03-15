@@ -12,6 +12,9 @@ use App\Http\Controllers\MediaController;
 use App\Http\Controllers\BiddingController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\BidController;
+use App\Http\Controllers\FeaturedProductController;
+use App\Http\Controllers\SliderProductController;
+use App\Http\Controllers\StoreBillingMethodController;
 
 /*
 |--------------------------------------------------------------------------
@@ -108,5 +111,22 @@ Route::post('/rating/add', [RatingController::class, 'addRating']);
 Route::post('/rating/by_store', [RatingController::class, 'getRatingByStore']);
 Route::post('/rating/by_customer_store', [RatingController::class, 'getRatingByCustomerAndStore']);
 
+//Featured Product
+Route::post('/product/featured/add', [FeaturedProductController::class, 'addFeaturedProduct']);
+Route::get('/product/featured/all', [FeaturedProductController::class, 'getAllFeaturedProduct']);
+Route::post('/product/featured/update', [FeaturedProductController::class, 'updateFeaturedProduct']);
+Route::post('/product/featured/delete', [FeaturedProductController::class, 'deleteFeaturedProduct']);
+//Slider Product
+Route::post('/product/slider/add', [SliderProductController::class, 'addSliderProduct']);
+Route::get('/product/slider/all', [SliderProductController::class, 'getAllSliderProduct']);
+Route::post('/product/slider/update', [SliderProductController::class, 'updateSliderProduct']);
+Route::post('/product/slider/delete', [SliderProductController::class, 'deleteSliderProduct']);
+
+//StoreBillingMethod API
+Route::post('/storebilling/add', [StoreBillingMethodController::class, 'addStoreBilling']);
+Route::get('/storebilling/all', [StoreBillingMethodController::class, 'getAllStoreBilling']);
+Route::post('/storebilling/get', [StoreBillingMethodController::class, 'getStoreBilling']);
 //Dummy Route
 Route::get('/product/delete_all', [ProductController::class, 'deleteAllProduct']);
+
+
