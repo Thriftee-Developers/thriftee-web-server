@@ -19,8 +19,7 @@ class BidController extends Controller
         $bid->amount=$req->amount;
         $bid->date=$req->date;
         $result = Biddings::where("uuid",$req->bidding)->first();
-        $highestBid = getHighestBidByBidding($req->bidding);
-        
+        $highestBid = $this->getHighestBidByBidding($req);
         if($highestBid!=""){
             if($req->amount >= ($highestBid->amount + $result->increment)){
                 $bid->save();
@@ -38,9 +37,9 @@ class BidController extends Controller
         }
     }
 
-    function getHighestBidByBidding($uuid){
-        $result = Bid::where("bidding",$uuid)->orderBy("amount","desc")->first();
-        return $result->amount;
+    function getHighestBidByBidding(Request $req){
+        $result = Bid::where("bidding",$req->uuid)->orderBy("amount","desc")->first();
+        return $result;
     }
 
     function getTotalNumberOfBids(Request $req){
