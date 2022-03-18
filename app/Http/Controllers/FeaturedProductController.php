@@ -9,7 +9,7 @@ use App\Models\FeaturedProduct;
 class FeaturedProductController extends Controller
 {
     function getAllFeaturedProduct(){
-        $result = FeaturedProduct::all();
+        $result = FeaturedProduct::join("product","products.uuid", "=","featuredProducts.product")->get();
         return $result;
     }
     //
