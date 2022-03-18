@@ -78,8 +78,16 @@ class BidController extends Controller
         $result = Bid::join("biddings", "bids.bidding", "=", "biddings.uuid")
             ->where("product", $req->product)
             ->where("customer", $req->customer)
-            ->orderBy("date", "desc")
+            ->orderBy("amount", "desc")
             ->get();
+        return $result;
+    }
+
+    function getBidByBiddingAndCustomer (Request $req) {
+        $result = Bid::where("bidding", $req->bidding)
+                    ->where("customer",$req->customer)
+                    ->orderBy("amount", "desc")
+                    ->get();
         return $result;
     }
 }
