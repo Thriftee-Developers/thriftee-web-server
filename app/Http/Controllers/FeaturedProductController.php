@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\FeaturedProduct;
+use App\Models\ProductImage;
 
 class FeaturedProductController extends Controller
 {
     function getAllFeaturedProduct(){
-        $result = FeaturedProduct::join("product","products.uuid", "=","featuredProducts.product")->get();
+        $result = FeaturedProduct::join("products","products.uuid", "=","featuredproducts.product")
+                                            ->join("productimages","products.uuid","=","productimages.product")
+                                            ->select("products.name","path")->get();
         return $result;
     }
     //
