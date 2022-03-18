@@ -8,7 +8,7 @@ use App\Models\FeaturedProduct;
 
 class FeaturedProductController extends Controller
 {
-    function getAllFeatuedProduct(){
+    function getAllFeaturedProduct(){
         $result = FeaturedProduct::all();
         return $result;
     }
