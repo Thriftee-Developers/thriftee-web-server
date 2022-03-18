@@ -6,18 +6,33 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\FeaturedProduct;
 use App\Models\Products;
-use App\Models\ProductsImage;
+use App\Models\ProductImage;
 
 class FeaturedProductController extends Controller
 {
     function getAllFeaturedProduct(){
         $featuredProducts = FeaturedProduct::join("biddings","biddings.uuid","=","featuredproducts.bidding")
                                 ->join("products","products.uuid","=","biddings.product")
+                                // ->join("productimages", function ($join) {
+                                //     $join->on("productimages.product","=","products.uuid");
+                                // })
+                                // ->select("bidding","productimages.product","productimages.path")
+                                // ->distinct("bidding")
+                                // ->select("products.name","productimages.path")
                                 ->get();
-        // foreach($featuredProducts as $value){
-        //     if($value.)
+        $result = array();
+        $i = 0;
+        foreach($featuredProducts as $value){
+            $productImage = ProductImage::where("product",$value->product)->first("path");
+            $result[$i] = [
+                "name"=>$featuredProducts[$i]->name,
+                "path"=>$productImage
+            ];
+            $i = 1;
+        }
+
         // }
-        $result = $featuredProducts::join("productimages","productimages.product","=",$featuredProducts->product)->get();
+
         return $result;
     }
     //
