@@ -52,7 +52,9 @@ class BidController extends Controller
 
     function getAllBidByCustomer(Request $req)
     {
-        $result = Bid::where("customer", $req->customer)->orderBy("date","desc")->get()->groupBy("bidding");
+        $result = Bid::join("biddings", "bids.bidding", "=", "biddings.uuid")
+            ->join("products", "biddings.product", "=", "products.uuid")
+            ->where("customer", $req->customer)->orderBy("date","desc")->get()->groupBy("bidding");
         return $result->toArray();
     }
 
