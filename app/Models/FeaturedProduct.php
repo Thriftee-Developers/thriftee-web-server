@@ -15,7 +15,7 @@ class FeaturedProduct extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        "product",
+        "bidding",
         "description"
     ];
 }

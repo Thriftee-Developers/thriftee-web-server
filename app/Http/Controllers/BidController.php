@@ -40,7 +40,7 @@ class BidController extends Controller
 
     function getHighestBidByBidding(Request $req)
     {
-        $result = Bid::where("bidding", $req->uuid)->orderBy("amount", "desc")->first();
+        $result = Bid::where("bidding", $req->bidding)->orderBy("amount", "desc")->first();
         return $result;
     }
 

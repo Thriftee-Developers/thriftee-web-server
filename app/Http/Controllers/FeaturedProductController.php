@@ -5,50 +5,55 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\FeaturedProduct;
-use App\Models\ProductImage;
+use App\Models\Products;
+use App\Models\ProductsImage;
 
 class FeaturedProductController extends Controller
 {
     function getAllFeaturedProduct(){
-        $result = FeaturedProduct::join("products","products.uuid", "=","featuredproducts.product")
-                                            ->join("productimages","products.uuid","=","productimages.product")
-                                            ->select("products.name","path")->get();
+        $featuredProducts = FeaturedProduct::join("biddings","biddings.uuid","=","featuredproducts.bidding")
+                                ->join("products","products.uuid","=","biddings.product")
+                                ->get();
+        // foreach($featuredProducts as $value){
+        //     if($value.)
+        // }
+        $result = $featuredProducts::join("productimages","productimages.product","=",$featuredProducts->product)->get();
         return $result;
     }
     //
     function addFeaturedProduct(Request $req){
-        $featuredProduct = new FeaturedProduct();
-        $featuredProduct->product = $req->product;
-        $featuredProduct->description = $req->description;
+        $featuredProducts = new FeaturedProduct();
+        $featuredProducts->bidding = $req->bidding;
+        $featuredProducts->description = $req->description;
 
-        if($this->checkFeaturedProduct($req->product)){
-            $featuredProduct->save();
+        if($this->checkFeaturedProducts($req->bidding)){
+            $featuredProducts->save();
             return ["success" => "success"];
         }else{
-            return ["error" => "Product is featured."];
+            return ["error" => "Products is featured."];
         }
     }
 
-    function updateFeaturedProduct(Request $req){
-        $featuredProduct = FeaturedProduct::where("product",$req->product)->first();
-        if($featuredProduct){
-            $result = $featuredProduct->update(["description"=> $req->description]);
+    function updateFeaturedProducts(Request $req){
+        $featuredProducts = FeaturedProduct::where("bidding",$req->bidding)->first();
+        if($featuredProducts){
+            $result = $featuredProducts->update(["description"=> $req->description]);
             return ["success" => "success"];
         }else{
-            return ["error" => "There's no match product id."];
+            return ["error" => "There's no match bidding id."];
         }
     }
 
-    function checkFeaturedProduct($uuid){
-        $result = FeaturedProduct::where("product",$uuid)->get();
+    function checkFeaturedProducts($uuid){
+        $result = FeaturedProduct::where("bidding",$uuid)->get();
         if(count($result)>0){
             return false;
         }
         return true;
     }
 
-    function deleteFeaturedProduct(Request $req){
-        $result = FeaturedProduct::where("product",$req->product)->delete();
+    function deleteFeaturedProducts(Request $req){
+        $result = FeaturedProduct::where("bidding",$req->bidding)->delete();
         return $result;
     }
 }
