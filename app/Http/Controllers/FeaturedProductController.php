@@ -20,6 +20,7 @@ class FeaturedProductController extends Controller
             $productImage = ProductImage::where("product",$value->product)->first();
             $result[$i] = [
                 "name"=>$featuredProducts[$i]->name,
+                "description"=>$featuredProducts[$i]->description,
                 "path"=>$productImage->path
             ];
             $i = 1;
