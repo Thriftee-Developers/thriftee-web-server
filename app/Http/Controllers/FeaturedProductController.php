@@ -13,6 +13,7 @@ class FeaturedProductController extends Controller
     function getAllFeaturedProduct(){
         $featuredProducts = FeaturedProduct::join("biddings","biddings.uuid","=","featuredproducts.bidding")
                                 ->join("products","products.uuid","=","biddings.product")
+                                ->select("products.name", "featuredproducts.description","biddings.product")
                                 ->get();
         $result = array();
         $i = 0;
