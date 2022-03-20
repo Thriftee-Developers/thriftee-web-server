@@ -13,25 +13,17 @@ class FeaturedProductController extends Controller
     function getAllFeaturedProduct(){
         $featuredProducts = FeaturedProduct::join("biddings","biddings.uuid","=","featuredproducts.bidding")
                                 ->join("products","products.uuid","=","biddings.product")
-                                // ->join("productimages", function ($join) {
-                                //     $join->on("productimages.product","=","products.uuid");
-                                // })
-                                // ->select("bidding","productimages.product","productimages.path")
-                                // ->distinct("bidding")
-                                // ->select("products.name","productimages.path")
                                 ->get();
         $result = array();
         $i = 0;
         foreach($featuredProducts as $value){
-            $productImage = ProductImage::where("product",$value->product)->first("path");
+            $productImage = ProductImage::where("product",$value->product)->first();
             $result[$i] = [
                 "name"=>$featuredProducts[$i]->name,
-                "path"=>$productImage
+                "path"=>$productImage->path
             ];
             $i = 1;
         }
-
-        // }
 
         return $result;
     }
