@@ -8,26 +8,28 @@ use Illuminate\Support\Str;
 
 class StoreBillingMethodController extends Controller
 {
-    function getAllStoreBilling(){
+    function getAllStoreBilling()
+    {
         $result = StoreBillingMethod::all();
         return $result;
     }
 
-    function getStoreBilling(Request $req){
-        $result = StoreBillingMethod::where("uuid",uuid)->get();
+    function getStoreBilling(Request $req)
+    {
+        $result = StoreBillingMethod::where("uuid", $req->uuid)->get();
         return $result;
     }
     //
-    function addStoreBilling(Request $req){
-        $storeBilling = new StoreBilling();
+    function addStoreBilling(Request $req)
+    {
+        $storeBilling = new StoreBillingMethod();
         $storeBilling->uuid = Str::uuid();
-        $storeBiling->store = $req->store;
-        $storeBiling->description=$req->description;
-        $storeBiling->account_name=$req->account_name;
-        $storeBilling->account_no=$req->account_no;
-        
-        $storeBiling->save();
+        $storeBilling->store = $req->store;
+        $storeBilling->description = $req->description;
+        $storeBilling->account_name = $req->account_name;
+        $storeBilling->account_no = $req->account_no;
+
+        $storeBilling->save();
+        return ["success" => "success"];
     }
-
-
 }

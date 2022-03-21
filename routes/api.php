@@ -13,6 +13,7 @@ use App\Http\Controllers\BiddingController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\BidController;
 use App\Http\Controllers\FeaturedProductController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SliderProductController;
 use App\Http\Controllers\StoreBillingMethodController;
 
@@ -44,7 +45,7 @@ Route::post('/store/check_password', [StoreController::class, 'checkPassword']);
 Route::post('/store/get_status', [StoreController::class, 'getStatus']);
 
 //Products
-Route::get('/product/all',[ProductController::class, 'getAllProducts']);
+Route::get('/product/all', [ProductController::class, 'getAllProducts']);
 Route::post('/product/get', [ProductController::class, 'getProduct']);
 Route::post('/product/id', [ProductController::class, 'getProductByID']);
 Route::post('/product/add', [ProductController::class, 'addProduct']);
@@ -64,13 +65,13 @@ Route::post('/product/condition', [ConditionController::class, 'getConditionByPr
 // Route::post('/product_category/delete', [ProductCategoryController::class, 'deleteProductCategory']);
 
 //Condition
-Route::get('/category/all',[CategoryController::class, 'getAllCategory']);
+Route::get('/category/all', [CategoryController::class, 'getAllCategory']);
 Route::post('/category/add', [CategoryController::class, 'addCategory']);
 Route::post('/category/delete', [CategoryController::class, 'deleteCategory']);
 Route::post('/category/get', [CategoryController::class, 'getCategory']);
 
 //Category
-Route::get('/condition/all',[ConditionController::class, 'getAllConditions']);
+Route::get('/condition/all', [ConditionController::class, 'getAllConditions']);
 Route::post('/condition/add', [ConditionController::class, 'addCondition']);
 Route::post('/condition/delete', [ConditionController::class, 'deleteCondition']);
 Route::post('/condition/get', [ConditionController::class, 'getCondition']);
@@ -127,7 +128,10 @@ Route::post('/product/slider/delete', [SliderProductController::class, 'deleteSl
 Route::post('/storebilling/add', [StoreBillingMethodController::class, 'addStoreBilling']);
 Route::get('/storebilling/all', [StoreBillingMethodController::class, 'getAllStoreBilling']);
 Route::post('/storebilling/get', [StoreBillingMethodController::class, 'getStoreBilling']);
+
+Route::post('/payment/add', [PaymentController::class, 'addPayment']);
+Route::post('/payment/by_customer', [PaymentController::class, 'getByCustomer']);
+Route::post('/payment/by_store', [PaymentController::class, 'getByStore']);
+Route::post('/payment/by_customer_store', [PaymentController::class, 'getByCustomerAndStore']);
 //Dummy Route
 Route::get('/product/delete_all', [ProductController::class, 'deleteAllProduct']);
-
-
