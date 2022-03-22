@@ -16,6 +16,7 @@ use App\Http\Controllers\FeaturedProductController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SliderProductController;
 use App\Http\Controllers\StoreBillingMethodController;
+use App\Http\Controllers\TransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -129,9 +130,15 @@ Route::post('/storebilling/add', [StoreBillingMethodController::class, 'addStore
 Route::get('/storebilling/all', [StoreBillingMethodController::class, 'getAllStoreBilling']);
 Route::post('/storebilling/get', [StoreBillingMethodController::class, 'getStoreBilling']);
 
-Route::post('/payment/add', [PaymentController::class, 'addPayment']);
-Route::post('/payment/by_customer', [PaymentController::class, 'getByCustomer']);
-Route::post('/payment/by_store', [PaymentController::class, 'getByStore']);
-Route::post('/payment/by_customer_store', [PaymentController::class, 'getByCustomerAndStore']);
+//Transaction
+Route::post('/transaction/add', [TransactionController::class, 'addTransaction']);
+Route::post('/transaction/update_payment', [TransactionController::class, 'updatePaymentMethod']);
+Route::post('/transaction/send_ref', [TransactionController::class, 'sendReference']);
+Route::post('/transaction/cancel_ref', [TransactionController::class, 'cancelReference']);
+Route::post('/transaction/valid', [TransactionController::class, 'validatePayment']);
+Route::post('/transaction/invalid', [TransactionController::class, 'invalidPayment']);
+Route::post('/transaction/close', [TransactionController::class, 'closeTransaction']);
+Route::post('/transaction/cancel', [TransactionController::class, 'cancelTransaction']);
+
 //Dummy Route
 Route::get('/product/delete_all', [ProductController::class, 'deleteAllProduct']);
