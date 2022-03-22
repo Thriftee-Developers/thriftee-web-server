@@ -8,9 +8,9 @@ use Illuminate\Support\Str;
 
 class StoreBillingMethodController extends Controller
 {
-    function getAllStoreBilling()
+    function getAllStoreBilling(Request $req)
     {
-        $result = StoreBillingMethod::all();
+        $result = StoreBillingMethod::where("store", $req->store)->get();
         return $result;
     }
 
