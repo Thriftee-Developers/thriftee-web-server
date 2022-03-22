@@ -126,9 +126,9 @@ Route::post('/product/slider/update', [SliderProductController::class, 'updateSl
 Route::post('/product/slider/delete', [SliderProductController::class, 'deleteSliderProduct']);
 
 //StoreBillingMethod API
-Route::post('/storebilling/add', [StoreBillingMethodController::class, 'addStoreBilling']);
-Route::get('/storebilling/all', [StoreBillingMethodController::class, 'getAllStoreBilling']);
-Route::post('/storebilling/get', [StoreBillingMethodController::class, 'getStoreBilling']);
+Route::post('/store/billing/add', [StoreBillingMethodController::class, 'addStoreBilling']);
+Route::get('/store/billing/all', [StoreBillingMethodController::class, 'getAllStoreBilling']);
+Route::post('/store/billing/get', [StoreBillingMethodController::class, 'getStoreBilling']);
 
 //Transaction
 Route::post('/transaction/add', [TransactionController::class, 'addTransaction']);
