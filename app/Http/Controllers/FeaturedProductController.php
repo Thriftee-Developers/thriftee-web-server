@@ -10,26 +10,30 @@ use App\Models\ProductImage;
 
 class FeaturedProductController extends Controller
 {
-    function getAllFeaturedProduct(){
-        $featuredProducts = FeaturedProduct::join("biddings","biddings.uuid","=","featuredproducts.bidding")
-                                ->join("products","products.uuid","=","biddings.product")
-                                ->select("products.name" 
-                                        ,"featuredproducts.description"
-                                        ,"biddings.product"
-                                        ,"biddings.start_time"
-                                        ,"biddings.end_time")
-                                ->get();
+    function getAllFeaturedProduct()
+    {
+        $featuredProducts = FeaturedProduct::join("biddings", "biddings.uuid", "=", "featuredproducts.bidding")
+            ->join("products", "products.uuid", "=", "biddings.product")
+            ->select(
+                "products.name",
+                "featuredproducts.description",
+                "biddings.product",
+                "biddings.start_time",
+                "biddings.end_time",
+                "products.store"
+            )
+            ->get();
         $result = array();
         $i = 0;
-        if($featuredProducts != ""){
-            foreach($featuredProducts as $value){
-                $productImage = ProductImage::where("product",$value->product)->first();
+        if ($featuredProducts != "") {
+            foreach ($featuredProducts as $value) {
+                $productImage = ProductImage::where("product", $value->product)->first();
                 $result[$i] = [
-                    "name"=>$featuredProducts[$i]->name,
-                    "description"=>$featuredProducts[$i]->description,
-                    "path"=>$productImage->path,
-                    "start_time"=>$featuredProducts[$i]->start_time,
-                    "end_time"=>$featuredProducts[$i]->end_time
+                    "name" => $featuredProducts[$i]->name,
+                    "description" => $featuredProducts[$i]->description,
+                    "path" => $productImage->path,
+                    "start_time" => $featuredProducts[$i]->start_time,
+                    "end_time" => $featuredProducts[$i]->end_time
                 ];
                 $i = 1;
             }
@@ -38,39 +42,43 @@ class FeaturedProductController extends Controller
         return $result;
     }
     //
-    function addFeaturedProduct(Request $req){
+    function addFeaturedProduct(Request $req)
+    {
         $featuredProducts = new FeaturedProduct();
         $featuredProducts->bidding = $req->bidding;
         $featuredProducts->description = $req->description;
 
-        if($this->checkFeaturedProducts($req->bidding)){
+        if ($this->checkFeaturedProducts($req->bidding)) {
             $featuredProducts->save();
             return ["success" => "success"];
-        }else{
-            return ["error" => "Products is featured."];
         }
+
+        return ["error" => "Products is featured."];
     }
 
-    function updateFeaturedProducts(Request $req){
-        $featuredProducts = FeaturedProduct::where("bidding",$req->bidding)->first();
-        if($featuredProducts){
-            $result = $featuredProducts->update(["description"=> $req->description]);
+    function updateFeaturedProducts(Request $req)
+    {
+        $featuredProducts = FeaturedProduct::where("bidding", $req->bidding)->first();
+        if ($featuredProducts) {
+            $result = $featuredProducts->update(["description" => $req->description]);
             return ["success" => "success"];
-        }else{
+        } else {
             return ["error" => "There's no match bidding id."];
         }
     }
 
-    function checkFeaturedProducts($uuid){
-        $result = FeaturedProduct::where("bidding",$uuid)->get();
-        if(count($result)>0){
+    function checkFeaturedProducts($uuid)
+    {
+        $result = FeaturedProduct::where("bidding", $uuid)->get();
+        if (count($result) > 0) {
             return false;
         }
         return true;
     }
 
-    function deleteFeaturedProducts(Request $req){
-        $result = FeaturedProduct::where("bidding",$req->bidding)->delete();
+    function deleteFeaturedProducts(Request $req)
+    {
+        $result = FeaturedProduct::where("bidding", $req->bidding)->delete();
         return $result;
     }
 }
