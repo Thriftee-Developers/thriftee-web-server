@@ -59,7 +59,7 @@ class FeaturedProductController extends Controller
         return ["error" => "Products is featured."];
     }
 
-    function updateFeaturedProducts(Request $req)
+    function updateFeaturedProduct(Request $req)
     {
         $featuredProducts = FeaturedProduct::where("bidding", $req->bidding)->first();
         if ($featuredProducts) {
@@ -79,7 +79,7 @@ class FeaturedProductController extends Controller
         return true;
     }
 
-    function deleteFeaturedProducts(Request $req)
+    function deleteFeaturedProduct(Request $req)
     {
         $result = FeaturedProduct::where("bidding", $req->bidding)->delete();
         return $result;
