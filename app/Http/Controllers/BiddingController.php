@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bid;
 use Illuminate\Http\Request;
 use App\Models\Biddings;
+use DateTime;
 use Illuminate\Support\Str;
 
 class BiddingController extends Controller
@@ -71,5 +73,45 @@ class BiddingController extends Controller
             "status" => $req->status,
         ]);
         return ["success" => "success"];
+    }
+
+    function getBiddingWinner(Request $req) {
+        $bidding = Biddings::where('uuid',$req->bidding)->first();
+        $start_time = strtotime($bidding->start_time);
+        $end_time = strtotime($bidding->end_time);
+        $current_time = strtotime(date("y-m-d H:i:s"));
+
+        if($current_time > $end_time) {
+
+
+            $hoursdiff = ($current_time - $end_time) / 3600;
+            //48 hrs = 2 days
+            $winnerIndex = $hoursdiff / 48;
+
+            $bids = Bid::where('bidding', $req->bidding)
+                ->orderBy('date', 'desc')
+                ->get()
+                ->groupBy('customer');
+
+            return [
+                "status" => "ended",
+                "hours" => $hoursdiff,
+                "winner" => ((int) $winnerIndex) ,
+                "bids" => json_decode($bids)
+            ];
+        }
+        else {
+            if($current_time >= $start_time) {
+                return [
+                    "status" => "on_going",
+                ];
+            }
+            else {
+                return [
+                    "status" => "waiting",
+                ];
+            }
+        }
+
     }
 }

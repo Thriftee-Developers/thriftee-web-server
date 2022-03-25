@@ -22,13 +22,14 @@ class CustomerController extends Controller
         $customer->lname = $req->lname;
         $customer->fname = $req->fname;
         $customer->email = $req->email;
+        $customer->password = Hash::make($req->password);
+        $customer->phone_code = "";
         $customer->contact_no = "";
-        $customer->province = "";
-        $customer->municipality = "";
-        $customer->barangay = "";
+        $customer->country = "";
+        $customer->state = "";
+        $customer->city = "";
         $customer->street = "";
         $customer->profile_uri = "";
-        $customer->password = Hash::make($req->password);
         $customer->status = 0;
 
         if($this -> checkEmail($req->email))
@@ -210,12 +211,12 @@ class CustomerController extends Controller
             'lname' => $req->lname,
             'fname' => $req->fname,
             'email' => $req->email,
+            'phone_code' => $req->phone_code,
             'contact_no' => $req->contact_no,
-            'province' => $req->province,
-            'municipality' => $req->municipality,
-            "barangay" => $req->barangay,
-            'street' => $req->street,
-            "profile_uri" => $req->profile_uri,
+            "country" => $req->country,
+            'state' => $req->state,
+            'city' => $req->city,
+            'street' => $req->street
         ]);
         return $result;
     }
