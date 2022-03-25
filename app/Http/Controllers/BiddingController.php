@@ -75,11 +75,16 @@ class BiddingController extends Controller
         $current_time = strtotime(date("y-m-d H:i:s"));
 
         if($current_time > $end_time) {
+
+            $winnerIndex = 0;
+            $hoursdiff = round(($current_time - $end_time) / 3600, 1);
+
             return [
                 "status" => "ended",
                 "start" => $start_time,
                 "end" => $end_time,
-                "current" => $current_time
+                "current" => $current_time,
+                "hoursdiff" => $hoursdiff
             ];
         }
         else {
