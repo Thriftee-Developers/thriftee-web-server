@@ -80,7 +80,7 @@ class BiddingController extends Controller
 
             $hoursdiff = ($current_time - $end_time) / 3600;
             //48 hrs = 2 days
-            $winnerIndex = (int) $hoursdiff / 48;
+            $winnerIndex = $hoursdiff / 48;
 
             $bids = Bid::where('bidding', $req->bidding)
                 ->orderBy('date', 'desc')
@@ -90,7 +90,7 @@ class BiddingController extends Controller
             return [
                 "status" => "ended",
                 "hours" => $hoursdiff,
-                "winner" => $winnerIndex,
+                "winner" => ((int) $winnerIndex) ,
                 "bids" => json_decode($bids)
             ];
         }
