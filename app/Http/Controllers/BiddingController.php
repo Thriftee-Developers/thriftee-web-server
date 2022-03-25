@@ -70,9 +70,9 @@ class BiddingController extends Controller
 
     function getBiddingWinner(Request $req) {
         $bidding = Biddings::where('uuid',$req->bidding)->first();
-        $start_time = $bidding->start_time;
-        $end_time = $bidding->end_time;
-        $current_time = date("y-m-d H:i:s");
+        $start_time = strtotime($bidding->start_time);
+        $end_time = strtotime($bidding->end_time);
+        $current_time = strtotime(date("y-m-d H:i:s"));
 
         if($current_time > $end_time) {
             return [
