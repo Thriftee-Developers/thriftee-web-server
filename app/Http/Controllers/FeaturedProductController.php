@@ -20,7 +20,8 @@ class FeaturedProductController extends Controller
                 "biddings.product",
                 "biddings.start_time",
                 "biddings.end_time",
-                "products.uuid"
+                "products.uuid",
+                "featuredproducts.bidding"
             )
             ->get();
         $result = array();
@@ -29,6 +30,7 @@ class FeaturedProductController extends Controller
             foreach ($featuredProducts as $value) {
                 $productImage = ProductImage::where("product", $value->product)->first();
                 $result[$i] = [
+                    "bidding" => $featuredProducts[$i]->bidding,
                     "name" => $featuredProducts[$i]->name,
                     "description" => $featuredProducts[$i]->description,
                     "product" => $featuredProducts[$i]->uuid,
