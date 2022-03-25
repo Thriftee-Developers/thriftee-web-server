@@ -20,7 +20,7 @@ class FeaturedProductController extends Controller
                 "biddings.product",
                 "biddings.start_time",
                 "biddings.end_time",
-                "products.store"
+                "products.uuid"
             )
             ->get();
         $result = array();
@@ -31,7 +31,7 @@ class FeaturedProductController extends Controller
                 $result[$i] = [
                     "name" => $featuredProducts[$i]->name,
                     "description" => $featuredProducts[$i]->description,
-                    "start_time" => $featuredProducts[$i]->store,
+                    "product" => $featuredProducts[$i]->uuid,
                     "path" => $productImage->path,
                     "start_time" => $featuredProducts[$i]->start_time,
                     "end_time" => $featuredProducts[$i]->end_time
