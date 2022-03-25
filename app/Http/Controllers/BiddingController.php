@@ -72,7 +72,7 @@ class BiddingController extends Controller
         $bidding = Biddings::where('uuid',$req->bidding)->first();
         $start_time = $bidding->start_time;
         $end_time = $bidding->end_time;
-        $current_time = date("yyyy-MM-DD HH:mm:ss");
+        $current_time = date("y-m-d H:i:s");
 
         if($current_time > $end_time) {
             return [
