@@ -78,7 +78,7 @@ class BiddingController extends Controller
         if($current_time > $end_time) {
 
 
-            $hoursdiff = 49;
+            $hoursdiff = ($current_time - $end_time) / 3600;
             //48 hrs = 2 days
             $winnerIndex = $hoursdiff / 48;
 
