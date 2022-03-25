@@ -206,6 +206,23 @@ class CustomerController extends Controller
 
     function updateCustomer(Request $req)
     {
+        $checkEmail = Customer
+            ::where('email', $req->email)
+            ->where('uuid', '<>', $req->uuid)
+            ->first();
+        if($checkEmail) {
+            return ["error" => "Email is already used"];
+        }
+
+        $checkPhone = Customer
+            ::where('phone_code', $req->phone_code)
+            ->where('contact_no', $req->contact_no)
+            ->where('uuid', '<>', $req->uuid)
+            ->first();
+        if($checkPhone) {
+            return ["error" => "Phone number is already used"];
+        }
+
         $customer = Customer::where('uuid', $req->uuid)->first();
         $result = $customer->update([
             'lname' => $req->lname,
@@ -218,7 +235,13 @@ class CustomerController extends Controller
             'city' => $req->city,
             'street' => $req->street
         ]);
-        return $result;
+
+        if($result) {
+            return ["success" => "success"];
+        }
+        else {
+            return ["error" => "Database error"];
+        }
     }
 
     function getCustomerByUUID(Request $req){
