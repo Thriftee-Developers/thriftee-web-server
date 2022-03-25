@@ -235,7 +235,13 @@ class CustomerController extends Controller
             'city' => $req->city,
             'street' => $req->street
         ]);
-        return $result;
+
+        if($result) {
+            return ["success" => "success"];
+        }
+        else {
+            return ["error" => "Database error"];
+        }
     }
 
     function getCustomerByUUID(Request $req){
