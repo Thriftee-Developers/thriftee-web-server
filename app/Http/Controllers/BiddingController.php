@@ -77,9 +77,9 @@ class BiddingController extends Controller
         if($current_time > $end_time) {
 
             $winnerIndex = 0;
-            $hoursdiff = round(($current_time - $end_time) / 3600, 1);
+            $hoursdiff = round(($current_time - $end_time) / 3600);
             //48 hrs = 2 days
-            $claims = round(($hoursdiff / 48), 1);
+            $claims = round($hoursdiff / 48);
 
             return [
                 "status" => "ended",
