@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bid;
 use Illuminate\Http\Request;
 use App\Models\Biddings;
 use DateTime;
@@ -76,10 +77,14 @@ class BiddingController extends Controller
 
         if($current_time > $end_time) {
 
-            $winnerIndex = 0;
+
             $hoursdiff = round(($current_time - $end_time) / 3600);
             //48 hrs = 2 days
-            $claims = round($hoursdiff / 48);
+            $winnerIndex = round($hoursdiff / 48);
+
+            $bids = Bid::where('bidding', $req->bidding)
+                ->get()
+                ->groupBy('customer');
 
             return [
                 "status" => "ended",
@@ -87,7 +92,8 @@ class BiddingController extends Controller
                 "end" => $end_time,
                 "current" => $current_time,
                 "hoursdiff" => $hoursdiff,
-                "claims" => $claims
+                "winner" => $winnerIndex,
+                "bids" => $bids
             ];
         }
         else {
