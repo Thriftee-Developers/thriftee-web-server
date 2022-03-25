@@ -89,6 +89,7 @@ class BiddingController extends Controller
 
             return [
                 "status" => "ended",
+                "hours" => $hoursdiff,
                 "winner" => $winnerIndex,
                 "bids" => json_decode($bids)
             ];
