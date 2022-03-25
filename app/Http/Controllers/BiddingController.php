@@ -83,6 +83,7 @@ class BiddingController extends Controller
             $winnerIndex = round($hoursdiff / 48);
 
             $bids = Bid::where('bidding', $req->bidding)
+                ->orderBy('date')
                 ->get()
                 ->groupBy('customer');
 
@@ -93,7 +94,7 @@ class BiddingController extends Controller
                 "current" => $current_time,
                 "hoursdiff" => $hoursdiff,
                 "winner" => $winnerIndex,
-                "bids" => $bids
+                "bids" => json_decode($bids)
             ];
         }
         else {
