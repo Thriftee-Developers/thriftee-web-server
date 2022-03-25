@@ -31,6 +31,7 @@ class FeaturedProductController extends Controller
                 $result[$i] = [
                     "name" => $featuredProducts[$i]->name,
                     "description" => $featuredProducts[$i]->description,
+                    "start_time" => $featuredProducts[$i]->store,
                     "path" => $productImage->path,
                     "start_time" => $featuredProducts[$i]->start_time,
                     "end_time" => $featuredProducts[$i]->end_time
