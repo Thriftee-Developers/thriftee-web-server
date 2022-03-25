@@ -98,17 +98,11 @@ class BiddingController extends Controller
             if($current_time >= $start_time) {
                 return [
                     "status" => "on_going",
-                    "start" => $start_time,
-                    "end" => $end_time,
-                    "current" => $current_time
                 ];
             }
             else {
                 return [
                     "status" => "waiting",
-                    "start" => $start_time,
-                    "end" => $end_time,
-                    "current" => $current_time
                 ];
             }
         }
