@@ -90,6 +90,7 @@ Route::post('/bidding/get', [BiddingController::class, 'getBidding']);
 Route::post('/bidding/by_product', [BiddingController::class, 'getBiddingByProduct']);
 Route::post('/bidding/latest_by_product', [BiddingController::class, 'getLatestBiddingByProduct']);
 Route::post('/bidding/by_store', [BiddingController::class, 'getBiddingByStore']);
+Route::post('/bidding/winner', [BiddingController::class, 'getBiddingWinner']);
 
 //Customer
 Route::post('/customer/register', [CustomerController::class, 'addCustomer']);

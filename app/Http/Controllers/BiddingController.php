@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Biddings;
+use DateTime;
 use Illuminate\Support\Str;
 
 class BiddingController extends Controller
@@ -65,5 +66,31 @@ class BiddingController extends Controller
                 "status" => $req->status,
             ]);
         return ["success" => "success"];
+    }
+
+    function getBiddingWinner(Request $req) {
+        $bidding = Biddings::where('uuid',$req->uuid)->first();
+        $start_time = DateTime::createFromFormat("yyyy-MM-DD HH:mm:ss", $bidding->start_time);
+        $end_time = DateTime::createFromFormat("yyyy-MM-DD HH:mm:ss", $bidding->end_time);
+        $current_time = date("yyyy-MM-DD HH:mm:ss");
+
+        if($current_time > $end_time) {
+            return [
+                "status" => "ended"
+            ];
+        }
+        else {
+            if($current_time >= $start_time) {
+                return [
+                    "status" => "on_going"
+                ];
+            }
+            else {
+                return [
+                    "status" => "waiting"
+                ];
+            }
+        }
+
     }
 }
