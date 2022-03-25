@@ -23,6 +23,16 @@ class TransactionController extends Controller
         return ["success" => "success"];
     }
 
+    function getTransaction(Request $req)
+    {
+        $transaction = Transaction::where([
+            ['customer', $req->customer],
+            ['bidding', $req->bidding]
+        ])->first();
+
+        return $transaction;
+    }
+
     function updatePaymentMethod(Request $req)
     {
         $transaction = Transaction::where("uuid", $req->uuid)->first();

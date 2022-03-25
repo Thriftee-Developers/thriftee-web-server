@@ -140,6 +140,7 @@ Route::post('/transaction/valid', [TransactionController::class, 'validatePaymen
 Route::post('/transaction/invalid', [TransactionController::class, 'invalidPayment']);
 Route::post('/transaction/close', [TransactionController::class, 'closeTransaction']);
 Route::post('/transaction/cancel', [TransactionController::class, 'cancelTransaction']);
+Route::post('/transaction/get', [TransactionController::class, 'getTransaction']);
 
 //Dummy Route
 Route::get('/product/delete_all', [ProductController::class, 'deleteAllProduct']);
