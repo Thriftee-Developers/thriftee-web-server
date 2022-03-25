@@ -38,7 +38,7 @@ class FeaturedProductController extends Controller
                     "start_time" => $featuredProducts[$i]->start_time,
                     "end_time" => $featuredProducts[$i]->end_time
                 ];
-                $i = 1;
+                $i += 1;
             }
         }
 
