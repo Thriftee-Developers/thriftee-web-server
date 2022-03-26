@@ -73,7 +73,7 @@ class BiddingController extends Controller
             "end_time" => $req->end_time,
             "status" => $req->status,
         ]);
-        return ["success" => "success"];
+        return ["success" => $result];
     }
 
     //if bidder has 2 bids it counts as 1
@@ -148,7 +148,7 @@ class BiddingController extends Controller
                 if($winnerIndex > count($bidder)) {
                     //TODO Product must archive
                     //Update Status
-                    $result = $bidding->update(['status', -1]);
+                    $result = $bidding->update(['status' => -1]);
                     return [
                         "status" => "no_claim",
                         "message" => $result
