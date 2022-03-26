@@ -12,8 +12,7 @@ class Transaction extends Model
     public $incrementing = false;
     public $timestamps = false;
     protected $fillable = [
-        "bidding",
-        "customer",
+        "bid",
         "description",
         "billing_method",
         "reference",
