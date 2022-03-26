@@ -16,6 +16,8 @@ class TransactionController extends Controller
         $transaction->billing_method = $req->billing_method;
         $transaction->bid = $req->bid;
         $transaction->description = $req->description;
+        $transaction->contact_no = $req->contact_no;
+        $transaction->email = $req->email;
         $transaction->country = $req->country;
         $transaction->state = $req->state;
         $transaction->city = $req->city;
