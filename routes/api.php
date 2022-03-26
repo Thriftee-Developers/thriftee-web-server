@@ -103,6 +103,7 @@ Route::post('/customer/login', [CustomerController::class, 'login']);
 
 //Bid
 Route::post('/bid/add', [BidController::class, 'addBid']);
+Route::post('/bid/get', [BidController::class, 'getBid']);
 Route::post('/bid/highest', [BidController::class, 'getHighestBidByProduct']);
 Route::post('/bid/highest_by_bidding', [BidController::class, 'getHighestBidByBidding']);
 Route::post('/bid/by_customer', [BidController::class, 'getAllBidByCustomer']);
