@@ -13,8 +13,6 @@ class TransactionController extends Controller
     {
         $transaction = new Transaction();
         $transaction->uuid = Str::uuid();
-        $transaction->bidding = $req->bidding;
-        $transaction->customer = $req->customer;
         $transaction->billing_method = $req->billing_method;
         $transaction->bid = $req->bid;
         $transaction->description = $req->description;
@@ -30,10 +28,11 @@ class TransactionController extends Controller
 
     function getTransaction(Request $req)
     {
-        $transaction = Transaction::where([
-            ['customer', $req->customer],
-            ['bidding', $req->bidding]
-        ])->first();
+        $transaction = Transaction::join('bids','bids.uuid','=','transaction.bid')
+            ->where([
+                ['bids.customer', $req->customer],
+                ['bids.bidding', $req->bidding]
+            ])->first();
 
         return $transaction;
     }
