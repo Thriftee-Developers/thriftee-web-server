@@ -94,10 +94,15 @@ class BiddingController extends Controller
     }
 
     function getBiddingWinner(Request $req) {
-        $bidding = Biddings::where('uuid',$req->bidding)->first();
+        $bidding = Biddings::where([
+            ['uuid',$req->bidding],
+            ['status','<>',-1]
+        ])->first();
         $start_time = strtotime($bidding->start_time);
         $end_time = strtotime($bidding->end_time);
         $current_time = strtotime(date("y-m-d H:i:s"));
+
+
 
         if($current_time > $end_time) {
 
@@ -112,12 +117,12 @@ class BiddingController extends Controller
             //48 hrs = 2 days
             $winnerIndex = $hoursdiff / 48;
 
+            $bidder = $this->getBidders($req->bidding);
+
             $bids = Bid::where('bidding', $req->bidding)
             ->orderBy('date', 'desc')
             ->get()
             ->groupBy('customer');
-
-            $bidder = $this->getBidders($req->bidding);
 
             if($transaction) {
                 return [
@@ -129,12 +134,25 @@ class BiddingController extends Controller
                 ];
             }
             else {
-                return [
-                    "status" => "ended",
-                    "winner" => ((int) $winnerIndex) ,
-                    "bids" => json_decode($bids),
-                    "bidder" => $bidder
-                ];
+
+                //No Claims
+                if($winnerIndex > count($bidder)) {
+                    //TODO Product must archive
+                    //Update Status
+                    $bidding->update(['status', -1]);
+                    return [
+                        "status" => "no_claim"
+                    ];
+                }
+                else
+                {
+                    return [
+                        "status" => "ended",
+                        "winner" => ((int) $winnerIndex) ,
+                        "bids" => json_decode($bids),
+                        "bidder" => $bidder
+                    ];
+                }
             }
         }
         else {
