@@ -29,7 +29,7 @@ class TransactionController extends Controller
     function getTransaction(Request $req)
     {
         $transaction = Transaction
-            ::select('transaction.*', 'bids.bidding', 'bids.customer', 'bids.amount')
+            ::select('transactions.*', 'bids.bidding', 'bids.customer', 'bids.amount')
             ->join('bids','bids.uuid','=','transactions.bid')
             ->where([
                 ['bids.customer', $req->customer],
