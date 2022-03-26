@@ -16,7 +16,7 @@ class StoreBillingMethodController extends Controller
 
     function getStoreBilling(Request $req)
     {
-        $result = StoreBillingMethod::where("uuid", $req->uuid)->get();
+        $result = StoreBillingMethod::where("uuid", $req->uuid)->first();
         return $result;
     }
     //
