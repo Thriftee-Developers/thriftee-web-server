@@ -15,8 +15,9 @@ class TransactionController extends Controller
         $transaction->uuid = Str::uuid();
         $transaction->bidding = $req->bidding;
         $transaction->customer = $req->customer;
-        $transaction->description = $req->description;
         $transaction->billing_method = $req->billing_method;
+        $transaction->bid = $req->bid;
+        $transaction->description = $req->description;
         $transaction->status = "no_payment";
 
         $transaction->save();
