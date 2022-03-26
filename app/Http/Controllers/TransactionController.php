@@ -18,6 +18,10 @@ class TransactionController extends Controller
         $transaction->billing_method = $req->billing_method;
         $transaction->bid = $req->bid;
         $transaction->description = $req->description;
+        $transaction->country = $req->country;
+        $transaction->state = $req->state;
+        $transaction->city = $req->city;
+        $transaction->street = $req->street;
         $transaction->status = "no_payment";
 
         $transaction->save();
