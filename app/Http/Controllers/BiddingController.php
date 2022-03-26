@@ -76,6 +76,23 @@ class BiddingController extends Controller
         return ["success" => "success"];
     }
 
+    //if bidder has 2 bids it counts as 1
+    function getBidders ($bidding) {
+        $bids = Bid
+            ::where('bidding', $bidding)
+            ->orderBy('date','desc')
+            ->get();
+        $bidder = array();
+
+        foreach ($bids as $bid) {
+            if(!in_array($bid->customer, $bidder)) {
+                array_push($bidder, $bid->customer);
+            }
+        }
+
+        return $bidder;
+    }
+
     function getBiddingWinner(Request $req) {
         $bidding = Biddings::where('uuid',$req->bidding)->first();
         $start_time = strtotime($bidding->start_time);
@@ -100,19 +117,23 @@ class BiddingController extends Controller
             ->get()
             ->groupBy('customer');
 
+            $bidder = $this->getBidders($req->bidding);
+
             if($transaction) {
                 return [
                     "status" => "claiming",
                     "claimer" => $transaction->customer,
                     "winner" => ((int) $winnerIndex) ,
-                    "bids" => json_decode($bids)
+                    "bids" => json_decode($bids),
+                    "bidder" => $bidder
                 ];
             }
             else {
                 return [
                     "status" => "ended",
                     "winner" => ((int) $winnerIndex) ,
-                    "bids" => json_decode($bids)
+                    "bids" => json_decode($bids),
+                    "bidder" => $bidder
                 ];
             }
         }
