@@ -45,7 +45,15 @@ class TransactionController extends Controller
     {
         $transaction = Transaction::where("uuid", $req->uuid)->first();
         if ($transaction) {
-            $result = $transaction->update(["billing_method" => $req->billing_method]);
+            $result = $transaction->update([
+                ["billing_method" => $req->billing_method],
+                ["contact_no" => $req->contact_no],
+                ["email" => $req->email],
+                ["country" => $req->country],
+                ["state" => $req->state],
+                ["city" => $req->city],
+                ["street" => $req->street]
+            ]);
             if ($result) {
                 return ["success" => "success"];
             } else {

@@ -15,6 +15,12 @@ class Transaction extends Model
         "bid",
         "description",
         "billing_method",
+        "contact_no",
+        "email",
+        "country",
+        "state",
+        "city",
+        "street",
         "reference",
         "status"
     ];
