@@ -23,6 +23,21 @@ class BiddingController extends Controller
         return $result;
     }
 
+    function getSpecificBiddingData()
+    {
+        $result = Biddings::join("products", "products.uuid", "=", "biddings.product")
+            ->join("stores", "stores.uuid", "=", "products.store")
+            ->select("biddings.uuid as bidding", "products.product_id", "products.name", "stores.store_name")
+            ->get();
+        return $result;
+    }
+
+    function getAllActiveBidding()
+    {
+        $result = Biddings::where("status", "<>", "-1")->get();
+        return $result;
+    }
+
     function getBiddingByProduct(Request $req)
     {
         $result = Biddings::where("product", $req->product)->get();
@@ -77,15 +92,16 @@ class BiddingController extends Controller
     }
 
     //if bidder has 2 bids it counts as 1
-    function getBidders ($bidding) {
+    function getBidders($bidding)
+    {
         $bids = Bid
             ::where('bidding', $bidding)
-            ->orderBy('date','desc')
+            ->orderBy('date', 'desc')
             ->get();
         $bidder = array();
 
         foreach ($bids as $bid) {
-            if(!in_array($bid->customer, $bidder)) {
+            if (!in_array($bid->customer, $bidder)) {
                 array_push($bidder, $bid->customer);
             }
         }
@@ -93,13 +109,14 @@ class BiddingController extends Controller
         return $bidder;
     }
 
-    function getBiddingWinner(Request $req) {
+    function getBiddingWinner(Request $req)
+    {
         $bidding = Biddings::where([
-            ['uuid',$req->bidding],
-            ['status','<>',-1]
+            ['uuid', $req->bidding],
+            ['status', '<>', -1]
         ])->first();
 
-        if(!$bidding) {
+        if (!$bidding) {
             return [
                 "status" => "no_claim"
             ];
@@ -113,14 +130,14 @@ class BiddingController extends Controller
 
 
 
-        if($current_time > $end_time) {
+        if ($current_time > $end_time) {
 
             $transaction = Transaction
-            ::join('bids','bids.uuid','=','transactions.bid')
-            ->where([
-                ['bids.bidding', $req->bidding],
-                ['transactions.status','<>', 'cancelled'],
-            ])->first();
+                ::join('bids', 'bids.uuid', '=', 'transactions.bid')
+                ->where([
+                    ['bids.bidding', $req->bidding],
+                    ['transactions.status', '<>', 'cancelled'],
+                ])->first();
 
             $hoursdiff = ($current_time - $end_time) / 3600;
             //48 hrs = 2 days
@@ -129,23 +146,22 @@ class BiddingController extends Controller
             $bidder = $this->getBidders($req->bidding);
 
             $bids = Bid::where('bidding', $req->bidding)
-            ->orderBy('date', 'desc')
-            ->get()
-            ->groupBy('customer');
+                ->orderBy('date', 'desc')
+                ->get()
+                ->groupBy('customer');
 
-            if($transaction) {
+            if ($transaction) {
                 return [
                     "status" => "claiming",
                     "claimer" => $transaction->customer,
-                    "winner" => ((int) $winnerIndex) ,
+                    "winner" => ((int) $winnerIndex),
                     "bids" => json_decode($bids),
                     "bidder" => $bidder
                 ];
-            }
-            else {
+            } else {
 
                 //No Claims
-                if($winnerIndex > count($bidder)) {
+                if ($winnerIndex > count($bidder)) {
                     //TODO Product must archive
                     //Update Status
                     $result = $bidding->update(['status' => -1]);
@@ -153,30 +169,25 @@ class BiddingController extends Controller
                         "status" => "no_claim",
                         "message" => $result
                     ];
-                }
-                else
-                {
+                } else {
                     return [
                         "status" => "ended",
-                        "winner" => ((int) $winnerIndex) ,
+                        "winner" => ((int) $winnerIndex),
                         "bids" => json_decode($bids),
                         "bidder" => $bidder
                     ];
                 }
             }
-        }
-        else {
-            if($current_time >= $start_time) {
+        } else {
+            if ($current_time >= $start_time) {
                 return [
                     "status" => "on_going",
                 ];
-            }
-            else {
+            } else {
                 return [
                     "status" => "waiting",
                 ];
             }
         }
-
     }
 }

@@ -91,7 +91,8 @@ Route::post('/bidding/by_product', [BiddingController::class, 'getBiddingByProdu
 Route::post('/bidding/latest_by_product', [BiddingController::class, 'getLatestBiddingByProduct']);
 Route::post('/bidding/by_store', [BiddingController::class, 'getBiddingByStore']);
 Route::post('/bidding/winner', [BiddingController::class, 'getBiddingWinner']);
-
+Route::get('/bidding/specific_data', [BiddingController::class, 'getSpecificBiddingData']);
+Route::get('/bidding/active', [BiddingController::class, 'getAllActiveBidding']);
 //Customer
 Route::post('/customer/register', [CustomerController::class, 'addCustomer']);
 Route::post('/customer/update', [CustomerController::class, 'updateCustomer']);
