@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Bid;
 use Illuminate\Http\Request;
 use App\Models\Biddings;
+use App\Models\Transaction;
 use DateTime;
 use Illuminate\Support\Str;
 
@@ -83,22 +84,36 @@ class BiddingController extends Controller
 
         if($current_time > $end_time) {
 
+            $transaction = Transaction
+            ::join('bids','bids.uuid','=','transactions.bid')
+            ->where([
+                ['bids.bidding', $req->bidding],
+                ['transactions.status','<>', 'cancelled'],
+            ])->first();
 
-            $hoursdiff = ($current_time - $end_time) / 3600;
-            //48 hrs = 2 days
-            $winnerIndex = $hoursdiff / 48;
+            if($transaction) {
+                return [
+                    "status" => "claiming",
+                    "claimer" => $transaction->customer,
+                ];
+            }
+            else {
+                $hoursdiff = ($current_time - $end_time) / 3600;
+                //48 hrs = 2 days
+                $winnerIndex = $hoursdiff / 48;
 
-            $bids = Bid::where('bidding', $req->bidding)
+                $bids = Bid::where('bidding', $req->bidding)
                 ->orderBy('date', 'desc')
                 ->get()
                 ->groupBy('customer');
 
-            return [
-                "status" => "ended",
-                "hours" => $hoursdiff,
-                "winner" => ((int) $winnerIndex) ,
-                "bids" => json_decode($bids)
-            ];
+                return [
+                    "status" => "ended",
+                    "hours" => $hoursdiff,
+                    "winner" => ((int) $winnerIndex) ,
+                    "bids" => json_decode($bids)
+                ];
+            }
         }
         else {
             if($current_time >= $start_time) {
