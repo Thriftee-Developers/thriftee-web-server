@@ -98,6 +98,15 @@ class BiddingController extends Controller
             ['uuid',$req->bidding],
             ['status','<>',-1]
         ])->first();
+
+        if(!$bidding) {
+            return [
+                "status" => "no_claim"
+            ];
+        }
+
+
+
         $start_time = strtotime($bidding->start_time);
         $end_time = strtotime($bidding->end_time);
         $current_time = strtotime(date("y-m-d H:i:s"));
@@ -139,9 +148,10 @@ class BiddingController extends Controller
                 if($winnerIndex > count($bidder)) {
                     //TODO Product must archive
                     //Update Status
-                    $bidding->update(['status', -1]);
+                    $result = $bidding->update(['status', -1]);
                     return [
-                        "status" => "no_claim"
+                        "status" => "no_claim",
+                        "message" => $result
                     ];
                 }
                 else
