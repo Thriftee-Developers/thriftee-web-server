@@ -28,7 +28,7 @@ class TransactionController extends Controller
 
     function getTransaction(Request $req)
     {
-        $transaction = Transaction::join('bids','bids.uuid','=','transaction.bid')
+        $transaction = Transaction::join('bids','bids.uuid','=','transactions.bid')
             ->where([
                 ['bids.customer', $req->customer],
                 ['bids.bidding', $req->bidding]
