@@ -91,25 +91,26 @@ class BiddingController extends Controller
                 ['transactions.status','<>', 'cancelled'],
             ])->first();
 
+            $hoursdiff = ($current_time - $end_time) / 3600;
+            //48 hrs = 2 days
+            $winnerIndex = $hoursdiff / 48;
+
+            $bids = Bid::where('bidding', $req->bidding)
+            ->orderBy('date', 'desc')
+            ->get()
+            ->groupBy('customer');
+
             if($transaction) {
                 return [
                     "status" => "claiming",
                     "claimer" => $transaction->customer,
+                    "winner" => ((int) $winnerIndex) ,
+                    "bids" => json_decode($bids)
                 ];
             }
             else {
-                $hoursdiff = ($current_time - $end_time) / 3600;
-                //48 hrs = 2 days
-                $winnerIndex = $hoursdiff / 48;
-
-                $bids = Bid::where('bidding', $req->bidding)
-                ->orderBy('date', 'desc')
-                ->get()
-                ->groupBy('customer');
-
                 return [
                     "status" => "ended",
-                    "hours" => $hoursdiff,
                     "winner" => ((int) $winnerIndex) ,
                     "bids" => json_decode($bids)
                 ];
