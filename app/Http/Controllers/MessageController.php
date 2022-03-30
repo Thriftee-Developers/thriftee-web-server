@@ -9,7 +9,9 @@ use Illuminate\Support\Str;
 class MessageController extends Controller
 {
     //
-    function sendMessage(Request $req) {
+    function sendMessage(Request $req)
+    {
+        event(new Message($req->customer, $req->store, $req->sender, $req->content));
 
         $message = new Message();
 
@@ -20,10 +22,11 @@ class MessageController extends Controller
         $message->content = $req->content;
     }
 
-    function seenMessages(Request $req) {
+    function seenMessages(Request $req)
+    {
         $uuids = json_decode($req->messages);
 
-        foreach($uuids as $uuid) {
+        foreach ($uuids as $uuid) {
             $messages = Message::where('uuid', $uuid);
             $messages->update(['status' => 1]);
         }
