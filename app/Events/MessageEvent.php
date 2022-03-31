@@ -24,7 +24,8 @@ class MessageEvent implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        return new Channel($this->customer . "" . $this->store);
+        // return new Channel($this->customer . "" . $this->store);
+        return new Channel("message");
     }
 
     public function broadcastAs()

@@ -13,6 +13,7 @@ use App\Http\Controllers\BiddingController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\BidController;
 use App\Http\Controllers\FeaturedProductController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SliderProductController;
 use App\Http\Controllers\StoreBillingMethodController;
@@ -145,7 +146,7 @@ Route::post('/transaction/cancel', [TransactionController::class, 'cancelTransac
 Route::post('/transaction/get', [TransactionController::class, 'getTransaction']);
 
 //Chat
-Route::post('/message/send_message', [ChatController::class, 'sendChat']);
+Route::post('/message/send_message', [MessageController::class, 'sendChat']);
 
 //Dummy Route
 Route::get('/product/delete_all', [ProductController::class, 'deleteAllProduct']);

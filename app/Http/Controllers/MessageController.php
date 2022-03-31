@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Message;
+use App\Events\MessageEvent as Chat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -10,7 +11,7 @@ class MessageController extends Controller
 {
     function sendChat(Request $req)
     {
-        event(new Message($req->customer, $req->store, $req->sender, $req->content));
+        event(new Chat($req->customer, $req->store, $req->sender, $req->content));
         return ["success" => "send success"];
     }
     //
