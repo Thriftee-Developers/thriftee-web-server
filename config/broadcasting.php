@@ -39,8 +39,8 @@ return [
                 'cluster' => env('PUSHER_APP_CLUSTER'),
                 'encrypted' => true,
                 'host' => 'thrifteeserver.hirayatech.net',
-                'port' => 6001,
-                'scheme' => 'https'
+                'port' => 65002,
+                'scheme' => 'http'
             ],
             'client_options' => [
                 // Guzzle client options: https://docs.guzzlephp.org/en/stable/request-options.html
