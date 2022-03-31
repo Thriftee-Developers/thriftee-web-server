@@ -144,5 +144,8 @@ Route::post('/transaction/close', [TransactionController::class, 'closeTransacti
 Route::post('/transaction/cancel', [TransactionController::class, 'cancelTransaction']);
 Route::post('/transaction/get', [TransactionController::class, 'getTransaction']);
 
+//Chat
+Route::post('/message/send_message', [ChatController::class, 'sendChat']);
+
 //Dummy Route
 Route::get('/product/delete_all', [ProductController::class, 'deleteAllProduct']);

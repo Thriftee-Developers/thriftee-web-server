@@ -8,10 +8,14 @@ use Illuminate\Support\Str;
 
 class MessageController extends Controller
 {
+    function sendChat(Request $req)
+    {
+        event(new Message($req->customer, $req->store, $req->sender, $req->content));
+        return ["success" => "send success"];
+    }
     //
     function sendMessage(Request $req)
     {
-        event(new Message($req->customer, $req->store, $req->sender, $req->content));
 
         $message = new Message();
 
