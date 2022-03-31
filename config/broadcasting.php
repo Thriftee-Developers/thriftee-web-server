@@ -40,7 +40,7 @@ return [
                 'encrypted' => true,
                 'host' => 'thrifteeserver.hirayatech.net',
                 'port' => 6001,
-                'scheme' => 'http'
+                'scheme' => 'https'
             ],
             'client_options' => [
                 // Guzzle client options: https://docs.guzzlephp.org/en/stable/request-options.html
