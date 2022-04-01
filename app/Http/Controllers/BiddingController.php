@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Biddings;
 use App\Models\Transaction;
 use DateTime;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class BiddingController extends Controller
@@ -89,6 +90,41 @@ class BiddingController extends Controller
             "status" => $req->status,
         ]);
         return ["success" => $result];
+    }
+
+    function getPopularBidding()
+    {
+        // $bidding = Biddings::select(['biddings.*'])
+        //     ->leftJoin('bids','bids.bidding','=','biddings.uuid')
+        //     ->get()
+        //     ->groupBy('biddings.uuid');
+
+        $bidding = DB::select(
+            "SELECT
+                biddings.*,
+                products.name,
+                products.description,
+                products.store,
+                stores.store_name,
+                Count(bids.uuid) as bid_count
+            FROM biddings
+
+            LEFT JOIN bids
+            ON biddings.uuid = bids.bidding
+
+            INNER JOIN products
+            ON biddings.product = products.uuid
+
+            INNER JOIN stores
+            ON products.store = stores.uuid
+
+            WHERE biddings.start_time>=cast((now()) as date) AND biddings.end_time>cast((now()) as date)
+
+            GROUP BY biddings.uuid
+            ORDER BY bid_count DESC"
+        );
+
+        return $bidding;
     }
 
     //if bidder has 2 bids it counts as 1
