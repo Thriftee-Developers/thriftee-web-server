@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
+    'App\\Events\\MessageEvent' => $baseDir . '/app/Events/MessageEvent.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
     'App\\Http\\Controllers\\BidController' => $baseDir . '/app/Http/Controllers/BidController.php',
     'App\\Http\\Controllers\\BiddingController' => $baseDir . '/app/Http/Controllers/BiddingController.php',
@@ -16,6 +17,8 @@ return array(
     'App\\Http\\Controllers\\CustomerController' => $baseDir . '/app/Http/Controllers/CustomerController.php',
     'App\\Http\\Controllers\\FeaturedProductController' => $baseDir . '/app/Http/Controllers/FeaturedProductController.php',
     'App\\Http\\Controllers\\MediaController' => $baseDir . '/app/Http/Controllers/MediaController.php',
+    'App\\Http\\Controllers\\MessageController' => $baseDir . '/app/Http/Controllers/MessageController.php',
+    'App\\Http\\Controllers\\NotificationController' => $baseDir . '/app/Http/Controllers/NotificationController.php',
     'App\\Http\\Controllers\\ProductController' => $baseDir . '/app/Http/Controllers/ProductController.php',
     'App\\Http\\Controllers\\RatingController' => $baseDir . '/app/Http/Controllers/RatingController.php',
     'App\\Http\\Controllers\\SliderProductController' => $baseDir . '/app/Http/Controllers/SliderProductController.php',
@@ -39,6 +42,8 @@ return array(
     'App\\Models\\Conditions' => $baseDir . '/app/Models/Conditions.php',
     'App\\Models\\Customer' => $baseDir . '/app/Models/Customer.php',
     'App\\Models\\FeaturedProduct' => $baseDir . '/app/Models/FeaturedProduct.php',
+    'App\\Models\\Message' => $baseDir . '/app/Models/Message.php',
+    'App\\Models\\Notification' => $baseDir . '/app/Models/Notification.php',
     'App\\Models\\Product' => $baseDir . '/app/Models/Product.php',
     'App\\Models\\ProductCategory' => $baseDir . '/app/Models/ProductCategory.php',
     'App\\Models\\ProductCondition' => $baseDir . '/app/Models/ProductCondition.php',
