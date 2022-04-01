@@ -25,6 +25,8 @@ class MessageController extends Controller
         $message->store = $req->store;
         $message->sender = $req->sender;
         $message->content = $req->content;
+
+        $message->save();
     }
 
     function seenMessages(Request $req)
