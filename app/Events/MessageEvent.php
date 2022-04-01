@@ -31,6 +31,6 @@ class MessageEvent implements ShouldBroadcast
 
     public function broadcastAs()
     {
-        return "user-" . $this->user;
+        return "message";
     }
 }
