@@ -13,23 +13,24 @@ use Illuminate\Queue\SerializesModels;
 class MessageEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    public $customer;
-    public $store;
-    public function __construct($customer, $store, public string $sender, public string $content)
+    public $user;
+    public function __construct(public string $customer, public string $store, public string $sender, public string $content)
     {
         //
-        $this->customer = $customer;
-        $this->store = $store;
+        $this->user = $store;
+        if ($sender === "store") {
+            $this->user = $customer;
+        }
     }
 
     public function broadcastOn()
     {
-        return new Channel($this->customer . "" . $this->store);
+        return new Channel("message");
         // return new Channel("message");
     }
 
     public function broadcastAs()
     {
-        return 'message';
+        return "user-" . $this->user;
     }
 }
