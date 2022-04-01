@@ -38,7 +38,7 @@ return [
             'options' => [
                 'cluster' => env('PUSHER_APP_CLUSTER'),
                 'encrypted' => true,
-                'host' => 'thrifteeserver.hirayatech.net',
+                'host' => '194.163.35.34',
                 'port' => 6001,
                 'scheme' => 'http'
             ],
