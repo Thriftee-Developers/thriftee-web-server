@@ -102,6 +102,7 @@ class BiddingController extends Controller
         $bidding = DB::select(
             "SELECT
                 biddings.*,
+                products.product_id,
                 products.name,
                 products.description,
                 products.store,
