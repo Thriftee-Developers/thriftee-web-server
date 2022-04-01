@@ -151,6 +151,7 @@ Route::post('/transaction/get', [TransactionController::class, 'getTransaction']
 //Chat
 Route::post('/message/send_chat', [MessageController::class, 'sendChat']);
 Route::post('/message/get', [MessageController::class, 'getMessages']);
-Route::post('/message/send_message', [MessageController::class, 'sendMessages']);
+Route::post('/message/send_message', [MessageController::class, 'sendMessage']);
+Route::post('/message/latest', [MessageController::class, 'getLatestMessage']);
 //Dummy Route
 Route::get('/product/delete_all', [ProductController::class, 'deleteAllProduct']);
