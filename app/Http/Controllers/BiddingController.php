@@ -106,6 +106,7 @@ class BiddingController extends Controller
                 products.description,
                 products.store,
                 stores.store_name,
+                productimages.path,
                 Count(bids.uuid) as bid_count
             FROM biddings
 
@@ -117,6 +118,12 @@ class BiddingController extends Controller
 
             INNER JOIN stores
             ON products.store = stores.uuid
+
+            LEFT JOIN (
+                SELECT * FROM productimages ORDER BY path DESC
+            ) productimages
+
+            ON productimages.product = products.uuid
 
             WHERE biddings.start_time>=cast((now()) as date) AND biddings.end_time>cast((now()) as date)
 
