@@ -29,6 +29,16 @@ class MessageController extends Controller
         $message->save();
     }
 
+    function getMessages(Request $req)
+    {
+        $result = Message::where("customer", $req->customer)
+            ->where("store", $req->store)
+            ->orderBy("date", "asc")
+            ->get();
+
+        return $result;
+    }
+
     function seenMessages(Request $req)
     {
         $uuids = json_decode($req->messages);
