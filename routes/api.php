@@ -116,6 +116,8 @@ Route::post('/bid/by_product', [BidController::class, 'getBidByProduct']);
 Route::post('/bid/by_customer_product', [BidController::class, 'getBidByProductAndCustomer']);
 Route::post('/bid/total_number_of_bids', [BidController::class, 'getTotalNumberOfBids']);
 Route::post('/bid/by_bidding_customer', [BidController::class, 'getBidByBiddingAndCustomer']);
+Route::post('/bid/sync', [BidController::class, 'syncBid']);
+
 //Rating
 Route::post('/rating/add', [RatingController::class, 'addRating']);
 Route::post('/rating/by_store', [RatingController::class, 'getRatingByStore']);
