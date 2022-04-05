@@ -162,6 +162,8 @@ Route::post('/notification/add_customer', [NotificationController::class, 'addCu
 Route::post('/notification/add_store', [NotificationController::class, 'addStoreNotification']);
 Route::post('/notification/get_customer', [NotificationController::class, 'getCustomerNotification']);
 Route::post('/notification/get_store', [NotificationController::class, 'getStoreNotification']);
+Route::post('/notification/delete_store', [NotificationController::class, 'deleteStoreNotification']);
+Route::post('/notification/delete_customer', [NotificationController::class, 'deleteCustomerNotification']);
 
 //Dummy Route
 Route::get('/product/delete_all', [ProductController::class, 'deleteAllProduct']);
