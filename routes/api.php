@@ -14,6 +14,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\BidController;
 use App\Http\Controllers\FeaturedProductController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SliderProductController;
 use App\Http\Controllers\StoreBillingMethodController;
@@ -155,5 +156,12 @@ Route::post('/message/send_chat', [MessageController::class, 'sendChat']);
 Route::post('/message/get', [MessageController::class, 'getMessages']);
 Route::post('/message/send_message', [MessageController::class, 'sendMessage']);
 Route::post('/message/latest', [MessageController::class, 'getLatestMessage']);
+
+//Notification
+Route::post('/notification/add_customer', [NotificationController::class, 'addCustomerNotification']);
+Route::post('/notification/add_store', [NotificationController::class, 'addStoreNotification']);
+Route::post('/notification/get_customer', [NotificationController::class, 'getCustomerNotification']);
+Route::post('/notification/get_store', [NotificationController::class, 'getStoreNotification']);
+
 //Dummy Route
 Route::get('/product/delete_all', [ProductController::class, 'deleteAllProduct']);
