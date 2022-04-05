@@ -10,27 +10,24 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class MessageEvent implements ShouldBroadcast
+class BidEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    public $user;
-    public function __construct(public string $customer, public string $store, public string $sender, public string $content)
+
+    public $bidding;
+    public function __construct($bidding, public string $customer, public string $amount, public string $noOfBid)
     {
         //
-        $this->user = $store;
-        if ($sender === "store") {
-            $this->user = $customer;
-        }
+        $this->bidding = $bidding;
     }
 
     public function broadcastOn()
     {
-        return new Channel("message");
-        // return new Channel("message");
+        return new Channel("bidding");
     }
 
     public function broadcastAs()
     {
-        return "user-" . $this->user;
+        return "bidding-" . $this->bidding;
     }
 }

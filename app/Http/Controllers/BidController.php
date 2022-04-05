@@ -4,12 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Bid;
+use App\Events\BidEvent;
 use App\Models\Biddings;
 use Illuminate\Support\Str;
 
 class BidController extends Controller
 {
     //
+
+    function syncBid(Request $req)
+    {
+        event(new BidEvent($req->bidding, $req->customer, $req->amount, $req->noOfBid));
+        return "success";
+    }
 
     function addBid(Request $req)
     {
@@ -60,7 +67,7 @@ class BidController extends Controller
     {
         $result = Bid::join("biddings", "bids.bidding", "=", "biddings.uuid")
             ->join("products", "biddings.product", "=", "products.uuid")
-            ->where("customer", $req->customer)->orderBy("date","desc")->get()->groupBy("bidding");
+            ->where("customer", $req->customer)->orderBy("date", "desc")->get()->groupBy("bidding");
         return $result->toArray();
     }
 
@@ -91,11 +98,12 @@ class BidController extends Controller
         return $result;
     }
 
-    function getBidByBiddingAndCustomer (Request $req) {
+    function getBidByBiddingAndCustomer(Request $req)
+    {
         $result = Bid::where("bidding", $req->bidding)
-                    ->where("customer",$req->customer)
-                    ->orderBy("amount", "desc")
-                    ->get();
+            ->where("customer", $req->customer)
+            ->orderBy("amount", "desc")
+            ->get();
         return $result;
     }
 }

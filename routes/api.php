@@ -14,6 +14,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\BidController;
 use App\Http\Controllers\FeaturedProductController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SliderProductController;
 use App\Http\Controllers\StoreBillingMethodController;
@@ -116,6 +117,8 @@ Route::post('/bid/by_product', [BidController::class, 'getBidByProduct']);
 Route::post('/bid/by_customer_product', [BidController::class, 'getBidByProductAndCustomer']);
 Route::post('/bid/total_number_of_bids', [BidController::class, 'getTotalNumberOfBids']);
 Route::post('/bid/by_bidding_customer', [BidController::class, 'getBidByBiddingAndCustomer']);
+Route::post('/bid/sync', [BidController::class, 'syncBid']);
+
 //Rating
 Route::post('/rating/add', [RatingController::class, 'addRating']);
 Route::post('/rating/by_store', [RatingController::class, 'getRatingByStore']);
@@ -153,5 +156,14 @@ Route::post('/message/send_chat', [MessageController::class, 'sendChat']);
 Route::post('/message/get', [MessageController::class, 'getMessages']);
 Route::post('/message/send_message', [MessageController::class, 'sendMessage']);
 Route::post('/message/latest', [MessageController::class, 'getLatestMessage']);
+
+//Notification
+Route::post('/notification/add_customer', [NotificationController::class, 'addCustomerNotification']);
+Route::post('/notification/add_store', [NotificationController::class, 'addStoreNotification']);
+Route::post('/notification/get_customer', [NotificationController::class, 'getCustomerNotification']);
+Route::post('/notification/get_store', [NotificationController::class, 'getStoreNotification']);
+Route::post('/notification/delete_store', [NotificationController::class, 'deleteStoreNotification']);
+Route::post('/notification/delete_customer', [NotificationController::class, 'deleteCustomerNotification']);
+
 //Dummy Route
 Route::get('/product/delete_all', [ProductController::class, 'deleteAllProduct']);
