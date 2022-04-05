@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\Bid;
 use App\Models\Biddings;
@@ -12,8 +13,6 @@ use App\Models\ProductCategory;
 use App\Models\ProductCondition;
 use App\Models\ProductImage;
 use App\Models\ProductTag;
-
-use DB;
 
 class ProductController extends Controller
 {
@@ -33,7 +32,54 @@ class ProductController extends Controller
     }
 
     function getStoreProducts(Request $req){
-        $result = Product::where('store', $req->store)->get();
+        $bidding = DB::select(
+            "SELECT
+                products.*,
+                Count(biddings.uuid) as bidding_count,
+                productimages.path as image,
+                mBids.highest as highest_bid,
+                latestbidding.uuid as latest_bidding
+
+            FROM products
+
+            -- Get bidding counts
+            LEFT JOIN biddings
+            ON biddings.product = products.uuid
+
+            -- Get Latest Bidding
+            LEFT JOIN (
+                SELECT *, MAX(end_time) as latest_bidding FROM biddings GROUP BY product
+            ) latestbidding
+            ON latestbidding.product = products.uuid
+
+            -- Get Latest bidding's highest bid
+            LEFT OUTER JOIN (
+                SELECT bidding, MAX(amount) AS highest
+                FROM bids
+                GROUP BY bidding
+            ) mBids
+            ON mBids.bidding = latestbidding.uuid
+
+            -- Get product's first image
+            LEFT JOIN (
+                SELECT path, product, MIN(name) AS name FROM productimages GROUP BY product
+            ) productimages
+            ON productimages.product = products.uuid
+
+            WHERE products.store = ".$req->store."
+
+            GROUP BY products.uuid"
+        );
+
+        return $bidding;
+    }
+
+    function getStoreArchiveProducs(Request $req){
+        $result = Product::where([
+            ['store', $req->store],
+            ['status', -1]
+        ])->get();
+
         return $result;
     }
 
