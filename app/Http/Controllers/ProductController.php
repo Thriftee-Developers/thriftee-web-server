@@ -66,7 +66,7 @@ class ProductController extends Controller
             ) productimages
             ON productimages.product = products.uuid
 
-            WHERE products.store = ".$req->store."
+            WHERE products.store = '".$req->store."'
 
             GROUP BY products.uuid"
         );
