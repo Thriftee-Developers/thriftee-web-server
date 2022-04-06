@@ -36,8 +36,7 @@ class ProductController extends Controller
             "SELECT
                 products.*,
                 Count(biddings.uuid) as bidding_count,
-                productimages.path as image,
-                mBids.highest as highest_bid,
+                productimages.path as image
             FROM products
 
             -- Get bidding counts
@@ -51,12 +50,12 @@ class ProductController extends Controller
             -- ON latestbidding.product = products.uuid
 
             -- Get Latest bidding's highest bid
-            LEFT OUTER JOIN (
-                SELECT bidding, MAX(amount) AS highest
-                FROM bids
-                GROUP BY bidding
-            ) mBids
-            ON mBids.bidding = latestbidding.uuid
+            -- LEFT OUTER JOIN (
+            --     SELECT bidding, MAX(amount) AS highest
+            --     FROM bids
+            --     GROUP BY bidding
+            -- ) mBids
+            -- ON mBids.bidding = latestbidding.uuid
 
             -- Get product's first image
             LEFT JOIN (
