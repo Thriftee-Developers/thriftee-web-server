@@ -52,10 +52,14 @@ Route::get('/product/all', [ProductController::class, 'getAllProducts']);
 Route::post('/product/get', [ProductController::class, 'getProduct']);
 Route::post('/product/id', [ProductController::class, 'getProductByID']);
 Route::post('/product/add', [ProductController::class, 'addProduct']);
-Route::post('/product/store', [ProductController::class, 'getStoreProducts']);
 Route::post('/product/delete', [ProductController::class, 'deleteProduct']);
 Route::post('/product/category', [CategoryController::class, 'getCategoryByProduct']);
 Route::post('/product/condition', [ConditionController::class, 'getConditionByProduct']);
+
+//Get by store
+Route::post('/product/active/store', [ProductController::class, 'getStoreActiveProducts']);
+Route::post('/product/completed/store', [ProductController::class, 'getStoreCompletedProducts']);
+Route::post('/product/archived/store', [ProductController::class, 'getStoreArchivedProducts']);
 
 //Product Condition
 // Route::get('/product_condition/all',[ProductConditionController::class, 'getProductCondition']);

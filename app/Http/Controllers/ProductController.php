@@ -31,7 +31,7 @@ class ProductController extends Controller
         return $result;
     }
 
-    function getStoreProducts(Request $req){
+    function getStoreActiveProducts(Request $req){
         $bidding = DB::select(
             "SELECT
                 products.*,
@@ -66,7 +66,9 @@ class ProductController extends Controller
             ) productimages
             ON productimages.product = products.uuid
 
-            WHERE products.store = '".$req->store."'
+            WHERE
+                products.store = '".$req->store."'
+                AND products.status = 0
 
             GROUP BY products.uuid"
         );
@@ -74,10 +76,19 @@ class ProductController extends Controller
         return $bidding;
     }
 
-    function getStoreArchiveProducs(Request $req){
+    function getStoreArchivedProducts(Request $req){
         $result = Product::where([
             ['store', $req->store],
             ['status', -1]
+        ])->get();
+
+        return $result;
+    }
+
+    function getStoreCompletedProducts(Request $req){
+        $result = Product::where([
+            ['store', $req->store],
+            ['status', 1]
         ])->get();
 
         return $result;
