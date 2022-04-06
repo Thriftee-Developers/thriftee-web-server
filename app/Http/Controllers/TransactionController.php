@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Bid;
 use App\Models\Biddings;
 use App\Models\Customer;
+use App\Models\Product;
 use App\Models\StoreBillingMethod;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
@@ -65,6 +66,9 @@ class TransactionController extends Controller
 
             $bidding = Biddings::where('uuid', $item->bidding)->first();
             $item->bidding = $bidding;
+
+            $product = Product::where('uuid', $bidding->product)->first();
+            $item->product = $product;
 
             $bid = Bid::where('uuid', $item->bid)->first();
             $item->bid = $bid;
