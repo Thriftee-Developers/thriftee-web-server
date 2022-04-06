@@ -85,7 +85,7 @@ class ProductController extends Controller
                 $result->bids = $bids;
             }
 
-            $item->latest_bidding = $result;
+            $item->latestbidding = $result;
         }
 
         return $bidding;
