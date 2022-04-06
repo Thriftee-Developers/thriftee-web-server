@@ -5,12 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Models\CustomerNotification;
 use App\Models\StoreNotification;
+use App\Events\NotificationEvent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class NotificationController extends Controller
 {
     //
+    public function syncNotification(Request $req)
+    {
+        event(new NotificationEvent($req->user, $req->type, $req->content));
+    }
+
     function addCustomerNotification(Request $req)
     {
         $customerNotification = new CustomerNotification();
