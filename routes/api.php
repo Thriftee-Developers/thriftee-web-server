@@ -154,6 +154,8 @@ Route::post('/transaction/invalid', [TransactionController::class, 'invalidPayme
 Route::post('/transaction/close', [TransactionController::class, 'closeTransaction']);
 Route::post('/transaction/cancel', [TransactionController::class, 'cancelTransaction']);
 Route::post('/transaction/get', [TransactionController::class, 'getTransaction']);
+Route::post('/transaction/incomplete', [TransactionController::class, 'getIncompleteTransactions']);
+Route::post('/transaction/complete', [TransactionController::class, 'getCompletedTransactions']);
 
 //Chat
 Route::post('/message/send_chat', [MessageController::class, 'sendChat']);

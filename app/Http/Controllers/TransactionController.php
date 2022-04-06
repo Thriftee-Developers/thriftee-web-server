@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bid;
+use App\Models\Biddings;
+use App\Models\Customer;
+use App\Models\StoreBillingMethod;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -39,6 +43,68 @@ class TransactionController extends Controller
             ])->first();
 
         return $transaction;
+    }
+
+    function getIncompleteTransactions(Request $req)
+    {
+        $transactions = Transaction
+            ::select(
+                'transactions.*',
+                'bids.bidding',
+                'bids.customer')
+            ->join('bids','bids.uuid','=','transactions.bid')
+            ->join('storebillingmethods', 'storebillingmethods.uuid', '=', 'transactions.billing_method')
+            ->where([
+                ['storebillingmethods.store', $req->store],
+                ['status','<>','complete']
+            ])->get();
+
+        foreach($transactions as $item) {
+            $customer = Customer::where('uuid', $item->customer)->first();
+            $item->customer = $customer;
+
+            $bidding = Biddings::where('uuid', $item->bidding)->first();
+            $item->bidding = $bidding;
+
+            $bid = Bid::where('uuid', $item->bid)->first();
+            $item->bid = $bid;
+
+            $billingmethod = StoreBillingMethod::where('uuid', $item->billing_method)->first();
+            $item->billing_method = $billingmethod;
+        }
+
+        return $transactions;
+    }
+
+    function getCompletedTransactions(Request $req)
+    {
+        $transactions = Transaction
+            ::select(
+                'transactions.*',
+                'bids.bidding',
+                'bids.customer')
+            ->join('bids','bids.uuid','=','transactions.bid')
+            ->join('storebillingmethods', 'storebillingmethods.uuid', '=', 'transactions.billing_method')
+            ->where([
+                ['storebillingmethods.store', $req->store],
+                ['status','complete']
+            ])->get();
+
+        foreach($transactions as $item) {
+            $customer = Customer::where('uuid', $item->customer)->first();
+            $item->customer = $customer;
+
+            $bidding = Biddings::where('uuid', $item->bidding)->first();
+            $item->bidding = $bidding;
+
+            $bid = Bid::where('uuid', $item->bid)->first();
+            $item->bid = $bid;
+
+            $billingmethod = StoreBillingMethod::where('uuid', $item->billing_method)->first();
+            $item->billing_method = $billingmethod;
+        }
+
+        return $transactions;
     }
 
     function updatePaymentMethod(Request $req)

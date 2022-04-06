@@ -133,7 +133,7 @@ class BiddingController extends Controller
             ) mBids
             ON mBids.bidding = biddings.uuid
 
-            WHERE biddings.start_time>=cast((now()) as date) AND biddings.end_time>cast((now()) as date)
+            WHERE biddings.start_time<=now() AND biddings.end_time>now()
 
             GROUP BY biddings.uuid
             ORDER BY bid_count DESC"
