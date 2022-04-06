@@ -38,8 +38,6 @@ class ProductController extends Controller
                 Count(biddings.uuid) as bidding_count,
                 productimages.path as image,
                 mBids.highest as highest_bid,
-                latestbidding.uuid as latest_bidding
-
             FROM products
 
             -- Get bidding counts
@@ -47,10 +45,10 @@ class ProductController extends Controller
             ON biddings.product = products.uuid
 
             -- Get Latest Bidding
-            LEFT JOIN (
-                SELECT *, MAX(end_time) as latest_bidding FROM biddings GROUP BY product
-            ) latestbidding
-            ON latestbidding.product = products.uuid
+            -- LEFT JOIN (
+            --     SELECT *, MAX(end_time) as latest_bidding FROM biddings GROUP BY product
+            -- ) latestbidding
+            -- ON latestbidding.product = products.uuid
 
             -- Get Latest bidding's highest bid
             LEFT OUTER JOIN (
@@ -72,6 +70,20 @@ class ProductController extends Controller
 
             GROUP BY products.uuid"
         );
+
+        foreach($bidding as $item) {
+            $result = DB::selectOne(
+                "SELECT
+                    *,
+                    MAX(end_time) as latest_bidding
+                FROM
+                    biddings
+                WHERE
+                    biddings.product='".$item->uuid."'"
+            );
+
+            $item->latest_bidding = $result;
+        }
 
         return $bidding;
     }
