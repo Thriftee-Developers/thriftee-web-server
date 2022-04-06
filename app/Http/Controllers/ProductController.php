@@ -71,15 +71,19 @@ class ProductController extends Controller
         );
 
         foreach($bidding as $item) {
-            $result = DB::selectOne(
-                "SELECT
-                    *,
-                    MAX(end_time) as latest_bidding
-                FROM
-                    biddings
-                WHERE
-                    biddings.product='".$item->uuid."'"
-            );
+            $result = Biddings
+                ::where('product',$item->uuid)
+                ->orderBy('created_at', 'desc')
+                ->first();
+
+            if($result) {
+                $bids = Bid
+                    ::where('bidding', $result->uuid)
+                    ->orderBy('amount', 'desc')
+                    ->get();
+
+                $result->bids = $bids;
+            }
 
             $item->latest_bidding = $result;
         }
