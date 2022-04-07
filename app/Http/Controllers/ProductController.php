@@ -65,7 +65,7 @@ class ProductController extends Controller
 
             WHERE
                 products.store = '".$req->store."'
-                AND products.status = 0
+                AND products.status = 'active'
 
             GROUP BY products.uuid"
         );
@@ -94,7 +94,7 @@ class ProductController extends Controller
     function getStoreArchivedProducts(Request $req){
         $result = Product::where([
             ['store', $req->store],
-            ['status', -1]
+            ['status', 'archived']
         ])->get();
 
         return $result;
@@ -103,7 +103,7 @@ class ProductController extends Controller
     function getStoreCompletedProducts(Request $req){
         $result = Product::where([
             ['store', $req->store],
-            ['status', 1]
+            ['status', 'sold']
         ])->get();
 
         return $result;

@@ -35,7 +35,7 @@ class BiddingController extends Controller
 
     function getAllActiveBidding()
     {
-        $result = Biddings::where("status", "<>", "-1")->get();
+        $result = Biddings::where("status", "<>", "active")->get();
         return $result;
     }
 
@@ -215,7 +215,7 @@ class BiddingController extends Controller
                 if ($winnerIndex > count($bidder)) {
                     //TODO Product must archive
                     //Update Status
-                    $result = $bidding->update(['status' => -1]);
+                    $result = $bidding->update(['status' => "claim_failed"]);
                     return [
                         "status" => "no_claim",
                         "message" => $result

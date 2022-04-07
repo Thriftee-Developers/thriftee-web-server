@@ -49,7 +49,7 @@ class TransactionController extends Controller
         return $transaction;
     }
 
-    function getNoPayment(Request $req)
+    function getStoreNoPayment(Request $req)
     {
         $transactions = Transaction
             ::select(
@@ -88,7 +88,7 @@ class TransactionController extends Controller
         return $transactions;
     }
 
-    function getForValidation(Request $req)
+    function getStoreForValidation(Request $req)
     {
         $transactions = Transaction
             ::select(
@@ -125,7 +125,7 @@ class TransactionController extends Controller
         return $transactions;
     }
 
-    function getCompletedTransactions(Request $req)
+    function getStoreCompletedTransactions(Request $req)
     {
         $transactions = Transaction
             ::select(
@@ -137,6 +137,43 @@ class TransactionController extends Controller
             ->where([
                 ['storebillingmethods.store', $req->store],
                 ['transactions.status','complete']
+            ])->get();
+
+        foreach($transactions as $item) {
+            $customer = Customer::where('uuid', $item->customer)->first();
+            $item->customer = $customer;
+
+            $bidding = Biddings::where('uuid', $item->bidding)->first();
+            $item->bidding = $bidding;
+
+            $product = Product::where('uuid', $bidding->product)->first();
+            $item->product = $product;
+
+            $image = ProductImage::where('product', $product->uuid)->first();
+            $item->product->image = $image->path;
+
+            $bid = Bid::where('uuid', $item->bid)->first();
+            $item->bid = $bid;
+
+            $billingmethod = StoreBillingMethod::where('uuid', $item->billing_method)->first();
+            $item->billing_method = $billingmethod;
+        }
+
+        return $transactions;
+    }
+
+    function getStoreCancelledTransactions(Request $req)
+    {
+        $transactions = Transaction
+            ::select(
+                'transactions.*',
+                'bids.bidding',
+                'bids.customer')
+            ->join('bids','bids.uuid','=','transactions.bid')
+            ->join('storebillingmethods', 'storebillingmethods.uuid', '=', 'transactions.billing_method')
+            ->where([
+                ['storebillingmethods.store', $req->store],
+                ['transactions.status','cancelled']
             ])->get();
 
         foreach($transactions as $item) {
@@ -218,30 +255,47 @@ class TransactionController extends Controller
     }
     function validatePayment(Request $req)
     {
-
-        //check store password
+        //get store
         $store = Store::where('uuid', $req->store)->first();
 
+        //check store password
         if($store && Hash::check($req->password, $store->password)) {
-            $transaction = Transaction::where("uuid", $req->transaction)->first();
+            $transaction = Transaction
+                ::select(
+                    'transactions.*',
+                    'products.name as product_name'
+                )
+                ->leftJoin('bids','bids.uuid','=','transactions.bid')
+                ->leftJoin('biddings','biddings.uuid','=','bids.bidding')
+                ->leftJoin('products','products.uuid','=','biddings.product')
+
+                ->where("transactions.uuid", $req->transaction)
+                ->first();
             if ($transaction) {
 
-                $currentTime = date("Y-m-d H:i:s");
-                $result = $transaction->update([
+                //Update Transaction Status
+                $transaction->update([
                     "status" => "complete",
-                    "validate_at" => $currentTime
+                    "validate_at" => date("Y-m-d H:i:s")
                 ]);
 
+                //Send notification
                 $notif = new Request();
                 $notif->customer = $req->customer;
                 $notif->type = "payment_validate";
-                $notif->content = "Your payment has been validated for ";
-
+                $notif->details = json_encode([
+                    "customer" => $req->customer,
+                    "transaction" => $transaction->uuid,
+                    "product_name" => $transaction->product_name,
+                    "store_name" =>  $store->store_name
+                ]);
                 $notifCtrl = new NotificationController();
                 $result = $notifCtrl->addCustomerNotification($notif);
 
                 if ($result) {
-                    return ["success" => "success"];
+                    return [
+                        "success" => "success"
+                    ];
                 } else {
                     return ["error" => "Error updating status"];
                 }
@@ -256,13 +310,40 @@ class TransactionController extends Controller
     }
     function revokePayment(Request $req)
     {
-        //check store password
+        //get store
         $store = Store::where('uuid', $req->store)->first();
 
+        //check store password
         if($store && Hash::check($req->password, $store->password)) {
-            $transaction = Transaction::where("uuid", $req->transaction)->first();
+            $transaction = Transaction
+                ::select(
+                    'transactions.*',
+                    'products.name as product_name'
+                )
+                ->leftJoin('bids','bids.uuid','=','transactions.bid')
+                ->leftJoin('biddings','biddings.uuid','=','bids.bidding')
+                ->leftJoin('products','products.uuid','=','biddings.product')
+
+                ->where("transactions.uuid", $req->transaction)
+                ->first();
+
             if ($transaction) {
+                //Update status
                 $result = $transaction->update(["status" => "invalid_payment"]);
+
+                //Send notification
+                $notif = new Request();
+                $notif->customer = $req->customer;
+                $notif->type = "payment_revoked";
+                $notif->details = json_encode([
+                    "customer" => $req->customer,
+                    "transaction" => $transaction->uuid,
+                    "product_name" => $transaction->product_name,
+                    "store_name" =>  $store->store_name
+                ]);
+                $notifCtrl = new NotificationController();
+                $result = $notifCtrl->addCustomerNotification($notif);
+
                 if ($result) {
                     return ["success" => "success"];
                 } else {
@@ -274,21 +355,6 @@ class TransactionController extends Controller
         }
         else {
             return ["error" => "Invalid Password"];
-        }
-    }
-
-    function closeTransaction(Request $req)
-    {
-        $transaction = Transaction::where("uuid", $req->uuid)->first();
-        if ($transaction) {
-            $result = $transaction->update(["status" => "success"]);
-            if ($result) {
-                return ["success" => "success"];
-            } else {
-                return ["error" => "Error updating status!"];
-            }
-        } else {
-            return ["error" => "Transaction not found!"];
         }
     }
 

@@ -148,12 +148,11 @@ Route::post('/store/billing/get', [StoreBillingMethodController::class, 'getStor
 Route::post('/transaction/get', [TransactionController::class, 'getTransaction']);
 Route::post('/transaction/add', [TransactionController::class, 'addTransaction']);
 Route::post('/transaction/update_payment', [TransactionController::class, 'updatePaymentMethod']);
-
-Route::post('/transaction/no_payment', [TransactionController::class, 'getNoPayment']);
-Route::post('/transaction/for_validation', [TransactionController::class, 'getForValidation']);
-Route::post('/transaction/complete', [TransactionController::class, 'getCompletedTransactions']);
-Route::post('/transaction/close', [TransactionController::class, 'closeTransaction']);
 Route::post('/transaction/cancel', [TransactionController::class, 'cancelTransaction']);
+
+Route::post('/transaction/store/no_payment', [TransactionController::class, 'getStoreNoPayment']);
+Route::post('/transaction/store/for_validation', [TransactionController::class, 'getStoreForValidation']);
+Route::post('/transaction/store/complete', [TransactionController::class, 'getStoreCompletedTransactions']);
 
 Route::post('/transaction/payment/send', [TransactionController::class, 'sendReference']);
 Route::post('/transaction/payment/cancel', [TransactionController::class, 'cancelReference']);

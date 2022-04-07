@@ -14,7 +14,7 @@ class NotificationController extends Controller
     //
     public function syncNotification(Request $req)
     {
-        event(new NotificationEvent($req->user, $req->type, $req->content));
+        event(new NotificationEvent($req->user, $req->type, $req->details));
     }
 
     function addCustomerNotification(Request $req)
@@ -23,7 +23,7 @@ class NotificationController extends Controller
         $customerNotification->uuid = Str::uuid();
         $customerNotification->customer = $req->customer;
         $customerNotification->type = $req->type;
-        $customerNotification->content = $req->content;
+        $customerNotification->details = $req->details;
         $customerNotification->date = date("Y-m-d H:i:s");
 
         $customerNotification->save();
@@ -37,7 +37,7 @@ class NotificationController extends Controller
         $storeNotification->uuid = Str::uuid();
         $storeNotification->store = $req->store;
         $storeNotification->type = $req->type;
-        $storeNotification->content = $req->content;
+        $storeNotification->details = $req->details;
 
         $storeNotification->save();
         return ["sucess" => "success"];
