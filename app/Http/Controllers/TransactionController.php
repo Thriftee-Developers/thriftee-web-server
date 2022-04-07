@@ -235,7 +235,7 @@ class TransactionController extends Controller
                 $notif = new Request();
                 $notif->customer = $req->customer;
                 $notif->type = "payment_validate";
-                $notif->content = "Your payment has been validated for ".$transaction->uuid;
+                $notif->content = "Your payment has been validated for ";
 
                 $notifCtrl = new NotificationController();
                 $result = $notifCtrl->addCustomerNotification($notif);
