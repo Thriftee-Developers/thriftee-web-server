@@ -232,13 +232,15 @@ class TransactionController extends Controller
                     "validate_at" => $currentTime
                 ]);
 
-                $notif = new Request();
-                $notif->customer = $req->customer;
-                $notif->type = "payment_validate";
-                $notif->content = [
+                $content = [
                     "customer" => $req->customer,
                     "transaction" => $req->transaction
                 ];
+
+                $notif = new Request();
+                $notif->customer = $req->customer;
+                $notif->type = "payment_validate";
+                $notif->content = $content;
 
                 $notifCtrl = new NotificationController();
                 $result = $notifCtrl->addCustomerNotification($notif);
