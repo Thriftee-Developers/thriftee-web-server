@@ -22,6 +22,7 @@ class Transaction extends Model
         "city",
         "street",
         "reference",
-        "status"
+        "status",
+        "validate_at"
     ];
 }

@@ -186,7 +186,10 @@ class TransactionController extends Controller
         if($store && Hash::check($req->password, $store->password)) {
             $transaction = Transaction::where("uuid", $req->transaction)->first();
             if ($transaction) {
-                $result = $transaction->update(["status" => "complete"]);
+                $result = $transaction->update([
+                    "status" => "complete",
+                    "validate_at" => date("Y-m-d H:i:s"),
+                ]);
                 if ($result) {
                     return ["success" => "success"];
                 } else {
