@@ -150,7 +150,7 @@ class BiddingController extends Controller
             ) mBids
             ON mBids.bidding = biddings.uuid
 
-            WHERE status = 'on_going'
+            WHERE biddings.status = 'on_going'
 
             GROUP BY biddings.uuid
             ORDER BY bid_count DESC"
