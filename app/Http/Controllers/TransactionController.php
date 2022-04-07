@@ -33,6 +33,18 @@ class TransactionController extends Controller
         $transaction->status = "no_payment";
 
         $transaction->save();
+
+        //Update Bidding Status
+        $bidding = Biddings::select(['biddings.*'])
+            ->rightJoin('bids','bids.bidding','=','biddings.uuid')
+            ->where('bids.uuid',$req->bid)
+            ->first();
+        $bidding->update(['status'=>'under_transaction']);
+
+        //Update Product Status
+        $product = Product::where('uuid', $bidding->product)->first();
+        $product->update(['status'=>'under_transaction']);
+
         return ["success" => "success"];
     }
 
@@ -110,10 +122,11 @@ class TransactionController extends Controller
             $item->bidding = $bidding;
 
             $product = Product::where('uuid', $bidding->product)->first();
+            $image = ProductImage::where('product', $product->uuid)
+                ->orderBy('name','ASC')
+                ->first();
+            $product->image = $image->path;
             $item->product = $product;
-
-            $image = ProductImage::where('product', $product->uuid)->first();
-            $item->product->image = $image->path;
 
             $bid = Bid::where('uuid', $item->bid)->first();
             $item->bid = $bid;
@@ -265,6 +278,8 @@ class TransactionController extends Controller
             $transaction = Transaction
                 ::select(
                     'transactions.*',
+                    'biddings.uuid as bidding',
+                    'products.uuid as product',
                     'products.name as product_name'
                 )
                 ->leftJoin('bids','bids.uuid','=','transactions.bid')
@@ -280,6 +295,14 @@ class TransactionController extends Controller
                     "status" => "complete",
                     "validate_at" => date("Y-m-d H:i:s")
                 ]);
+
+                //Update Bidding
+                $bidding = Biddings::where('uuid', $transaction->bidding)->first();
+                $bidding->update(['status' => 'success']);
+
+                //Update Product Status
+                $product = Product::where('uuid', $bidding->product)->first();
+                $product->update(['status'=>'sold']);
 
                 //Send notification
                 $notif = new Request();
