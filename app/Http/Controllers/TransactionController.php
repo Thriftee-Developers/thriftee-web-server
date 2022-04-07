@@ -232,10 +232,7 @@ class TransactionController extends Controller
                     "validate_at" => $currentTime
                 ]);
 
-                $content = [
-                    "customer" => $req->customer,
-                    "transaction" => $req->transaction
-                ];
+                $content = 'Your payment has been validated for '.$req->transaction;
 
                 $notif = new Request();
                 $notif->customer = $req->customer;
