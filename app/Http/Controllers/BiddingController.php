@@ -68,6 +68,8 @@ class BiddingController extends Controller
 
     function getBiddingsByStore(Request $req)
     {
+        $this->checkWaitingBiddings();
+        $this->checkActiveBiddings();
         $result = Biddings::join("products", "biddings.product", "=", "products.uuid")->where("store", $req->uuid)->get();
         return $result;
     }
@@ -111,6 +113,9 @@ class BiddingController extends Controller
         //     ->get()
         //     ->groupBy('biddings.uuid');
 
+        $this->checkWaitingBiddings();
+        $this->checkActiveBiddings();
+
         $bidding = DB::select(
             "SELECT
                 biddings.*,
@@ -145,7 +150,7 @@ class BiddingController extends Controller
             ) mBids
             ON mBids.bidding = biddings.uuid
 
-            WHERE biddings.start_time<=now() AND biddings.end_time>now()
+            WHERE status = 'on_going'
 
             GROUP BY biddings.uuid
             ORDER BY bid_count DESC"
@@ -254,8 +259,10 @@ class BiddingController extends Controller
         }
     }
 
+
+    //Check And Update Bidding Status
     function checkBiddingStatus ($uuid) {
-        $bidding = Biddings::where('uuid', $uuid);
+        $bidding = Biddings::where('uuid', $uuid)->first();
 
         $current_time = strtotime(date("y-m-d H:i:s"));
         $start_time = strtotime($bidding->start_time);
@@ -277,7 +284,7 @@ class BiddingController extends Controller
     }
 
     function checkWaitingBiddings () {
-        $biddings = Biddings::where('status','on_going');
+        $biddings = Biddings::where('status','on_going')->get();
 
         $current_time = strtotime(date("y-m-d H:i:s"));
 
@@ -295,7 +302,7 @@ class BiddingController extends Controller
     }
 
     function checkActiveBiddings () {
-        $biddings = Biddings::where('status','on_going');
+        $biddings = Biddings::where('status','on_going')->get();
 
         $current_time = strtotime(date("y-m-d H:i:s"));
 
