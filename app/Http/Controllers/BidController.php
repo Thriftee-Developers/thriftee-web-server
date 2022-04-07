@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Bid;
 use App\Events\BidEvent;
 use App\Models\Biddings;
+use App\Models\ProductImage;
 use Illuminate\Support\Str;
 
 class BidController extends Controller
@@ -59,8 +60,6 @@ class BidController extends Controller
         else {
             return ["error" => "This bidding has already ended."];
         }
-
-
     }
 
     function getBid(Request $req)
@@ -83,10 +82,35 @@ class BidController extends Controller
 
     function getAllBidByCustomer(Request $req)
     {
-        $result = Bid::join("biddings", "bids.bidding", "=", "biddings.uuid")
-            ->join("products", "biddings.product", "=", "products.uuid")
-            ->where("customer", $req->customer)->orderBy("date", "desc")->get()->groupBy("bidding");
-        return $result->toArray();
+        $result = Bid::select([
+                'bids.*'
+            ])
+
+            ->where("customer", $req->customer)
+            ->orderBy("date", "desc")
+            ->get()
+            ->groupBy("bidding");
+
+        $bids = $result->toArray();
+        $array = array();
+
+        foreach($bids as $item) {
+            $array[$item]->bids = $item;
+
+            $bidding = Biddings::where('uuid', $item[0]->bidding);
+            $array[$item]->bidding = $bidding;
+
+            $product = Biddings::where('uuid', $bidding->product);
+            $image = ProductImage::where('product', $product->uuid)
+                ->orderBy('name','ASC')
+                ->first();
+            $product->image = $image->path;
+            $array[$item]->product = $product;
+
+            $store = Biddings::where('uuid', $product->store);
+            $array[$item]->store = $store;
+
+        }
     }
 
     function getBidByProduct(Request $req)
