@@ -107,6 +107,12 @@ class TransactionController extends Controller
             $bidding = Biddings::where('uuid', $item->bidding)->first();
             $item->bidding = $bidding;
 
+            $product = Product::where('uuid', $bidding->product)->first();
+            $item->product = $product;
+
+            $image = ProductImage::where('product', $product->uuid)->first();
+            $item->product->image = $image->path;
+
             $bid = Bid::where('uuid', $item->bid)->first();
             $item->bid = $bid;
 
@@ -146,7 +152,7 @@ class TransactionController extends Controller
         if ($transaction) {
             $result = $transaction->update(["reference" => $req->reference]);
             if ($result) {
-                $transaction->update(["status" => "payment_verification"]);
+                $transaction->update(["status" => "for_validation"]);
                 return ["success" => "success"];
             } else {
                 return ["error" => "Error updating reference!"];
