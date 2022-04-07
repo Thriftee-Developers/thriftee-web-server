@@ -12,4 +12,9 @@ class Categories extends Model
     protected $primaryKey = 'uuid';
     public $incrementing = false;
     public $timestamps = false;
+
+    protected $fillable = [
+        "name",
+        "description"
+    ];
 }
