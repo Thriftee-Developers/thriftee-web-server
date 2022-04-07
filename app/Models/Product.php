@@ -11,4 +11,8 @@ class Product extends Model
 
     protected $primaryKey = 'uuid';
     public $incrementing = false;
+
+    protected $fillable = [
+        "status"
+    ];
 }
