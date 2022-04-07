@@ -265,15 +265,15 @@ class BiddingController extends Controller
 
         if($bidding->status == 'waiting') {
             if($current_time >= $end_time) {
-                $bidding->update(['status '=> 'ended']);
+                $bidding->update(['status' => 'ended']);
             }
             else if($current_time >= $start_time){
-                $bidding->update(['status '=> 'on_going']);
+                $bidding->update(['status' => 'on_going']);
             }
         }
         else if($bidding->status == 'on_going') {
             if($current_time >= $end_time) {
-                $bidding->update(['status '=> 'ended']);
+                $bidding->update(['status' => 'ended']);
             }
         }
     }
@@ -305,7 +305,7 @@ class BiddingController extends Controller
             $end_time = strtotime($item->end_time);
 
             if($current_time >= $end_time) {
-                $item->update(['status '=> 'ended']);
+                $item->update(['status' => 'ended']);
             }
         }
     }
