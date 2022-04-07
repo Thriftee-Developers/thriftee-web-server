@@ -235,10 +235,10 @@ class TransactionController extends Controller
                 $notif = new Request();
                 $notif->customer = $req->customer;
                 $notif->type = "payment_validate";
-
-                $notif->content->customer = "AAA";
-                $notif->content->transaction = $req->transaction;
-                $notif->content = json_encode($notif->content);
+                $notif->content = [
+                    "customer" => $req->customer,
+                    "transaction" => $req->transaction
+                ];
 
                 $notifCtrl = new NotificationController();
                 $result = $notifCtrl->addCustomerNotification($notif);
