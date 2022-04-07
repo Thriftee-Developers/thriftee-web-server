@@ -78,7 +78,6 @@ Route::post('/category/delete', [CategoryController::class, 'deleteCategory']);
 Route::post('/category/get', [CategoryController::class, 'getCategory']);
 Route::post('/category/update', [CategoryController::class, 'updateCategory']);
 Route::post('/category/product', [CategoryController::class, 'getProductsByCategory']);
-
 //Category
 Route::get('/condition/all', [ConditionController::class, 'getAllConditions']);
 Route::post('/condition/add', [ConditionController::class, 'addCondition']);
@@ -177,5 +176,7 @@ Route::post('/notification/get_store', [NotificationController::class, 'getStore
 Route::post('/notification/delete_store', [NotificationController::class, 'deleteStoreNotification']);
 Route::post('/notification/delete_customer', [NotificationController::class, 'deleteCustomerNotification']);
 Route::post('/notification/sync', [NotificationController::class, 'syncNotification']);
+Route::post('/notification/update_customer_status', [NotificationController::class, 'updateCustomerNotificationStatus']);
+Route::post('/notification/update_store_status', [NotificationController::class, 'updateStoreNotificationStatus']);
 //Dummy Route
 Route::get('/product/delete_all', [ProductController::class, 'deleteAllProduct']);

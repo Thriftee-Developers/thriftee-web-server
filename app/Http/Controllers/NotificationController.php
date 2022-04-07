@@ -7,6 +7,7 @@ use App\Models\CustomerNotification;
 use App\Models\StoreNotification;
 use App\Events\NotificationEvent;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class NotificationController extends Controller
@@ -49,6 +50,19 @@ class NotificationController extends Controller
         return $result;
     }
 
+    function updateCustomerNotificationStatus(Request $req)
+    {
+
+        $result = CustomerNotification::where("customer", $req->uuid)->whereIn('status', [1])->update(array('status' => "0"));
+        return ["success" => "success"];
+    }
+
+    function updateStoreNotificationStatus(Request $req)
+    {
+
+        $result = StoreNotification::where("store", $req->uuid)->whereIn('status', [1])->update(array('status' => "0"));
+        return ["success" => "success"];
+    }
 
     function getStoreNotification(Request $req)
     {
