@@ -49,7 +49,7 @@ class TransactionController extends Controller
         return $transaction;
     }
 
-    function getIncompleteTransactions(Request $req)
+    function getForValidation(Request $req)
     {
         $transactions = Transaction
             ::select(
@@ -60,7 +60,7 @@ class TransactionController extends Controller
             ->join('storebillingmethods', 'storebillingmethods.uuid', '=', 'transactions.billing_method')
             ->where([
                 ['storebillingmethods.store', $req->store],
-                ['status','<>','complete']
+                ['status','for_validation']
             ])->get();
 
         foreach($transactions as $item) {
