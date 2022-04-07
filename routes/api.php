@@ -160,6 +160,7 @@ Route::post('/transaction/payment/send', [TransactionController::class, 'sendRef
 Route::post('/transaction/payment/cancel', [TransactionController::class, 'cancelReference']);
 Route::post('/transaction/payment/received', [TransactionController::class, 'validatePayment']);
 Route::post('/transaction/payment/revoked', [TransactionController::class, 'revokePayment']);
+Route::post('/transaction/payment/cancel', [TransactionController::class, 'cancelPayment']);
 
 //Chat
 Route::post('/message/send_chat', [MessageController::class, 'sendChat']);

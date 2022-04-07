@@ -253,6 +253,8 @@ class TransactionController extends Controller
             return ["error" => "Transaction not found!"];
         }
     }
+
+
     function validatePayment(Request $req)
     {
         //get store
@@ -363,6 +365,24 @@ class TransactionController extends Controller
         $transaction = Transaction::where("uuid", $req->uuid)->first();
         if ($transaction) {
             $result = $transaction->update(["status" => "cancelled"]);
+            if ($result) {
+                return ["success" => "success"];
+            } else {
+                return ["error" => "Error updating status!"];
+            }
+        } else {
+            return ["error" => "Transaction not found!"];
+        }
+    }
+
+    function cancelPayment(Request $req)
+    {
+        $transaction = Transaction::where("uuid", $req->uuid)->first();
+        if ($transaction) {
+            $result = $transaction->update([
+                "status" => "no_payment",
+                "reference" => null,
+            ]);
             if ($result) {
                 return ["success" => "success"];
             } else {
