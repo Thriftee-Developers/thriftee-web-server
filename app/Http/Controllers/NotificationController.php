@@ -53,7 +53,7 @@ class NotificationController extends Controller
     function updateCustomerNotificationStatus(Request $req)
     {
 
-        $result = CustomerNotification::where("customer", $req->uuid)->whereIn('status', [1])->update(array('status' => "0"));
+        $result = CustomerNotification::where("customer", $req->uuid)->whereIn('status', [0])->update(array('status' => "1"));
         return ["success" => "success"];
     }
 
@@ -72,13 +72,13 @@ class NotificationController extends Controller
 
     function getCustomerUnreadNotificationCount(Request $req)
     {
-        $result = CustomerNotification::where("customer", $req->customer)->where("status", 1)->get()->count();
+        $result = CustomerNotification::where("customer", $req->uuid)->where("status", 0)->get()->count();
         return $result;
     }
 
     function getStoreUnreadNotificationCount(Request $req)
     {
-        $result = StoreNotification::where("store", $req->store)->where("status", 1)->get();
+        $result = StoreNotification::where("store", $req->store)->where("status", 0)->get();
         return $result;
     }
 
