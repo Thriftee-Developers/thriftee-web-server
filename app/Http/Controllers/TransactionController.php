@@ -279,8 +279,8 @@ class TransactionController extends Controller
                 ::select(
                     'transactions.*',
                     'biddings.uuid as bidding',
-                    'products.uuid as product',
-                    'products.name as product_name'
+                    'products.name as product_name',
+                    'biddings.uuid as bidding'
                 )
                 ->leftJoin('bids','bids.uuid','=','transactions.bid')
                 ->leftJoin('biddings','biddings.uuid','=','bids.bidding')
@@ -312,7 +312,8 @@ class TransactionController extends Controller
                     "customer" => $req->customer,
                     "transaction" => $transaction->uuid,
                     "product_name" => $transaction->product_name,
-                    "store_name" =>  $store->store_name
+                    "store_name" =>  $store->store_name,
+                    "bidding" =>  $transaction->bidding
                 ]);
                 $notifCtrl = new NotificationController();
                 $result = $notifCtrl->addCustomerNotification($notif);
@@ -333,6 +334,7 @@ class TransactionController extends Controller
         }
 
     }
+
     function revokePayment(Request $req)
     {
         //get store
@@ -343,7 +345,8 @@ class TransactionController extends Controller
             $transaction = Transaction
                 ::select(
                     'transactions.*',
-                    'products.name as product_name'
+                    'products.name as product_name',
+                    'biddings.uuid as bidding'
                 )
                 ->leftJoin('bids','bids.uuid','=','transactions.bid')
                 ->leftJoin('biddings','biddings.uuid','=','bids.bidding')
@@ -364,7 +367,8 @@ class TransactionController extends Controller
                     "customer" => $req->customer,
                     "transaction" => $transaction->uuid,
                     "product_name" => $transaction->product_name,
-                    "store_name" =>  $store->store_name
+                    "store_name" =>  $store->store_name,
+                    "bidding" =>  $transaction->bidding
                 ]);
                 $notifCtrl = new NotificationController();
                 $result = $notifCtrl->addCustomerNotification($notif);
