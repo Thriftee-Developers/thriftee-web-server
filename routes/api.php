@@ -77,7 +77,7 @@ Route::post('/category/add', [CategoryController::class, 'addCategory']);
 Route::post('/category/delete', [CategoryController::class, 'deleteCategory']);
 Route::post('/category/get', [CategoryController::class, 'getCategory']);
 Route::post('/category/update', [CategoryController::class, 'updateCategory']);
-Route::get('/category/get_count', [CategoryController::class, 'getCountCategory']);
+Route::post('/category/product', [CategoryController::class, 'getProductsByCategory']);
 
 //Category
 Route::get('/condition/all', [ConditionController::class, 'getAllConditions']);
@@ -97,7 +97,7 @@ Route::get('/bidding/all', [BiddingController::class, 'getAllBidding']);
 Route::post('/bidding/get', [BiddingController::class, 'getBidding']);
 Route::post('/bidding/by_product', [BiddingController::class, 'getBiddingByProduct']);
 Route::post('/bidding/latest_by_product', [BiddingController::class, 'getLatestBiddingByProduct']);
-Route::post('/bidding/by_store', [BiddingController::class, 'getBiddingByStore']);
+Route::post('/bidding/by_store', [BiddingController::class, 'getBiddingsByStore']);
 Route::post('/bidding/winner', [BiddingController::class, 'getBiddingWinner']);
 Route::get('/bidding/specific_data', [BiddingController::class, 'getSpecificBiddingData']);
 Route::get('/bidding/active', [BiddingController::class, 'getAllActiveBidding']);

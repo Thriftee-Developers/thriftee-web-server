@@ -6,12 +6,26 @@ use Illuminate\Http\Request;
 use App\Models\Categories;
 use App\Models\ProductCategory;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
 {
     function getAllCategory()
     {
-        $result = Categories::all();
+        $result = Categories::join("productcategories", "productcategories.product_category", "categories.uuid");
+        $result = DB::select(
+            "SELECT
+                categories.name,
+                categories.description,
+                Count(productcategories.uuid) as count
+            FROM categories
+
+            LEFT JOIN productcategories
+            ON categories.uuid = productcategories.product_category
+
+            GROUP BY categories.uuid"
+        );
+
         return $result;
     }
 
@@ -68,6 +82,14 @@ class CategoryController extends Controller
     {
         $result = ProductCategory::join('categories', 'productcategories.product_category', '=', 'categories.uuid')
             ->where("product", $req->product)
+            ->get();
+        return $result;
+    }
+
+    function getProductsByCategory(Request $req)
+    {
+        $result = ProductCategory::join('categories', 'productcategories.product_category', '=', 'categories.uuid')
+            ->where("categories.uuid", $req->uuid)
             ->get();
         return $result;
     }
