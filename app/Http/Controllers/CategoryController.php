@@ -85,7 +85,7 @@ class CategoryController extends Controller
 
     function deleteCategory(Request $req)
     {
-        if ($this->checkUsedCategory($req->uuid) <= 0) {
+        if ($this->checkUsedCategory($req->uuid)) {
             $result = Categories::where("uuid", $req->uuid)->delete();
             return ["success" => "success"];;
         } else {
@@ -96,7 +96,7 @@ class CategoryController extends Controller
     function checkUsedCategory($uuid)
     {
         $usedCategory = ProductCategory::where("product_category", $uuid)->get()->count();
-        if ($usedCategory <= 0) {
+        if ($usedCategory == 0) {
             return true;
         } else {
             return false;
