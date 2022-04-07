@@ -50,7 +50,7 @@ class BiddingController extends Controller
                 products.store,
                 stores.uuid as store_uuid,
                 stores.store_name,
-                productimages.path
+                productimages.path as image_path
             FROM biddings
 
             INNER JOIN products
@@ -87,7 +87,7 @@ class BiddingController extends Controller
                 products.store,
                 stores.uuid as store_uuid,
                 stores.store_name,
-                productimages.path
+                productimages.path as image_path
             FROM biddings
 
             INNER JOIN products
@@ -124,7 +124,7 @@ class BiddingController extends Controller
                 products.store,
                 stores.uuid as store_uuid,
                 stores.store_name,
-                productimages.path,
+                productimages.path as image_path,
                 mBids.highest as highest_bid,
                 Count(bids.uuid) as bid_count
             FROM biddings
