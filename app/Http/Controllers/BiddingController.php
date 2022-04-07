@@ -36,11 +36,19 @@ class BiddingController extends Controller
         return $result;
     }
 
-    function getAllActiveBidding()
+    function getOnGoingBiddings()
     {
         $this->checkWaitingBiddings();
         $this->checkActiveBiddings();
-        $result = Biddings::where("status", "<>", "active")->get();
+        $result = Biddings::where("status","on_going")->get();
+        return $result;
+    }
+
+    function getWaitingBiddings()
+    {
+        $this->checkWaitingBiddings();
+        $this->checkActiveBiddings();
+        $result = Biddings::where("status","waiting")->get();
         return $result;
     }
 
@@ -85,7 +93,7 @@ class BiddingController extends Controller
         $bidding->created_at = $req->created_at;
         $bidding->start_time = $req->start_time;
         $bidding->end_time = $req->end_time;
-        $bidding->status = 0;
+        $bidding->status = "waiting";
 
         $bidding->save();
         return ["success" => "success"];
