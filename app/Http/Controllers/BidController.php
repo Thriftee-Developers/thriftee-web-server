@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Bid;
 use App\Events\BidEvent;
 use App\Models\Biddings;
+use App\Models\Product;
 use App\Models\ProductImage;
+use App\Models\Store;
 use Illuminate\Support\Str;
 
 class BidController extends Controller
@@ -29,8 +31,6 @@ class BidController extends Controller
         $bid->customer = $req->customer;
         $bid->amount = $req->amount;
         $bid->date = $req->date;
-
-
         //Check bidding Status
 
         $biddingCtrl = new BiddingController();
@@ -82,11 +82,17 @@ class BidController extends Controller
 
     function getAllBidByCustomer(Request $req)
     {
-        $result = Bid::select([
-                'bids.*'
-            ])
 
+        $biddingCtrl = new BiddingController();
+        $biddingCtrl->checkActiveBiddings();
+
+        $result = Bid::select('bids.*')
+            ->leftJoin('biddings','biddings.uuid','bids.bidding')
             ->where("customer", $req->customer)
+            ->where(function($query) {
+                $query->where('biddings.status', 'on_going')
+                ->orWhere('biddings.status', 'ended');
+            })
             ->orderBy("date", "desc")
             ->get()
             ->groupBy("bidding");
@@ -95,22 +101,36 @@ class BidController extends Controller
         $array = array();
 
         foreach($bids as $item) {
-            $array[$item]->bids = $item;
 
-            $bidding = Biddings::where('uuid', $item[0]->bidding);
-            $array[$item]->bidding = $bidding;
+            $bidding = Biddings::where('uuid', $item[0]['bidding'])->first();
 
-            $product = Biddings::where('uuid', $bidding->product);
+            $product = Product::where('uuid', $bidding->product)->first();
+
             $image = ProductImage::where('product', $product->uuid)
                 ->orderBy('name','ASC')
                 ->first();
             $product->image = $image->path;
-            $array[$item]->product = $product;
 
-            $store = Biddings::where('uuid', $product->store);
-            $array[$item]->store = $store;
+            $store = Store::where('uuid', $product->store)->first();
 
+            $highestBid = Bid::where('bidding',$bidding->uuid)
+                ->orderBy('amount', 'DESC')
+                ->first();
+
+
+            $arr_item = [
+                'bidding' => $bidding,
+                'highest' => $highestBid,
+                'product' => $product,
+                'store' => $store,
+                'bids' => $item
+            ];
+
+            $array[] = $arr_item;
         }
+
+        return $array;
+
     }
 
     function getBidByProduct(Request $req)
