@@ -149,13 +149,15 @@ Route::post('/transaction/add', [TransactionController::class, 'addTransaction']
 Route::post('/transaction/update_payment', [TransactionController::class, 'updatePaymentMethod']);
 Route::post('/transaction/send_ref', [TransactionController::class, 'sendReference']);
 Route::post('/transaction/cancel_ref', [TransactionController::class, 'cancelReference']);
+
+Route::post('/transaction/get', [TransactionController::class, 'getTransaction']);
 Route::post('/transaction/valid', [TransactionController::class, 'validatePayment']);
-Route::post('/transaction/invalid', [TransactionController::class, 'invalidPayment']);
+Route::post('/transaction/invalid', [TransactionController::class, 'revokePayment']);
+Route::post('/transaction/no_payment', [TransactionController::class, 'getNoPayment']);
+Route::post('/transaction/for_validation', [TransactionController::class, 'getForValidation']);
+Route::post('/transaction/complete', [TransactionController::class, 'getCompletedTransactions']);
 Route::post('/transaction/close', [TransactionController::class, 'closeTransaction']);
 Route::post('/transaction/cancel', [TransactionController::class, 'cancelTransaction']);
-Route::post('/transaction/get', [TransactionController::class, 'getTransaction']);
-Route::post('/transaction/incomplete', [TransactionController::class, 'getForValidation']);
-Route::post('/transaction/complete', [TransactionController::class, 'getCompletedTransactions']);
 
 //Chat
 Route::post('/message/send_chat', [MessageController::class, 'sendChat']);

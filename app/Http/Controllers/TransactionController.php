@@ -49,6 +49,45 @@ class TransactionController extends Controller
         return $transaction;
     }
 
+    function getNoPayment(Request $req)
+    {
+        $transactions = Transaction
+            ::select(
+                'transactions.*',
+                'bids.bidding',
+                'bids.customer')
+            ->join('bids','bids.uuid','=','transactions.bid')
+            ->join('storebillingmethods', 'storebillingmethods.uuid', '=', 'transactions.billing_method')
+            ->where('storebillingmethods.store', $req->store)
+            ->where(function($query) {
+                $query->where('transactions.status', 'no_payment')
+                ->orWhere('transactions.status', 'invalid_payment');
+            })
+            ->get();
+
+        foreach($transactions as $item) {
+            $customer = Customer::where('uuid', $item->customer)->first();
+            $item->customer = $customer;
+
+            $bidding = Biddings::where('uuid', $item->bidding)->first();
+            $item->bidding = $bidding;
+
+            $product = Product::where('uuid', $bidding->product)->first();
+            $item->product = $product;
+
+            $image = ProductImage::where('product', $product->uuid)->first();
+            $item->product->image = $image->path;
+
+            $bid = Bid::where('uuid', $item->bid)->first();
+            $item->bid = $bid;
+
+            $billingmethod = StoreBillingMethod::where('uuid', $item->billing_method)->first();
+            $item->billing_method = $billingmethod;
+        }
+
+        return $transactions;
+    }
+
     function getForValidation(Request $req)
     {
         $transactions = Transaction
@@ -60,7 +99,7 @@ class TransactionController extends Controller
             ->join('storebillingmethods', 'storebillingmethods.uuid', '=', 'transactions.billing_method')
             ->where([
                 ['storebillingmethods.store', $req->store],
-                ['status','for_validation']
+                ['transactions.status','for_validation']
             ])->get();
 
         foreach($transactions as $item) {
@@ -97,7 +136,7 @@ class TransactionController extends Controller
             ->join('storebillingmethods', 'storebillingmethods.uuid', '=', 'transactions.billing_method')
             ->where([
                 ['storebillingmethods.store', $req->store],
-                ['status','complete']
+                ['transactions.status','complete']
             ])->get();
 
         foreach($transactions as $item) {
@@ -204,7 +243,7 @@ class TransactionController extends Controller
         }
 
     }
-    function invalidPayment(Request $req)
+    function revokePayment(Request $req)
     {
         //check store password
         $store = Store::where('uuid', $req->store)->first();
