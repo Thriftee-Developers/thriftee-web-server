@@ -20,29 +20,47 @@ class BidController extends Controller
 
     function addBid(Request $req)
     {
+
+        //Create Bid Data
         $bid = new Bid();
         $bid->uuid = Str::uuid();
         $bid->bidding = $req->bidding;
         $bid->customer = $req->customer;
         $bid->amount = $req->amount;
         $bid->date = $req->date;
-        $result = Biddings::where("uuid", $req->bidding)->first();
-        $highestBid = $this->getHighestBidByBidding($req);
-        if ($highestBid != "") {
-            if ($req->amount >= ($highestBid->amount + $result->increment)) {
-                $bid->save();
-                return ["success" => "success"];
+
+
+        //Check bidding Status
+
+        $biddingCtrl = new BiddingController();
+        $biddingCtrl->checkBiddingStatus($req->bidding);
+        $bidding = Biddings::where("uuid", $req->bidding)->first();
+
+        if($bidding->status == "on_going") {
+            //Check Highest bid
+            $highestBid = $this->getHighestBidByBidding($req);
+
+            if ($highestBid != "") {
+                if ($req->amount >= ($highestBid->amount + $bidding->increment)) {
+                    $bid->save();
+                    return ["success" => "success"];
+                } else {
+                    return ["error" => "Not enough bid amount."];
+                }
             } else {
-                return ["error" => "Not enough bid amount."];
-            }
-        } else {
-            if ($req->amount >= ($result->minimum)) {
-                $bid->save();
-                return ["success" => "success"];
-            } else {
-                return ["error" => "Bid Failed! Not Enough bid."];
+                if ($req->amount >= ($bidding->minimum)) {
+                    $bid->save();
+                    return ["success" => "success"];
+                } else {
+                    return ["error" => "Bid Failed! Not Enough bid."];
+                }
             }
         }
+        else {
+            return ["error" => "This bidding has already ended."];
+        }
+
+
     }
 
     function getBid(Request $req)
