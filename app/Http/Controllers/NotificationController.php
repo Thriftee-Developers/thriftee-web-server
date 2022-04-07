@@ -46,7 +46,13 @@ class NotificationController extends Controller
 
     function getCustomerNotification(Request $req)
     {
-        $result = CustomerNotification::where("customer", $req->customer)->orderBy("status", "desc")->get();
+        $result = CustomerNotification
+            ::where("customer", $req->customer)
+            ->orderBy([
+                ["date", "desc"],
+                ["status", "asc"]
+            ])
+            ->get();
         return $result;
     }
 
