@@ -38,23 +38,19 @@ class CategoryController extends Controller
 
     function updateCategory(Request $req)
     {
-        if ($this->checkUsedCategory($req->uuid)) {
-            $category = Categories::where("uuid", $req->uuid)->first();
-            if ($category) {
-                $result = $category->update([
-                    "name" => $req->name,
-                    "description" => $req->description
-                ]);
-                if ($result) {
-                    return ["success" => "success"];
-                } else {
-                    return ["error" => "Error updating category!"];
-                }
+        $category = Categories::where("uuid", $req->uuid)->first();
+        if ($category) {
+            $result = $category->update([
+                "name" => $req->name,
+                "description" => $req->description
+            ]);
+            if ($result) {
+                return ["success" => "success"];
             } else {
-                return ["error" => "Category Not Found!"];
+                return ["error" => "Error updating category!"];
             }
         } else {
-            return ["error" => "Used Category!"];
+            return ["error" => "Category Not Found!"];
         }
     }
 
