@@ -7,9 +7,11 @@ use App\Models\Biddings;
 use App\Models\Customer;
 use App\Models\Product;
 use App\Models\ProductImage;
+use App\Models\Store;
 use App\Models\StoreBillingMethod;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class TransactionController extends Controller
@@ -171,17 +173,26 @@ class TransactionController extends Controller
     }
     function validatePayment(Request $req)
     {
-        $transaction = Transaction::where("uuid", $req->uuid)->first();
-        if ($transaction) {
-            $result = $transaction->update(["status" => "payment_valid"]);
-            if ($result) {
-                return ["success" => "success"];
+
+        //check store password
+        $store = Store::where('uuid', $req->store);
+        if(Hash::check($req->password, $store->password)) {
+            $transaction = Transaction::where("uuid", $req->transaction)->first();
+            if ($transaction) {
+                $result = $transaction->update(["status" => "payment_valid"]);
+                if ($result) {
+                    return ["success" => "success"];
+                } else {
+                    return ["error" => "Error updating status"];
+                }
             } else {
-                return ["error" => "Error updating status!"];
+                return ["error" => "Transaction not found"];
             }
-        } else {
-            return ["error" => "Transaction not found!"];
         }
+        else {
+            return ["error" => "Invalid Password"];
+        }
+
     }
     function invalidPayment(Request $req)
     {
