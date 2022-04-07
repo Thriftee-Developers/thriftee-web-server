@@ -175,26 +175,25 @@ class TransactionController extends Controller
     {
 
         //check store password
-        // $store = Store::where('uuid', $req->store)->first();
+        $store = Store::where('uuid', $req->store)->first();
 
-        // if($store && Hash::check($req->password, $store->password)) {
-        //     $transaction = Transaction::where("uuid", $req->transaction)->first();
-        //     if ($transaction) {
-        //         $result = $transaction->update(["status" => "complete"]);
-        //         if ($result) {
-        //             return ["success" => "success"];
-        //         } else {
-        //             return ["error" => "Error updating status"];
-        //         }
-        //     } else {
-        //         return ["error" => "Transaction not found"];
-        //     }
-        // }
-        // else {
-        //     return ["error" => "Invalid Password"];
-        // }
+        if($store && Hash::check($req->password, $store->password)) {
+            $transaction = Transaction::where("uuid", $req->transaction)->first();
+            if ($transaction) {
+                $result = $transaction->update(["status" => "complete"]);
+                if ($result) {
+                    return ["success" => "success"];
+                } else {
+                    return ["error" => "Error updating status"];
+                }
+            } else {
+                return ["error" => "Transaction not found"];
+            }
+        }
+        else {
+            return ["error" => "Invalid Password"];
+        }
 
-        return date("h:i:sa");
     }
     function invalidPayment(Request $req)
     {
