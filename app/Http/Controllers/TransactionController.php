@@ -232,12 +232,10 @@ class TransactionController extends Controller
                     "validate_at" => $currentTime
                 ]);
 
-                $content = 'Your payment has been validated for '.$transaction->uuid;
-
                 $notif = new Request();
                 $notif->customer = $req->customer;
                 $notif->type = "payment_validate";
-                $notif->content = $content;
+                $notif->content = "Your payment has been validated for ".$transaction->uuid;
 
                 $notifCtrl = new NotificationController();
                 $result = $notifCtrl->addCustomerNotification($notif);
