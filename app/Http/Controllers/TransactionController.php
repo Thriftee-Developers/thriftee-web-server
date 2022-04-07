@@ -175,11 +175,36 @@ class TransactionController extends Controller
     {
 
         //check store password
+        // $store = Store::where('uuid', $req->store)->first();
+
+        // if($store && Hash::check($req->password, $store->password)) {
+        //     $transaction = Transaction::where("uuid", $req->transaction)->first();
+        //     if ($transaction) {
+        //         $result = $transaction->update(["status" => "complete"]);
+        //         if ($result) {
+        //             return ["success" => "success"];
+        //         } else {
+        //             return ["error" => "Error updating status"];
+        //         }
+        //     } else {
+        //         return ["error" => "Transaction not found"];
+        //     }
+        // }
+        // else {
+        //     return ["error" => "Invalid Password"];
+        // }
+
+        return date("h:i:sa");
+    }
+    function invalidPayment(Request $req)
+    {
+        //check store password
         $store = Store::where('uuid', $req->store)->first();
+
         if($store && Hash::check($req->password, $store->password)) {
             $transaction = Transaction::where("uuid", $req->transaction)->first();
             if ($transaction) {
-                $result = $transaction->update(["status" => "payment_valid"]);
+                $result = $transaction->update(["status" => "invalid_payment"]);
                 if ($result) {
                     return ["success" => "success"];
                 } else {
@@ -191,21 +216,6 @@ class TransactionController extends Controller
         }
         else {
             return ["error" => "Invalid Password"];
-        }
-
-    }
-    function invalidPayment(Request $req)
-    {
-        $transaction = Transaction::where("uuid", $req->uuid)->first();
-        if ($transaction) {
-            $result = $transaction->update(["status" => "invalid_payment"]);
-            if ($result) {
-                return ["success" => "success"];
-            } else {
-                return ["error" => "Error updating status!"];
-            }
-        } else {
-            return ["error" => "Transaction not found!"];
         }
     }
 
