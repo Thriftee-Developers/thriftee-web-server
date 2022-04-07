@@ -24,6 +24,7 @@ class NotificationController extends Controller
         $customerNotification->customer = $req->customer;
         $customerNotification->type = $req->type;
         $customerNotification->content = $req->content;
+        $customerNotification->date = date("Y-m-d H:i:s");
 
         $customerNotification->save();
 
