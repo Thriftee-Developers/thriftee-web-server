@@ -48,10 +48,7 @@ class NotificationController extends Controller
     {
         $result = CustomerNotification
             ::where("customer", $req->customer)
-            ->orderBy([
-                ["date", "desc"],
-                ["status", "asc"]
-            ])
+            ->orderBy("date", "desc")
             ->get();
         return $result;
     }
