@@ -72,7 +72,7 @@ class NotificationController extends Controller
 
     function getCustomerUnreadNotificationCount(Request $req)
     {
-        $result = CustomerNotification::where("customer", $req->customer)->where("status", 0)->get()->count();
+        $result = CustomerNotification::where("customer", $req->uuid)->where("status", 0)->get()->count();
         return $result;
     }
 
