@@ -100,7 +100,8 @@ Route::post('/bidding/latest_by_product', [BiddingController::class, 'getLatestB
 Route::post('/bidding/by_store', [BiddingController::class, 'getBiddingsByStore']);
 Route::post('/bidding/winner', [BiddingController::class, 'getBiddingWinner']);
 Route::get('/bidding/specific_data', [BiddingController::class, 'getSpecificBiddingData']);
-Route::get('/bidding/active', [BiddingController::class, 'getAllActiveBidding']);
+Route::get('/bidding/waiting', [BiddingController::class, 'getWaitingBiddings']);
+Route::get('/bidding/on_going', [BiddingController::class, 'getOnGoingBiddings']);
 Route::get('/bidding/popular', [BiddingController::class, 'getPopularBidding']);
 
 

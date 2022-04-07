@@ -40,16 +40,123 @@ class BiddingController extends Controller
     {
         $this->checkWaitingBiddings();
         $this->checkActiveBiddings();
-        $result = Biddings::where("status","on_going")->get();
-        return $result;
+
+        $biddings = DB::select(
+            "SELECT
+                biddings.*,
+                products.product_id,
+                products.name,
+                products.description,
+                products.store,
+                stores.uuid as store_uuid,
+                stores.store_name,
+                productimages.path
+            FROM biddings
+
+            INNER JOIN products
+            ON biddings.product = products.uuid
+
+            INNER JOIN stores
+            ON products.store = stores.uuid
+
+            LEFT JOIN (
+                SELECT path, product, MIN(name) AS name FROM productimages GROUP BY product
+            ) productimages
+            ON productimages.product = products.uuid
+
+            WHERE biddings.status = 'on_going'
+
+            GROUP BY biddings.uuid
+            ORDER BY biddings.start_time DESC"
+        );
+
+        return $biddings;
     }
 
     function getWaitingBiddings()
     {
         $this->checkWaitingBiddings();
         $this->checkActiveBiddings();
-        $result = Biddings::where("status","waiting")->get();
-        return $result;
+
+        $biddings = DB::select(
+            "SELECT
+                biddings.*,
+                products.product_id,
+                products.name,
+                products.description,
+                products.store,
+                stores.uuid as store_uuid,
+                stores.store_name,
+                productimages.path
+            FROM biddings
+
+            INNER JOIN products
+            ON biddings.product = products.uuid
+
+            INNER JOIN stores
+            ON products.store = stores.uuid
+
+            LEFT JOIN (
+                SELECT path, product, MIN(name) AS name FROM productimages GROUP BY product
+            ) productimages
+            ON productimages.product = products.uuid
+
+            WHERE biddings.status = 'waiting'
+
+            GROUP BY biddings.uuid
+            ORDER BY biddings.start_time ASC"
+        );
+
+        return $biddings;
+    }
+
+    function getPopularBidding()
+    {
+        $this->checkWaitingBiddings();
+        $this->checkActiveBiddings();
+
+        $biddings = DB::select(
+            "SELECT
+                biddings.*,
+                products.product_id,
+                products.name,
+                products.description,
+                products.store,
+                stores.uuid as store_uuid,
+                stores.store_name,
+                productimages.path,
+                mBids.highest as highest_bid,
+                Count(bids.uuid) as bid_count
+            FROM biddings
+
+            LEFT JOIN bids
+            ON biddings.uuid = bids.bidding
+
+            INNER JOIN products
+            ON biddings.product = products.uuid
+
+            INNER JOIN stores
+            ON products.store = stores.uuid
+
+            LEFT JOIN (
+                SELECT path, product, MIN(name) AS name FROM productimages GROUP BY product
+            ) productimages
+            ON productimages.product = products.uuid
+
+            LEFT OUTER JOIN (
+                SELECT bidding, MAX(amount) AS highest
+                FROM bids
+                GROUP BY bidding
+            ) mBids
+            ON mBids.bidding = biddings.uuid
+
+            WHERE biddings.status = 'on_going'
+
+            GROUP BY biddings.uuid
+            ORDER BY bid_count DESC"
+        );
+
+        return $biddings;
     }
 
     function getBiddingByProduct(Request $req)
@@ -112,54 +219,6 @@ class BiddingController extends Controller
             "status" => $req->status,
         ]);
         return ["success" => $result];
-    }
-
-    function getPopularBidding()
-    {
-        $this->checkWaitingBiddings();
-        $this->checkActiveBiddings();
-
-        $bidding = DB::select(
-            "SELECT
-                biddings.*,
-                products.product_id,
-                products.name,
-                products.description,
-                products.store,
-                stores.store_name,
-                productimages.path,
-                mBids.highest as highest_bid,
-                Count(bids.uuid) as bid_count
-            FROM biddings
-
-            LEFT JOIN bids
-            ON biddings.uuid = bids.bidding
-
-            INNER JOIN products
-            ON biddings.product = products.uuid
-
-            INNER JOIN stores
-            ON products.store = stores.uuid
-
-            LEFT JOIN (
-                SELECT path, product, MIN(name) AS name FROM productimages GROUP BY product
-            ) productimages
-            ON productimages.product = products.uuid
-
-            LEFT OUTER JOIN (
-                SELECT bidding, MAX(amount) AS highest
-                FROM bids
-                GROUP BY bidding
-            ) mBids
-            ON mBids.bidding = biddings.uuid
-
-            WHERE biddings.status = 'on_going'
-
-            GROUP BY biddings.uuid
-            ORDER BY bid_count DESC"
-        );
-
-        return $bidding;
     }
 
     //if bidder has 2 bids it counts as 1
