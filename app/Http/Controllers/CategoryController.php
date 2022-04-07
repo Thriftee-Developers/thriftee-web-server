@@ -23,8 +23,7 @@ class CategoryController extends Controller
             LEFT JOIN productcategories
             ON categories.uuid = productcategories.product_category
 
-            GROUP BY categories.uuid
-            -- ORDER BY bid_count DESC"
+            GROUP BY categories.uuid"
         );
 
         return $result;
@@ -83,6 +82,14 @@ class CategoryController extends Controller
     {
         $result = ProductCategory::join('categories', 'productcategories.product_category', '=', 'categories.uuid')
             ->where("product", $req->product)
+            ->get();
+        return $result;
+    }
+
+    function getProductsByCategory(Request $req)
+    {
+        $result = ProductCategory::join('categories', 'productcategories.product_category', '=', 'categories.uuid')
+            ->where("categories.uuid", $req->uuid)
             ->get();
         return $result;
     }
