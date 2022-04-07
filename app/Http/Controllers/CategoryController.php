@@ -38,19 +38,23 @@ class CategoryController extends Controller
 
     function updateCategory(Request $req)
     {
-        $category = Categories::where("uuid", $req->uuid)->first();
-        if ($category) {
-            $result = $category->update([
-                "name" => $req->name,
-                "description" => $req->description
-            ]);
-            if ($result) {
-                return ["success" => "success"];
+        if ($this->checkUsedCategory($req->uuid)) {
+            $category = Categories::where("uuid", $req->uuid)->first();
+            if ($category) {
+                $result = $category->update([
+                    "name" => $req->name,
+                    "description" => $req->description
+                ]);
+                if ($result) {
+                    return ["success" => "success"];
+                } else {
+                    return ["error" => "Error updating category!"];
+                }
             } else {
-                return ["error" => "Error updating category!"];
+                return ["error" => "Category Not Found!"];
             }
         } else {
-            return ["error" => "Category Not Found!"];
+            return ["error" => "Used Category!"];
         }
     }
 
@@ -81,12 +85,21 @@ class CategoryController extends Controller
 
     function deleteCategory(Request $req)
     {
-        $usedCategory = ProductCategory::where("product_category", $req->uuid)->get()->count();
-        if ($usedCategory <= 0) {
+        if ($this->checkUsedCategory($req->uuid) <= 0) {
             $result = Categories::where("uuid", $req->uuid)->delete();
             return ["success" => "success"];;
         } else {
             return ["error" => "Used Category!"];
+        }
+    }
+
+    function checkUsedCategory($uuid)
+    {
+        $usedCategory = ProductCategory::where("product_category", $uuid)->get()->count();
+        if ($usedCategory <= 0) {
+            return true;
+        } else {
+            return false;
         }
     }
 }
