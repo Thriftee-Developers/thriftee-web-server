@@ -178,5 +178,6 @@ Route::post('/notification/delete_customer', [NotificationController::class, 'de
 Route::post('/notification/sync', [NotificationController::class, 'syncNotification']);
 Route::post('/notification/update_customer_status', [NotificationController::class, 'updateCustomerNotificationStatus']);
 Route::post('/notification/update_store_status', [NotificationController::class, 'updateStoreNotificationStatus']);
+Route::post('/notification/count', [NotificationController::class, 'getCustomerUnreadNotificationCount']);
 //Dummy Route
 Route::get('/product/delete_all', [ProductController::class, 'deleteAllProduct']);
