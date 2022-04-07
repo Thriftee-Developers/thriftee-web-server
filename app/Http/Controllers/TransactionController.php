@@ -225,10 +225,24 @@ class TransactionController extends Controller
         if($store && Hash::check($req->password, $store->password)) {
             $transaction = Transaction::where("uuid", $req->transaction)->first();
             if ($transaction) {
+
+                $currentTime = date("Y-m-d H:i:s");
                 $result = $transaction->update([
                     "status" => "complete",
-                    "validate_at" => date("Y-m-d H:i:s"),
+                    "validate_at" => $currentTime
                 ]);
+
+                $notif = new Request();
+                $notif->customer = $req->customer;
+                $notif->type = "payment_validate";
+
+                $notif->content->customer = "AAA";
+                $notif->content->transaction = $req->transaction;
+                $notif->content = json_encode($notif->content);
+
+                $notifCtrl = new NotificationController();
+                $result = $notifCtrl->addCustomerNotification($notif);
+
                 if ($result) {
                     return ["success" => "success"];
                 } else {
