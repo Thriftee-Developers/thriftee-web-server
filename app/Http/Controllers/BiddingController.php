@@ -108,11 +108,6 @@ class BiddingController extends Controller
 
     function getPopularBidding()
     {
-        // $bidding = Biddings::select(['biddings.*'])
-        //     ->leftJoin('bids','bids.bidding','=','biddings.uuid')
-        //     ->get()
-        //     ->groupBy('biddings.uuid');
-
         $this->checkWaitingBiddings();
         $this->checkActiveBiddings();
 
@@ -293,10 +288,10 @@ class BiddingController extends Controller
             $end_time = strtotime($item->end_time);
 
             if($current_time >= $end_time) {
-                $item->update(['status '=> 'ended']);
+                $item->update(['status' => 'ended']);
             }
             else if($current_time >= $start_time){
-                $item->update(['status '=> 'on_going']);
+                $item->update(['status' => 'on_going']);
             }
         }
     }
