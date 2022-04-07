@@ -79,6 +79,12 @@ class CategoryController extends Controller
         return true;
     }
 
+    function getCountCategory()
+    {
+        $result = ProductCategory::all()->countBy("product_category");
+        return $result;
+    }
+
     function deleteCategory(Request $req)
     {
         if ($this->checkUsedCategory($req->uuid)) {
