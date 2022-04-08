@@ -41,53 +41,47 @@ class MessageController extends Controller
 
         $message->save();
 
-        //Add store status in message_status
+        //Create Store Chatbox
+        if (!$storeChatBox) {
+            $storeChatBox = new ChatBox();
+            $storeChatBox->uuid = Str::uuid();
+            $storeChatBox->owner_type = "store";
+            $storeChatBox->customer = $req->customer;
+            $storeChatBox->store = $req->store;
+            $storeChatBox->save();
+        }
+        //Create Message Status
         $storeStatus = new MessageStatus();
         $storeStatus->uuid = Str::uuid();
         $storeStatus->message = $message->uuid;
+        $storeStatus->chatbox = $storeChatBox->uuid;
 
         //Set store status to 1
         if ($req->sender == "store") {
             $storeStatus->status = "1";
         }
-
-        if ($storeChatBox) {
-            //if storechatbox not found set store status save
-            $storeStatus->chatbox = $storeChatBox->uuid;
-        } else {
-            $chatBox = new ChatBox();
-            $chatBox->uuid = Str::uuid();
-            $chatBox->owner_type = "store";
-            $chatBox->customer = $req->customer;
-            $chatBox->store = $req->store;
-            $chatBox->save();
-            // event(new ChatBoxEvent($req->sender, $req->customer, $req->store));
-        }
-
         $storeStatus->save();
 
+
+        //Create customer chatbox
+        if (!$customerChatBox) {
+            $customerChatBox = new ChatBox();
+            $customerChatBox->uuid = Str::uuid();
+            $customerChatBox->owner_type = "customer";
+            $customerChatBox->customer = $req->customer;
+            $customerChatBox->store = $req->store;
+            $customerChatBox->save();
+        }
+        //Create Message Status
         $customerStatus = new MessageStatus();
         $customerStatus->uuid = Str::uuid();
         $customerStatus->message = $message->uuid;
-
+        $customerStatus->chatbox = $customerChatBox->uuid;
+        //Set Status
         if ($req->sender == "customer") {
             $customerStatus->status = "1";
         }
-
-        if ($customerChatBox) {
-            $customerStatus->chatbox = $customerChatBox->uuid;
-        } else {
-            $chatBox = new ChatBox();
-            $chatBox->uuid = Str::uuid();
-            $chatBox->owner_type = "customer";
-            $chatBox->customer = $req->customer;
-            $chatBox->store = $req->store;
-            $chatBox->save();
-            // event(new ChatBoxEvent($req->sender, $req->customer, $req->store));
-        }
-
         $customerStatus->save();
-
 
         // event(new Chat($req->customer, $req->store, $req->sender, $req->content));
         return ["success" => "success"];
