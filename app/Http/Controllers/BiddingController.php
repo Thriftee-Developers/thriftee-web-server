@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Bid;
 use Illuminate\Http\Request;
 use App\Models\Biddings;
+use App\Models\Product;
 use App\Models\Transaction;
 use DateTime;
 use Illuminate\Support\Facades\DB;
@@ -328,13 +329,9 @@ class BiddingController extends Controller
     {
         $bidding = Biddings::where([
             ['uuid', $req->bidding],
-            ['status', '<>', 'failed']
+            ['status', '<>', 'failed'],
+            ['status', '<>', 'no_claims']
         ])->first();
-
-        $transaction = Transaction
-            ::join('bids', 'bids.uuid', '=', 'transactions.bid')
-            ->where('bids.bidding', $req->bidding)
-            ->first();
 
         if (!$bidding) {
             return [
@@ -342,73 +339,103 @@ class BiddingController extends Controller
             ];
         }
 
+        $transaction = Transaction
+            ::join('bids', 'bids.uuid', '=', 'transactions.bid')
+            ->where('bids.bidding', $req->bidding)
+            ->orderBy('transactions.created_at','DESC')
+            ->first();
 
-
-        $start_time = strtotime($bidding->start_time);
-        $end_time = strtotime($bidding->end_time);
+        $bidder = $this->getBidders($req->bidding);
         $current_time = strtotime(date("y-m-d H:i:s"));
 
+        if($transaction) {
+            if($transaction->status === "cancelled") {
+                $cancelled_at = strtotime($transaction->updated_at);
+                $hoursdiff = ($current_time - $cancelled_at) / 3600;
 
+                //48 hrs = 2 days
+                //Customer under the last claimer
+                $indexToAdd = $hoursdiff / 48;
+                $i = 1;
+                foreach($bidder as $item) {
+                    if($item->customer == $transaction->customer){
+                        break;
+                    }
+                    else {
+                        $i++;
+                    }
+                }
 
-        $hoursdiff = ($current_time - $end_time) / 3600;
+                $winnerIndex = $indexToAdd + $i;
 
-        //48 hrs = 2 days
-        $winnerIndex = $hoursdiff / 48;
-        $bidder = $this->getBidders($req->bidding);
-        $bids = Bid::where('bidding', $req->bidding)
-        ->orderBy('date', 'desc')
-        ->get()
-        ->groupBy('customer');
+                //failed Bidding
+                if($winnerIndex >= count($bidder)) {
 
+                    //Update bidding status
+                    $bidding->update(['status' => "no_claims"]);
+                    Product::where('uuid', $bidding->product)
+                        ->first()
+                        ->update(['status' => 'archived']);
 
-        if($bidding->status == 'under_transaction') {
-            $transaction = Transaction::select([
-                    'transactions.*',
-                    'bids.customer'
-                ])
-                ->join('bids', 'bids.uuid', '=', 'transactions.bid')
-                ->where('bids.bidding', $req->bidding)
-                ->orderBy('created_at', 'DESC')
-                ->first();
-
-            return [
-                "status" => "under_transaction",
-                "claimer" => $transaction->customer,
-                "winner" => ((int) $winnerIndex),
-                "bids" => json_decode($bids),
-                "bidder" => $bidder
-            ];
-        }
-        else if($bidding->status == "ended") {
-
-            $transaction = Transaction
-                ::join('bids', 'bids.uuid', '=', 'transactions.bid')
-                ->where([
-                    ['bids.bidding', $req->bidding],
-                    ['transactions.status', '<>', 'cancelled'],
-                ])->first();
-
-
-            if ($transaction) {
+                    return [
+                        "status" => "no_claim"
+                    ];
+                }
+            }
+            else {
                 return [
-                    "status" => "claiming",
+                    "status" => "under_transaction",
                     "claimer" => $transaction->customer,
-                    "winner" => ((int) $winnerIndex),
-                    "bids" => json_decode($bids),
                     "bidder" => $bidder
                 ];
-            } else {
+            }
+        }
+        else {
 
-                //No Claims
-                if ($winnerIndex > count($bidder)) {
-                    //TODO Product must archive
-                    //Update Status
-                    $result = $bidding->update(['status' => "claim_failed"]);
+            $start_time = strtotime($bidding->start_time);
+            $end_time = strtotime($bidding->end_time);
+
+
+            if($bidding->status == "ended") {
+
+
+                //No bids
+                if(count($bidder) == 0) {
+
+                    //Update product status
+                    $bidding->update(['status' => "failed"]);
+                    Product::where('uuid', $bidding->product)
+                        ->first()
+                        ->update(['status' => 'archived']);
+
                     return [
-                        "status" => "no_claim",
-                        "message" => $result
+                        "status" => "failed"
                     ];
-                } else {
+                }
+
+                $hoursdiff = ($current_time - $end_time) / 3600;
+
+                //48 hrs = 2 days
+                $winnerIndex = $hoursdiff / 48;
+
+                $bids = Bid::where('bidding', $req->bidding)
+                ->orderBy('date', 'desc')
+                ->get()
+                ->groupBy('customer');
+
+                if ($winnerIndex >= count($bidder)) {
+
+                    //Update Status
+                    $bidding->update(['status' => "no_claims"]);
+                    Product::where('uuid', $bidding->product)
+                        ->first()
+                        ->update(['status' => 'archived']);
+
+                    return [
+                        "status" => "no_claim"
+                    ];
+                }
+                else {
                     return [
                         "status" => "ended",
                         "winner" => ((int) $winnerIndex),
@@ -417,15 +444,18 @@ class BiddingController extends Controller
                     ];
                 }
             }
-        } else {
-            if ($current_time >= $start_time) {
-                return [
-                    "status" => "on_going",
-                ];
-            } else {
-                return [
-                    "status" => "waiting",
-                ];
+
+            //Not yet
+            else {
+                if ($current_time >= $start_time) {
+                    return [
+                        "status" => "on_going",
+                    ];
+                } else {
+                    return [
+                        "status" => "waiting",
+                    ];
+                }
             }
         }
     }
