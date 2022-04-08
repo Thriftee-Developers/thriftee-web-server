@@ -174,6 +174,7 @@ Route::post('/notification/add', [NotificationController::class, 'addNotificatio
 Route::post('/notification/get', [NotificationController::class, 'getNotifications']);
 Route::post('/notification/delete', [NotificationController::class, 'deleteNotification']);
 Route::post('/notification/sync', [NotificationController::class, 'syncNotification']);
+Route::post('/notification/update_status', [NotificationController::class, 'updateNotificationsStatus']);
 Route::post('/notification/count', [NotificationController::class, 'getUnreadNotificationCount']);
 //Dummy Route
 Route::get('/product/delete_all', [ProductController::class, 'deleteAllProduct']);
