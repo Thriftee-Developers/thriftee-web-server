@@ -48,9 +48,9 @@ class NotificationController extends Controller
     function getNotifications(Request $req)
     {
         if ($req->type == "store") {
-            return StoreNotification::where("store", $req->uuid)->orderBy("status", "desc")->orderBy("date", "desc")->get();
+            return StoreNotification::where("store", $req->uuid)->orderBy("status", "asc")->orderBy("date", "asc")->get();
         } else {
-            return CustomerNotification::where("customer", $req->uuid)->orderBy("status", "desc")->orderBy("date", "desc")->get();
+            return CustomerNotification::where("customer", $req->uuid)->orderBy("status", "asc")->orderBy("date", "asc")->get();
         }
         return ["error" => "Customer or store not found!"];
     }
