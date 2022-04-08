@@ -9,5 +9,5 @@ class MessageStatus extends Model
 {
     use HasFactory;
 
-    protected $table = "messagestatus";
+    protected $table = "message_status";
 }
