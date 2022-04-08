@@ -9,5 +9,6 @@ class ChatBox extends Model
 {
     use HasFactory;
 
-    protected $table ="chatboxes";
+    protected $table = "chatboxes";
+    public $timestamps = false;
 }
