@@ -214,8 +214,6 @@ class BiddingController extends Controller
             $result = null;
         }
 
-
-
         return $result;
     }
 
@@ -226,7 +224,43 @@ class BiddingController extends Controller
             ->first();
 
         $this->checkBiddingStatus($bidding->uuid);
-        $result = Biddings::where("uuid", $bidding->uuid)->first();
+
+        $result = DB::select(
+            "SELECT
+                biddings.*,
+                mBids.uuid as highest_bid,
+                Count(bids.uuid) as bid_count
+            FROM biddings
+
+            LEFT JOIN bids
+            ON biddings.uuid = bids.bidding
+
+            LEFT OUTER JOIN (
+                SELECT uuid, bidding, MAX(amount) AS highest
+                FROM bids
+                GROUP BY bidding
+            ) mBids
+            ON mBids.bidding = biddings.uuid
+
+            WHERE biddings.product = '$req->product'
+
+            GROUP BY biddings.uuid
+            ORDER BY biddings.end_time DESC"
+        );
+
+        if(count($result) > 0) {
+            $result = $result[0];
+            if($result->highest_bid) {
+                $highest = Bid::where('uuid',$result->highest_bid)->first();
+                $result->highest_bid = $highest;
+            }
+            else {
+                $result->highest_bid = null;
+            }
+        }
+        else {
+            $result = null;
+        }
 
         return $result;
     }
