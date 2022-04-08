@@ -10,30 +10,40 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class MessageEvent implements ShouldBroadcast
+class ChatBoxEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    /**
+     * Create a new event instance.
+     *
+     * @return void
+     */
+
     public $user;
-    public $sender;
-    public function __construct(public string $customer, public string $store, $sender, public string $content)
+    public $ownerType;
+    public function __construct($sender, public string $customer, public string $store)
     {
-        //
         $this->user = $customer;
-        $this->sender = "customer";
+        $this->ownerType = "customer";
         if ($sender == "customer") {
             $this->user = $store;
-            $this->sender = "store";
+            $this->ownerType = "store";
         }
     }
 
+    /**
+     * Get the channels the event should broadcast on.
+     *
+     * @return \Illuminate\Broadcasting\Channel|array
+     */
     public function broadcastOn()
     {
-        return new Channel($this->sender . "-" . $this->user);
-        // return new Channel("message");
+        return new Channel($this->ownerType . '-' . $this->user);
     }
 
-    public function broadcastAs()
+    public function broadCastAs()
     {
-        return "message";
+        return "chatbox";
     }
 }

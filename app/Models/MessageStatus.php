@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class MessageStatus extends Model
 {
     use HasFactory;
+
+    protected $table = "message_status";
+    public $timestamps = false;
 }
