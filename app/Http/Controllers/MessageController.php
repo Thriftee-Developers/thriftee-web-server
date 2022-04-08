@@ -53,13 +53,13 @@ class MessageController extends Controller
         }
 
         if ($storeChatBox) {
-            $storeStatus->chatbox = $storeChatBox->uuid;
-        } else {
             $chatBox = new ChatBox();
             $chatBox->owner_type = "store";
             $chatBox->customer = $req->customer;
             $chatBox->store = $req->store;
             $chatBox->save();
+        } else {
+            $storeStatus->chatbox = $storeChatBox->uuid;
             // event(new ChatBoxEvent($req->sender, $req->customer, $req->store));
         }
 
@@ -74,13 +74,13 @@ class MessageController extends Controller
         }
 
         if ($customerChatBox) {
-            $customerStatus->chatbox = $customerChatBox->uuid;
-        } else {
             $chatBox = new ChatBox();
             $chatBox->owner_type = "customer";
             $chatBox->customer = $req->customer;
             $chatBox->store = $req->store;
             $chatBox->save();
+        } else {
+            $customerStatus->chatbox = $customerChatBox->uuid;
             // event(new ChatBoxEvent($req->sender, $req->customer, $req->store));
         }
 
