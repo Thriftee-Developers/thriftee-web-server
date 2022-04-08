@@ -171,16 +171,10 @@ Route::post('/message/chatlist/store', [MessageController::class, 'getStoreChatL
 Route::post('/message/chatlist/customer', [MessageController::class, 'getCustomerChatList']);
 
 //Notification
-Route::post('/notification/add_customer', [NotificationController::class, 'addCustomerNotification']);
-Route::post('/notification/add_store', [NotificationController::class, 'addStoreNotification']);
-Route::post('/notification/get_customer', [NotificationController::class, 'getCustomerNotification']);
-Route::post('/notification/get_store', [NotificationController::class, 'getStoreNotification']);
-Route::post('/notification/delete_store', [NotificationController::class, 'deleteStoreNotification']);
-Route::post('/notification/delete_customer', [NotificationController::class, 'deleteCustomerNotification']);
+Route::post('/notification/add', [NotificationController::class, 'addNotification']);
+Route::post('/notification/get', [NotificationController::class, 'getNotifications']);
+Route::post('/notification/delete', [NotificationController::class, 'deleteNotification']);
 Route::post('/notification/sync', [NotificationController::class, 'syncNotification']);
-Route::post('/notification/update_customer_status', [NotificationController::class, 'updateCustomerNotificationStatus']);
-Route::post('/notification/update_store_status', [NotificationController::class, 'updateStoreNotificationStatus']);
-Route::post('/notification/count', [NotificationController::class, 'getCustomerUnreadNotificationCount']);
-
+Route::post('/notification/count', [NotificationController::class, 'getUnreadNotificationCount']);
 //Dummy Route
 Route::get('/product/delete_all', [ProductController::class, 'deleteAllProduct']);

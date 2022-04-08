@@ -18,82 +18,77 @@ class NotificationController extends Controller
         event(new NotificationEvent($req->user, $req->type, $req->details));
     }
 
-    function addCustomerNotification(Request $req)
+    function addNotification(Request $req)
     {
-        $customerNotification = new CustomerNotification();
-        $customerNotification->uuid = Str::uuid();
-        $customerNotification->customer = $req->customer;
-        $customerNotification->type = $req->type;
-        $customerNotification->details = $req->details;
-        $customerNotification->date = date("Y-m-d H:i:s");
+        if ($req->type == "store") {
 
-        $customerNotification->save();
+            $customerNotification = new CustomerNotification();
+            $customerNotification->uuid = Str::uuid();
+            $customerNotification->customer = $req->customer;
+            $customerNotification->type = $req->type;
+            $customerNotification->details = $req->details;
+            $customerNotification->date = date("Y-m-d H:i:s");
 
-        return ["sucess" => "success"];
+            $customerNotification->save();
+            return ["sucess" => "success"];
+        } else {
+            $storeNotification = new StoreNotification();
+            $storeNotification->uuid = Str::uuid();
+            $storeNotification->store = $req->store;
+            $storeNotification->type = $req->type;
+            $storeNotification->details = $req->details;
+            $storeNotification->date = date("Y-m-d H:i:s");
+
+            $storeNotification->save();
+            return ["sucess" => "success"];
+        }
+        return ["error" => "Adding failed!"];
     }
 
-    function addStoreNotification(Request $req)
+    function getNotifications(Request $req)
     {
-        $storeNotification = new StoreNotification();
-        $storeNotification->uuid = Str::uuid();
-        $storeNotification->store = $req->store;
-        $storeNotification->type = $req->type;
-        $storeNotification->details = $req->details;
-
-        $storeNotification->save();
-        return ["sucess" => "success"];
+        if ($req->type == "store") {
+            return StoreNotification::where("store", $req->uuid)->orderBy("status", "asc")->orderBy("date", "asc")->get();
+        } else {
+            return CustomerNotification::where("customer", $req->uuid)->orderBy("status", "asc")->orderBy("date", "asc")->get();
+        }
+        return ["error" => "Customer or store not found!"];
     }
 
-    function getCustomerNotification(Request $req)
+    function updateNotificationsStatus(Request $req)
     {
-        $result = CustomerNotification
-            ::where("customer", $req->customer)
-            ->orderBy("date", "desc")
-            ->get();
-        return $result;
+        if ($req->type == "store") {
+            StoreNotification::where("store", $req->uuid)
+                ->whereIn('status', [0])
+                ->update(array('status' => "1"));
+            return ["success" => "success"];
+        } else {
+            CustomerNotification::where("customer", $req->uuid)
+                ->whereIn('status', [0])
+                ->update(array('status' => "1"));
+            return ["success" => "success"];
+        }
+        return ["error" => "Customer or store not found!"];
     }
 
-    function updateCustomerNotificationStatus(Request $req)
-    {
 
-        $result = CustomerNotification::where("customer", $req->uuid)->whereIn('status', [0])->update(array('status' => "1"));
-        return ["success" => "success"];
+    function getUnreadNotificationCount(Request $req)
+    {
+        if ($req->type == "store") {
+            return StoreNotification::where("store", $req->uuid)->where("status", 0)->get();
+        } else {
+            return CustomerNotification::where("customer", $req->uuid)->where("status", 0)->get()->count();
+        }
+        return ["error" => "Customer or store not found!"];
     }
 
-    function updateStoreNotificationStatus(Request $req)
+    function deleteNotification(Request $req)
     {
-
-        $result = StoreNotification::where("store", $req->uuid)->whereIn('status', [1])->update(array('status' => "0"));
-        return ["success" => "success"];
-    }
-
-    function getStoreNotification(Request $req)
-    {
-        $result = StoreNotification::where("store", $req->store)->get();
-        return $result;
-    }
-
-    function getCustomerUnreadNotificationCount(Request $req)
-    {
-        $result = CustomerNotification::where("customer", $req->uuid)->where("status", 0)->get()->count();
-        return $result;
-    }
-
-    function getStoreUnreadNotificationCount(Request $req)
-    {
-        $result = StoreNotification::where("store", $req->store)->where("status", 0)->get();
-        return $result;
-    }
-
-    function deleteCustomerNotification(Request $req)
-    {
-        $result = CustomerNotification::where("uuid", $req->uuid)->first();
-        return $result;
-    }
-
-    function deleteStoreNotification(Request $req)
-    {
-        $result = StoreNotification::where("uuid", $req->uuid)->first();
-        return $result;
+        if ($req->type == "store") {
+            return StoreNotification::where("uuid", $req->uuid)->first();
+        } else {
+            return CustomerNotification::where("uuid", $req->uuid)->first();
+        }
+        return ["error" => "Customer or store not found!"];
     }
 }
