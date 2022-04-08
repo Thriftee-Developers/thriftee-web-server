@@ -18,7 +18,7 @@ class NotificationController extends Controller
         event(new NotificationEvent($req->user, $req->type, $req->details));
     }
 
-    function addCustomerNotification(Request $req)
+    function addNotification(Request $req)
     {
         if ($req->type == "store") {
 
@@ -45,7 +45,7 @@ class NotificationController extends Controller
         return ["error" => "Adding failed!"];
     }
 
-    function getNotification(Request $req)
+    function getNotifications(Request $req)
     {
         if ($req->type == "store") {
             return StoreNotification::where("store", $req->uuid)->get();
@@ -82,7 +82,7 @@ class NotificationController extends Controller
         return ["error" => "Customer or store not found!"];
     }
 
-    function deleteCustomerNotification(Request $req)
+    function deleteNotification(Request $req)
     {
         if ($req->type == "store") {
             return StoreNotification::where("uuid", $req->uuid)->first();

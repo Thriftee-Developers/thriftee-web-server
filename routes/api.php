@@ -169,8 +169,8 @@ Route::post('/message/send_message', [MessageController::class, 'sendMessage']);
 Route::post('/message/latest', [MessageController::class, 'getLatestMessage']);
 
 //Notification
-Route::post('/notification/addr', [NotificationController::class, 'addCustomerNotification']);
-Route::post('/notification/get', [NotificationController::class, 'getNotification']);
+Route::post('/notification/add', [NotificationController::class, 'addNotification']);
+Route::post('/notification/get', [NotificationController::class, 'getNotifications']);
 Route::post('/notification/delete', [NotificationController::class, 'deleteNotification']);
 Route::post('/notification/sync', [NotificationController::class, 'syncNotification']);
 Route::post('/notification/update_status', [NotificationController::class, 'updateNotificationsStatus']);
