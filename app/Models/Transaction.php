@@ -10,7 +10,7 @@ class Transaction extends Model
     use HasFactory;
     protected $primaryKey = 'uuid';
     public $incrementing = false;
-    public $timestamps = false;
+
     protected $fillable = [
         "bid",
         "description",

@@ -328,8 +328,13 @@ class BiddingController extends Controller
     {
         $bidding = Biddings::where([
             ['uuid', $req->bidding],
-            ['status', '<>', -1]
+            ['status', '<>', 'failed']
         ])->first();
+
+        $transaction = Transaction
+            ::join('bids', 'bids.uuid', '=', 'transactions.bid')
+            ->where('bids.bidding', $req->bidding)
+            ->first();
 
         if (!$bidding) {
             return [
@@ -345,7 +350,36 @@ class BiddingController extends Controller
 
 
 
-        if ($current_time > $end_time) {
+        $hoursdiff = ($current_time - $end_time) / 3600;
+
+        //48 hrs = 2 days
+        $winnerIndex = $hoursdiff / 48;
+        $bidder = $this->getBidders($req->bidding);
+        $bids = Bid::where('bidding', $req->bidding)
+        ->orderBy('date', 'desc')
+        ->get()
+        ->groupBy('customer');
+
+
+        if($bidding->status == 'under_transaction') {
+            $transaction = Transaction::select([
+                    'transactions.*',
+                    'bids.customer'
+                ])
+                ->join('bids', 'bids.uuid', '=', 'transactions.bid')
+                ->where('bids.bidding', $req->bidding)
+                ->orderBy('created_at', 'DESC')
+                ->first();
+
+            return [
+                "status" => "under_transaction",
+                "claimer" => $transaction->customer,
+                "winner" => ((int) $winnerIndex),
+                "bids" => json_decode($bids),
+                "bidder" => $bidder
+            ];
+        }
+        else if($bidding->status == "ended") {
 
             $transaction = Transaction
                 ::join('bids', 'bids.uuid', '=', 'transactions.bid')
@@ -354,16 +388,6 @@ class BiddingController extends Controller
                     ['transactions.status', '<>', 'cancelled'],
                 ])->first();
 
-            $hoursdiff = ($current_time - $end_time) / 3600;
-            //48 hrs = 2 days
-            $winnerIndex = $hoursdiff / 48;
-
-            $bidder = $this->getBidders($req->bidding);
-
-            $bids = Bid::where('bidding', $req->bidding)
-                ->orderBy('date', 'desc')
-                ->get()
-                ->groupBy('customer');
 
             if ($transaction) {
                 return [
