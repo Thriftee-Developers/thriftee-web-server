@@ -32,8 +32,6 @@ class MessageController extends Controller
             ->where("owner_type", "customer")
             ->first();
 
-        return "CCB: " . $customerChatBox . " SCB: " . $storeChatBox;
-
         //Ad message in messages
         $message = new Message();
         $message->uuid = Str::uuid();
