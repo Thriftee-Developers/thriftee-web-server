@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class ChatBox extends Model
 {
     use HasFactory;
+
+    protected $table ="chatboxes";
 }

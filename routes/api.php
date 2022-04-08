@@ -167,8 +167,7 @@ Route::post('/message/send_chat', [MessageController::class, 'sendChat']);
 Route::post('/message/get', [MessageController::class, 'getMessages']);
 Route::post('/message/send_message', [MessageController::class, 'sendMessage']);
 Route::post('/message/latest', [MessageController::class, 'getLatestMessage']);
-Route::post('/message/chatlist/store', [MessageController::class, 'getStoreChatList']);
-Route::post('/message/chatlist/customer', [MessageController::class, 'getCustomerChatList']);
+Route::post('/message/chatlist', [MessageController::class, 'getChatList']);
 
 //Notification
 Route::post('/notification/add', [NotificationController::class, 'addNotification']);

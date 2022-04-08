@@ -105,4 +105,22 @@ class MessageController extends Controller
             $messages->update(['status' => 1]);
         }
     }
+
+    function getChatList(Request $req)
+    {
+        if($req->owner == 'customer') {
+            $chatlist = ChatBox::where([
+                ['customer',$req->user],
+                ['owner_type', 'customer']
+            ])->get();
+        }
+        else {
+            $chatlist = ChatBox::where([
+                ['store',$req->user],
+                ['owner_type', 'store']
+            ])->get();
+        }
+
+        return $chatlist;
+    }
 }
