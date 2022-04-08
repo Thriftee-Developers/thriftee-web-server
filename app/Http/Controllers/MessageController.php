@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Message;
 use App\Events\MessageEvent as Chat;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class MessageController extends Controller
@@ -47,5 +48,49 @@ class MessageController extends Controller
             $messages = Message::where('uuid', $uuid);
             $messages->update(['status' => 1]);
         }
+    }
+
+    function getStoreChatList(Request $req)
+    {
+        $chatlist = DB::select(
+            "SELECT
+                messages.customer,
+                messages.date,
+                CONCAT(customers.fname,' ',customers.lname) as name,
+                customers.profile_uri
+            FROM (
+                SELECT MAX(messages.date) as date, messages.sender, messages.customer
+                FROM messages
+                WHERE messages.store='$req->store' AND messages.sender='store'
+                GROUP BY messages.customer
+                ORDER BY date DESC
+            ) messages
+
+            LEFT JOIN customers ON customers.uuid = messages.customer"
+        );
+
+        return $chatlist;
+    }
+
+    function getCustomerChatList(Request $req)
+    {
+        $chatlist = DB::select(
+            "SELECT
+                messages.store,
+                messages.date,
+                stores.store_name as name,
+                stores.image_uri as profile_uri
+            FROM (
+                SELECT MAX(messages.date) as date, messages.sender, messages.store
+                FROM messages
+                WHERE messages.customer='$req->customer' AND messages.sender='customer'
+                GROUP BY messages.store
+                ORDER BY date DESC
+            ) messages
+
+            LEFT JOIN stores ON stores.uuid = messages.store"
+        );
+
+        return $chatlist;
     }
 }

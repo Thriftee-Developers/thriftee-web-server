@@ -167,6 +167,8 @@ Route::post('/message/send_chat', [MessageController::class, 'sendChat']);
 Route::post('/message/get', [MessageController::class, 'getMessages']);
 Route::post('/message/send_message', [MessageController::class, 'sendMessage']);
 Route::post('/message/latest', [MessageController::class, 'getLatestMessage']);
+Route::post('/message/chatlist/store', [MessageController::class, 'getStoreChatList']);
+Route::post('/message/chatlist/customer', [MessageController::class, 'getCustomerChatList']);
 
 //Notification
 Route::post('/notification/add_customer', [NotificationController::class, 'addCustomerNotification']);
@@ -179,5 +181,6 @@ Route::post('/notification/sync', [NotificationController::class, 'syncNotificat
 Route::post('/notification/update_customer_status', [NotificationController::class, 'updateCustomerNotificationStatus']);
 Route::post('/notification/update_store_status', [NotificationController::class, 'updateStoreNotificationStatus']);
 Route::post('/notification/count', [NotificationController::class, 'getCustomerUnreadNotificationCount']);
+
 //Dummy Route
 Route::get('/product/delete_all', [ProductController::class, 'deleteAllProduct']);

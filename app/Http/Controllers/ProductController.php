@@ -64,7 +64,7 @@ class ProductController extends Controller
             ON productimages.product = products.uuid
 
             WHERE
-                products.store = '".$req->store."'
+                products.store = '$req->store'
                 AND products.status = 'active'
 
             GROUP BY products.uuid"
