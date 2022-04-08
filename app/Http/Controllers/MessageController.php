@@ -153,6 +153,7 @@ class MessageController extends Controller
                 ['chatboxes.customer',$req->user],
                 ['chatboxes.owner_type','customer']
             ])
+            ->orderBy('messages.date', 'DESC')
             ->get()
             ->groupBy('chatbox');
         }
@@ -168,6 +169,7 @@ class MessageController extends Controller
                 ['chatboxes.store',$req->user],
                 ['chatboxes.owner_type','store']
             ])
+            ->orderBy('messages.date', 'DESC')
             ->get()
             ->groupBy('chatbox');
         }
