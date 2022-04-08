@@ -5,22 +5,32 @@ namespace App\Http\Controllers;
 use App\Models\Message;
 use App\Events\MessageEvent as Chat;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use App\Models\ChatBox;
+use App\Models\MessageStatus;
 
 class MessageController extends Controller
 {
     function sendChat(Request $req)
     {
-        event(new Chat($req->customer, $req->store, $req->sender, $req->content));
         return ["success" => "send success"];
     }
     //
     function sendMessage(Request $req)
     {
+        //Found if the data will be duplicate
+        $storeChatBox = ChatBox::where("store", $req->store)
+            ->where("customer", $req->customer)
+            ->where("owner_type", "store")
+            ->first();
 
+        $customerChatBox = ChatBox::where("store", $req->store)
+            ->where("customer", $req->customer)
+            ->where("owner_type", "customer")
+            ->first();
+
+        //Ad message in messages
         $message = new Message();
-
         $message->uuid = Str::uuid();
         $message->customer = $req->customer;
         $message->store = $req->store;
@@ -28,6 +38,52 @@ class MessageController extends Controller
         $message->content = $req->content;
 
         $message->save();
+
+        //Add store status in message_status
+        $storeStatus = new MessageStatus();
+        $storeStatus->uuid = Str::uuid();
+        $storeStatus->message = $message->uuid;
+
+        //Set store status to 1
+        if ($req->sender == "store") {
+            $storeStatus->status = "1";
+        }
+
+        if ($storeChatBox) {
+            $storeStatus->chatbox = $storeChatBox->uuid;
+        } else {
+            $chatBox = new ChatBox();
+            $chatBox->owner_type = "store";
+            $chatBox->customer = $req->customer;
+            $chatBox->store = $req->store;
+            $chatBox->save();
+        }
+
+        $storeStatus->save();
+
+        $customerStatus = new MessageStatus();
+        $customerStatus->uuid = Str::uuid();
+        $customerStatus->message = $message->uuid;
+
+        if ($req->sender == "customer") {
+            $customerStatus->status = "1";
+        }
+
+        if ($customerChatBox) {
+            $customerStatus->chatbox = $customerChatBox->uuid;
+        } else {
+            $chatBox = new ChatBox();
+            $chatBox->owner_type = "customer";
+            $chatBox->customer = $req->customer;
+            $chatBox->store = $req->store;
+            $chatBox->save();
+        }
+
+        $customerStatus->save();
+
+
+        event(new Chat($req->customer, $req->store, $req->sender, $req->content));
+        return ["success" => "success"];
     }
 
     function getMessages(Request $req)
@@ -48,49 +104,5 @@ class MessageController extends Controller
             $messages = Message::where('uuid', $uuid);
             $messages->update(['status' => 1]);
         }
-    }
-
-    function getStoreChatList(Request $req)
-    {
-        $chatlist = DB::select(
-            "SELECT
-                messages.customer,
-                messages.date,
-                CONCAT(customers.fname,' ',customers.lname) as name,
-                customers.profile_uri
-            FROM (
-                SELECT MAX(messages.date) as date, messages.sender, messages.customer
-                FROM messages
-                WHERE messages.store='$req->store' AND messages.sender='store'
-                GROUP BY messages.customer
-                ORDER BY date DESC
-            ) messages
-
-            LEFT JOIN customers ON customers.uuid = messages.customer"
-        );
-
-        return $chatlist;
-    }
-
-    function getCustomerChatList(Request $req)
-    {
-        $chatlist = DB::select(
-            "SELECT
-                messages.store,
-                messages.date,
-                stores.store_name as name,
-                stores.image_uri as profile_uri
-            FROM (
-                SELECT MAX(messages.date) as date, messages.sender, messages.store
-                FROM messages
-                WHERE messages.customer='$req->customer' AND messages.sender='customer'
-                GROUP BY messages.store
-                ORDER BY date DESC
-            ) messages
-
-            LEFT JOIN stores ON stores.uuid = messages.store"
-        );
-
-        return $chatlist;
     }
 }

@@ -14,23 +14,25 @@ class MessageEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
     public $user;
-    public function __construct(public string $customer, public string $store, public string $sender, public string $content)
+    public $sender;
+    public function __construct(public string $customer, public string $store, $sender, public string $content)
     {
         //
         $this->user = $store;
         if ($sender === "store") {
             $this->user = $customer;
         }
+        $this->sender = $sender;
     }
 
     public function broadcastOn()
     {
-        return new Channel("message");
+        return new Channel($this->sender . "-" . $this->user);
         // return new Channel("message");
     }
 
     public function broadcastAs()
     {
-        return "user-" . $this->user;
+        return "message";
     }
 }
