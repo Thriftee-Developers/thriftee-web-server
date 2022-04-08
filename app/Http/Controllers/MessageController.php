@@ -60,7 +60,7 @@ class MessageController extends Controller
             $chatBox->customer = $req->customer;
             $chatBox->store = $req->store;
             $chatBox->save();
-            event(new ChatBoxEvent($req->sender, $req->customer, $req->store));
+            // event(new ChatBoxEvent($req->sender, $req->customer, $req->store));
         }
 
         $storeStatus->save();
@@ -81,13 +81,13 @@ class MessageController extends Controller
             $chatBox->customer = $req->customer;
             $chatBox->store = $req->store;
             $chatBox->save();
-            event(new ChatBoxEvent($req->sender, $req->customer, $req->store));
+            // event(new ChatBoxEvent($req->sender, $req->customer, $req->store));
         }
 
         $customerStatus->save();
 
 
-        event(new Chat($req->customer, $req->store, $req->sender, $req->content));
+        // event(new Chat($req->customer, $req->store, $req->sender, $req->content));
         return ["success" => "success"];
     }
 
