@@ -89,10 +89,11 @@ class BidController extends Controller
         $result = Bid::select('bids.*')
             ->leftJoin('biddings','biddings.uuid','bids.bidding')
             ->where("customer", $req->customer)
-            ->where(function($query) {
-                $query->where('biddings.status', 'on_going')
-                ->orWhere('biddings.status', 'ended');
-            })
+            // ->where(function($query) {
+            //     $query->where('biddings.status', 'on_going')
+            //     ->orWhere('biddings.status', 'ended')
+            //     ->orWhere('biddings.status', 'under_transaction');
+            // })
             ->orderBy("date", "desc")
             ->get()
             ->groupBy("bidding");
