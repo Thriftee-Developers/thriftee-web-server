@@ -25,13 +25,14 @@ class MessageController extends Controller
         //Found if the data will be duplicate
         $storeChatBox = ChatBox::where("store", $req->store)
             ->where("customer", $req->customer)
-            ->where("owner_type", "store")
             ->first();
 
         $customerChatBox = ChatBox::where("store", $req->store)
             ->where("customer", $req->customer)
             ->where("owner_type", "customer")
             ->first();
+
+        return "CCB: " . $customerChatBox . " SCB: " . $storeChatBox;
 
         //Ad message in messages
         $message = new Message();
@@ -53,13 +54,15 @@ class MessageController extends Controller
         }
 
         if ($storeChatBox) {
+            //if storechatbox not found set store status save
+            $storeStatus->chatbox = $storeChatBox->uuid;
+        } else {
             $chatBox = new ChatBox();
+            $chatBox->uuid = Str::uuid();
             $chatBox->owner_type = "store";
             $chatBox->customer = $req->customer;
             $chatBox->store = $req->store;
             $chatBox->save();
-        } else {
-            $storeStatus->chatbox = $storeChatBox->uuid;
             // event(new ChatBoxEvent($req->sender, $req->customer, $req->store));
         }
 
@@ -74,13 +77,14 @@ class MessageController extends Controller
         }
 
         if ($customerChatBox) {
+            $customerStatus->chatbox = $customerChatBox->uuid;
+        } else {
             $chatBox = new ChatBox();
+            $chatBox->uuid = Str::uuid();
             $chatBox->owner_type = "customer";
             $chatBox->customer = $req->customer;
             $chatBox->store = $req->store;
             $chatBox->save();
-        } else {
-            $customerStatus->chatbox = $customerChatBox->uuid;
             // event(new ChatBoxEvent($req->sender, $req->customer, $req->store));
         }
 
