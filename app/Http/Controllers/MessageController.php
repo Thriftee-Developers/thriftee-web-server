@@ -25,6 +25,7 @@ class MessageController extends Controller
         //Found if the data will be duplicate
         $storeChatBox = ChatBox::where("store", $req->store)
             ->where("customer", $req->customer)
+            ->where("owner_type", "store")
             ->first();
 
         $customerChatBox = ChatBox::where("store", $req->store)
