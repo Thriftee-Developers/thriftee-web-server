@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\ChatBox;
 use App\Models\MessageStatus;
+use Illuminate\Support\Facades\DB;
 
 class MessageController extends Controller
 {
@@ -109,16 +110,30 @@ class MessageController extends Controller
     function getChatList(Request $req)
     {
         if($req->owner == 'customer') {
-            $chatlist = ChatBox::where([
+            $chatlist = ChatBox::select([
+                'chatboxes.*',
+                'stores.store_name as name',
+                'stores.image_uri as profile_uri'
+            ])
+            ->where([
                 ['customer',$req->user],
                 ['owner_type', 'customer']
-            ])->get();
+            ])
+            ->join('stores','stores.uuid','chatboxes.store')
+            ->get();
         }
         else {
-            $chatlist = ChatBox::where([
+            $chatlist = ChatBox::select([
+                'chatboxes.*',
+                DB::raw('CONCAT(customers.fname," ",customers.lname) as name'),
+                'customers.profile_uri'
+            ])
+            ->where([
                 ['store',$req->user],
                 ['owner_type', 'store']
-            ])->get();
+            ])
+            ->join('customers','customers.uuid','chatboxes.customer')
+            ->get();
         }
 
         return $chatlist;
