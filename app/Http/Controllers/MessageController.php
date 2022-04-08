@@ -87,15 +87,15 @@ class MessageController extends Controller
         return ["success" => "success"];
     }
 
-    function getMessages(Request $req)
-    {
-        $result = Message::where("customer", $req->customer)
-            ->where("store", $req->store)
-            ->orderBy("date", "asc")
-            ->get();
+    // function getMessages(Request $req)
+    // {
+    //     $result = Message::where("customer", $req->customer)
+    //         ->where("store", $req->store)
+    //         ->orderBy("date", "asc")
+    //         ->get();
 
-        return $result;
-    }
+    //     return $result;
+    // }
 
     function seenMessages(Request $req)
     {
@@ -137,5 +137,41 @@ class MessageController extends Controller
         }
 
         return $chatlist;
+    }
+
+    function getMessages(Request $req) {
+
+        if($req->owner == 'customer') {
+            $messages = Message::select([
+                'messages.*',
+                'message_status.chatbox',
+                'message_status.status'
+            ])
+            ->leftJoin('message_status','message_status.message','messages.uuid')
+            ->leftJoin('chatboxes','chatboxes.uuid','message_status.chatbox')
+            ->where([
+                ['chatboxes.customer',$req->user],
+                ['chatboxes.owner_type','customer']
+            ])
+            ->get()
+            ->groupBy('chatbox');
+        }
+        else {
+            $messages = Message::select([
+                'messages.*',
+                'message_status.chatbox',
+                'message_status.status'
+            ])
+            ->leftJoin('message_status','message_status.message','messages.uuid')
+            ->leftJoin('chatboxes','chatboxes.uuid','message_status.chatbox')
+            ->where([
+                ['chatboxes.store',$req->user],
+                ['chatboxes.owner_type','store']
+            ])
+            ->get()
+            ->groupBy('chatbox');
+        }
+
+        return $messages->toArray();
     }
 }
