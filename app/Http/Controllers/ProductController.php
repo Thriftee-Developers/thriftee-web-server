@@ -27,7 +27,22 @@ class ProductController extends Controller
     }
 
     function getProductByID(Request $req){
-        $result = Product::where("product_id", $req->product_id)->first();
+        $result = Product::select([
+                'products.*',
+                'stores.uuid as store_uuid',
+                'stores.store_id as store_id',
+                'stores.store_name'
+            ])
+            ->where("product_id", $req->product_id)
+            ->join('stores','stores.uuid','products.store')
+            ->first();
+
+        $images = ProductImage
+            ::where('product',$result->uuid)
+            ->orderBy('name','ASC')
+            ->get();
+        $result->images = $images;
+
         return $result;
     }
 
