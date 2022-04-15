@@ -32,6 +32,8 @@ class StoreController extends Controller
             LEFT JOIN products
             ON  products.store = stores.uuid
 
+            WHERE stores.status = 1
+
             GROUP BY stores.uuid"
         );
         return $result;
