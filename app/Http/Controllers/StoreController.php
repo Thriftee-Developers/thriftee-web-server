@@ -69,6 +69,11 @@ class StoreController extends Controller
 
             GROUP BY stores.uuid"
         );
+
+        if (count($result) < 1) {
+            return null;
+        }
+
         return $result;
     }
 
