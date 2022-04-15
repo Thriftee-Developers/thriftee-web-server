@@ -424,13 +424,13 @@ class BiddingController extends Controller
     {
         $bidding = Biddings::where([
             ['uuid', $req->bidding],
-            ['status', '<>', 'failed'],
-            ['status', '<>', 'no_claim']
+            ['status', '<>', 'no_bid'],
+            ['status', '<>', 'claim_failed']
         ])->first();
 
         if (!$bidding) {
             return [
-                "status" => "no_claim"
+                "status" => "claim_failed"
             ];
         }
 
@@ -466,13 +466,13 @@ class BiddingController extends Controller
                 if ($winnerIndex >= count($bidder)) {
 
                     //Update bidding status
-                    $bidding->update(['status' => "no_claim"]);
+                    $bidding->update(['status' => "claim_failed"]);
                     Product::where('uuid', $bidding->product)
                         ->first()
                         ->update(['status' => 'archived']);
 
                     return [
-                        "status" => "no_claim"
+                        "status" => "claim_failed"
                     ];
                 }
             } else {
@@ -518,13 +518,13 @@ class BiddingController extends Controller
                 if ($winnerIndex >= count($bidder)) {
 
                     //Update Status
-                    $bidding->update(['status' => "no_claim"]);
+                    $bidding->update(['status' => "claim_failed"]);
                     Product::where('uuid', $bidding->product)
                         ->first()
                         ->update(['status' => 'archived']);
 
                     return [
-                        "status" => "no_claim"
+                        "status" => "claim_failed"
                     ];
                 } else {
                     return [

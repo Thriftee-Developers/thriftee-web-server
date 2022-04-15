@@ -44,13 +44,16 @@ class BidController extends Controller
             if ($highestBid != "") {
                 if ($req->amount >= ($highestBid->amount + $bidding->increment)) {
                     $bid->save();
+                    $bidding->update(['claimer' => $req->customer]);
                     return ["success" => "success"];
                 } else {
                     return ["error" => "Not enough bid amount."];
                 }
-            } else {
+            }
+            else {
                 if ($req->amount >= ($bidding->minimum)) {
                     $bid->save();
+                    $bidding->update(['claimer' => $req->customer]);
                     return ["success" => "success"];
                 } else {
                     return ["error" => "Bid Failed! Not Enough bid."];
