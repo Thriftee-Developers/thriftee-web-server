@@ -20,7 +20,7 @@ class NotificationController extends Controller
 
     function addNotification(Request $req)
     {
-        if ($req->type == "store") {
+        if ($req->user_type == "store") {
 
             $customerNotification = new CustomerNotification();
             $customerNotification->uuid = Str::uuid();
@@ -47,7 +47,7 @@ class NotificationController extends Controller
 
     function getNotifications(Request $req)
     {
-        if ($req->type == "store") {
+        if ($req->user_type == "store") {
             return StoreNotification::where("store", $req->uuid)->orderBy("status", "asc")->orderBy("date", "asc")->get();
         } else {
             return CustomerNotification::where("customer", $req->uuid)->orderBy("status", "asc")->orderBy("date", "asc")->get();
@@ -57,7 +57,7 @@ class NotificationController extends Controller
 
     function updateNotificationsStatus(Request $req)
     {
-        if ($req->type == "store") {
+        if ($req->user_type == "store") {
             StoreNotification::where("store", $req->uuid)
                 ->whereIn('status', [0])
                 ->update(array('status' => "1"));
@@ -74,7 +74,7 @@ class NotificationController extends Controller
 
     function getUnreadNotificationCount(Request $req)
     {
-        if ($req->type == "store") {
+        if ($req->user_type == "store") {
             return StoreNotification::where("store", $req->uuid)->where("status", 0)->get();
         } else {
             return CustomerNotification::where("customer", $req->uuid)->where("status", 0)->get()->count();
@@ -84,7 +84,7 @@ class NotificationController extends Controller
 
     function deleteNotification(Request $req)
     {
-        if ($req->type == "store") {
+        if ($req->user_type == "store") {
             return StoreNotification::where("uuid", $req->uuid)->first();
         } else {
             return CustomerNotification::where("uuid", $req->uuid)->first();
