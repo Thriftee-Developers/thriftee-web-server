@@ -126,7 +126,7 @@ class MessageController extends Controller
         if ($result) {
             return ["success" => "success"];
         }
-        return ["error" => "Message uuid not found"];
+        return ["error" => "All messages are seen or chatbox not found."];
     }
 
     function getChatList(Request $req)
