@@ -20,7 +20,6 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SliderProductController;
 use App\Http\Controllers\StoreBillingMethodController;
 use App\Http\Controllers\TransactionController;
-use App\Models\Follower;
 
 /*
 |--------------------------------------------------------------------------
