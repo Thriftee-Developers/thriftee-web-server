@@ -108,6 +108,7 @@ Route::post('/bidding/store/active', [BiddingController::class, 'getActiveBiddin
 Route::get('/bidding/specific_data', [BiddingController::class, 'getSpecificBiddingData']);
 Route::post('/bidding/store/waiting', [BiddingController::class, 'getWaitingBiddingsByStore']);
 Route::post('/bidding/store/on_going', [BiddingController::class, 'getOnGoingBiddingsByStore']);
+Route::post('/bidding/store/products/sold', [BiddingController::class, 'getStoreSoldProducts']);
 
 
 //Customer

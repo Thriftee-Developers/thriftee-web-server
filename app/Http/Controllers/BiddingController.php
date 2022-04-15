@@ -149,6 +149,52 @@ class BiddingController extends Controller
         return $biddings;
     }
 
+    function getStoreSoldProducts(Request $req)
+    {
+        $biddings = DB::select(
+            "SELECT
+                biddings.*,
+                products.product_id,
+                products.name,
+                products.description,
+                products.store,
+                stores.uuid as store_uuid,
+                stores.store_name,
+                productimages.path as image_path,
+                mBids.highest as highest_bid,
+                Count(bids.uuid) as bid_count
+            FROM biddings
+
+            LEFT JOIN bids
+            ON biddings.uuid = bids.bidding
+
+            INNER JOIN products
+            ON biddings.product = products.uuid
+
+            INNER JOIN stores
+            ON products.store = stores.uuid
+
+            LEFT JOIN (
+                SELECT path, product, MIN(name) AS name FROM productimages GROUP BY product
+            ) productimages
+            ON productimages.product = products.uuid
+
+            LEFT OUTER JOIN (
+                SELECT bidding, MAX(amount) AS highest
+                FROM bids
+                GROUP BY bidding
+            ) mBids
+            ON mBids.bidding = biddings.uuid
+
+            WHERE biddings.status = 'success' AND products.store='$req->store'
+
+            GROUP BY biddings.uuid
+            ORDER BY bid_count DESC"
+        );
+
+        return $biddings;
+    }
+
     function getOnGoingBiddingsByStore(Request $req)
     {
         $biddings = DB::select(
