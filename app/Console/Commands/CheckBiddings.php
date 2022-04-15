@@ -40,5 +40,7 @@ class CheckBiddings extends Command
         $biddingCtrl = new BiddingController();
         $biddingCtrl->checkWaitingBiddings();
         $biddingCtrl->checkActiveBiddings();
+
+        $this->info("Checking biddings status");
     }
 }
