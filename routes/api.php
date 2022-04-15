@@ -171,7 +171,7 @@ Route::post('/message/get', [MessageController::class, 'getMessages']);
 Route::post('/message/send_message', [MessageController::class, 'sendMessage']);
 Route::post('/message/latest', [MessageController::class, 'getLatestMessage']);
 Route::post('/message/chatlist', [MessageController::class, 'getChatList']);
-
+Route::post('/message/seen', [MessageController::class, 'seenMessages']);
 //Notification
 Route::post('/notification/add', [NotificationController::class, 'addNotification']);
 Route::post('/notification/get', [NotificationController::class, 'getNotifications']);
