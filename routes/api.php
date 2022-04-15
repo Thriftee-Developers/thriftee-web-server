@@ -47,7 +47,7 @@ Route::post('/store/login', [StoreController::class, 'login']);
 Route::post('/store/update_password', [StoreController::class, 'updatePassword']);
 Route::post('/store/check_password', [StoreController::class, 'checkPassword']);
 Route::post('/store/get_status', [StoreController::class, 'getStatus']);
-
+Route::post('/store/store_id', [StoreController::class, 'getStoreByID']);
 //Products
 Route::get('/product/all', [ProductController::class, 'getAllProducts']);
 Route::post('/product/get', [ProductController::class, 'getProduct']);

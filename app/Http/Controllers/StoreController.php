@@ -47,6 +47,12 @@ class StoreController extends Controller
         return $result;
     }
 
+    function getStoreByID(Request $req)
+    {
+        $result = Store::where('store_id', $req->store_id)->first();
+        return $result;
+    }
+
     function addStore(Request $req)
     {
         $store = new Store;
