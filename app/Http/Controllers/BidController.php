@@ -169,4 +169,53 @@ class BidController extends Controller
             ->get();
         return $result;
     }
+
+    function getCustomerBidStatus(Request $req)
+    {
+        $bidding = Biddings::where('uuid', $req->bidding)->first();
+        $bidders = $this->getBidders($bidding->uuid);
+
+        if($bidding->claimer == $req->customer)
+        {
+            return [
+                "status" => "claimer"
+            ];
+        }
+        else
+        {
+            $claimerIndex = array_search($bidding->claimer, $bidders);
+            $customerIndex = array_search($req->customer, $bidders);
+
+            if($claimerIndex > $customerIndex)
+            {
+                return [
+                    "status" => "lose"
+                ];
+            }
+            else
+            {
+                return [
+                    "status" => "claim_failed"
+                ];
+            }
+        }
+
+    }
+
+    function getBidders($bidding)
+    {
+        $bids = Bid
+            ::where('bidding', $bidding)
+            ->orderBy('date', 'desc')
+            ->get();
+        $bidder = array();
+
+        foreach ($bids as $bid) {
+            if (!in_array($bid->customer, $bidder)) {
+                array_push($bidder, $bid->customer);
+            }
+        }
+
+        return $bidder;
+    }
 }
