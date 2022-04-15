@@ -13,12 +13,14 @@ use App\Http\Controllers\BiddingController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\BidController;
 use App\Http\Controllers\FeaturedProductController;
+use App\Http\Controllers\FollowerController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SliderProductController;
 use App\Http\Controllers\StoreBillingMethodController;
 use App\Http\Controllers\TransactionController;
+use App\Models\Follower;
 
 /*
 |--------------------------------------------------------------------------
@@ -179,5 +181,14 @@ Route::post('/notification/delete', [NotificationController::class, 'deleteNotif
 Route::post('/notification/sync', [NotificationController::class, 'syncNotification']);
 Route::post('/notification/update_status', [NotificationController::class, 'updateNotificationsStatus']);
 Route::post('/notification/count', [NotificationController::class, 'getUnreadNotificationCount']);
+
+//Follower
+Route::post('/follower/store', [FollowerController::class, 'getAllFollowers']);
+Route::post('/follower/follow', [FollowerController::class, 'followStore']);
+Route::post('/follower/unfollow', [FollowerController::class, 'unfollowStore']);
+Route::post('/follower/customer', [FollowerController::class, 'getFollowedStore']);
+Route::post('/follower/customer/count', [FollowerController::class, 'getFollowedStoreCount']);
+Route::post('/follower/store/count', [FollowerController::class, 'getAllFollowersCount']);
+
 //Dummy Route
 Route::get('/product/delete_all', [ProductController::class, 'deleteAllProduct']);
