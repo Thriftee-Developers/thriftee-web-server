@@ -98,6 +98,26 @@ class MessageController extends Controller
         return $tempChatList;
     }
 
+    function createChatBox(Request $req)
+    {
+        $result = ChatBox::where("store", $req->store)
+            ->where("customer", $req->customer)
+            ->where("owner_type", $req->owner_type)
+            ->first();
+
+        $chatBox = new ChatBox();
+        if (!$result) {
+            $chatBox->uuid = Str::uuid();
+            $chatBox->owner_type = $req->owner_type;
+            $chatBox->customer = $req->customer;
+            $chatBox->store = $req->store;
+            $chatBox->save();
+            return ["success" => "success"];
+        } else {
+            return ["error" => "Not enough data or Chatbox found!"];
+        }
+    }
+
     // function getMessages(Request $req)
     // {
     //     $result = Message::where("customer", $req->customer)
