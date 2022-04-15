@@ -27,7 +27,7 @@ class StoreController extends Controller
             FROM stores
 
             LEFT JOIN ratings
-            ON stores.uuid = ratings.store1
+            ON stores.uuid = ratings.store
 
             LEFT JOIN products
             ON  products.store = stores.uuid
