@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\Store;
 use Illuminate\Support\Facades\DB;
@@ -38,7 +39,7 @@ class StoreController extends Controller
 
     function getProductsByStore(Request $req)
     {
-        $result = Store::where("uuid", $req->uuid)->get();
+        $result = Product::where("store", $req->uuid)->get();
         return $result;
     }
 
