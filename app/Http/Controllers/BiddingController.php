@@ -482,7 +482,7 @@ class BiddingController extends Controller
     }
 
     function checkWaitingBiddings () {
-        $biddings = Biddings::where('status','on_going')->get();
+        $biddings = Biddings::where('status','waiting')->get();
 
         $current_time = strtotime(date("y-m-d H:i:s"));
 
