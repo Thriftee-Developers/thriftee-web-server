@@ -9,10 +9,13 @@ use Illuminate\Support\Facades\DB;
 
 use App\Models\Bid;
 use App\Models\Biddings;
+use App\Models\CustomerNotification;
+use App\Models\Follower;
 use App\Models\ProductCategory;
 use App\Models\ProductCondition;
 use App\Models\ProductImage;
 use App\Models\ProductTag;
+use App\Models\Store;
 
 class ProductController extends Controller
 {
@@ -156,6 +159,26 @@ class ProductController extends Controller
                 $biddingCtrl = new BiddingController();
                 $req->product = $product->uuid;
                 $biddingCtrl->addBidding($req);
+
+
+                $followers = Follower::where(['store', $req->store])->get();
+                $store = Store::where(['uuid', $req->store])->first();
+
+                foreach($followers as $item)
+                {
+                    $notif = new CustomerNotification();
+                    $notif->uuid = Str::uuid();
+                    $notif->customer = $item->customer;
+                    $notif->type = 'new_product';
+                    $notif->details = json_encode([
+                        "store" => $req->store,
+                        "store_name" => $store->store_name,
+                        "product_name" => $req->name
+                    ]);
+                    $notif->date = date("Y-m-d H:i:s");
+
+                    $notif->save();
+                }
 
                 return ["success" => "success"];
             }

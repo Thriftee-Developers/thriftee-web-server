@@ -22,24 +22,24 @@ class NotificationController extends Controller
     {
         if ($req->user_type == "store") {
 
-            $customerNotification = new StoreNotification();
-            $customerNotification->uuid = Str::uuid();
-            $customerNotification->store = $req->store;
-            $customerNotification->type = $req->type;
-            $customerNotification->details = $req->details;
-            $customerNotification->date = date("Y-m-d H:i:s");
-
-            $customerNotification->save();
-            return ["sucess" => "success"];
-        } else {
-            $storeNotification = new CustomerNotification();
+            $storeNotification = new StoreNotification();
             $storeNotification->uuid = Str::uuid();
-            $storeNotification->customer = $req->customer;
+            $storeNotification->store = $req->store;
             $storeNotification->type = $req->type;
             $storeNotification->details = $req->details;
             $storeNotification->date = date("Y-m-d H:i:s");
 
             $storeNotification->save();
+            return ["sucess" => "success"];
+        } else {
+            $customerNotification = new CustomerNotification();
+            $customerNotification->uuid = Str::uuid();
+            $customerNotification->customer = $req->customer;
+            $customerNotification->type = $req->type;
+            $customerNotification->details = $req->details;
+            $customerNotification->date = date("Y-m-d H:i:s");
+
+            $customerNotification->save();
             return ["sucess" => "success"];
         }
         return ["error" => "Adding failed!"];
