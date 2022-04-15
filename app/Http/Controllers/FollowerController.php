@@ -41,7 +41,8 @@ class FollowerController extends Controller
 
     function unfollowStore(Request $req)
     {
-        $result = Follower::where("uuid", $req->uuid)
+        $result = Follower::where("customer", $req->customer)
+            ->where("store", $req->store)
             ->delete();
         if ($result) {
             return ["success" => "success"];
