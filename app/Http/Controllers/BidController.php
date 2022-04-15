@@ -188,7 +188,7 @@ class BidController extends Controller
 
             if($claimerIndex != null)
             {
-                if($claimerIndex > $customerIndex)
+                if($claimerIndex < $customerIndex)
                 {
                     return [
                         "status" => "lose"
