@@ -49,7 +49,26 @@ class StoreController extends Controller
 
     function getStoreByID(Request $req)
     {
-        $result = Store::where('store_id', $req->store_id)->first();
+        $result = DB::select(
+            "SELECT
+                stores.store_name,
+                stores.uuid,
+                stores.store_id,
+                Count(DISTINCT ratings.uuid) as rating_count,
+                Count(DISTINCT products.uuid) as count,
+                AVG(ratings.rate) as rating
+            FROM stores
+
+            LEFT JOIN ratings
+            ON stores.uuid = ratings.store
+
+            LEFT JOIN products
+            ON  products.store = stores.uuid
+
+            WHERE stores.store_id = '$req->store_idp'
+
+            GROUP BY stores.uuid"
+        );
         return $result;
     }
 
