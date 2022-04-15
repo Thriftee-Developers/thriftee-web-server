@@ -15,8 +15,8 @@ class BiddingController extends Controller
 {
     function getAllBidding()
     {
-        $this->checkWaitingBiddings();
-        $this->checkActiveBiddings();
+        // $this->checkWaitingBiddings();
+        // $this->checkActiveBiddings();
         $result =  Biddings::all();
         return $result;
     }
@@ -39,8 +39,8 @@ class BiddingController extends Controller
 
     function getWaitingBiddings()
     {
-        $this->checkWaitingBiddings();
-        $this->checkActiveBiddings();
+        // $this->checkWaitingBiddings();
+        // $this->checkActiveBiddings();
 
         $biddings = DB::select(
             "SELECT
@@ -76,8 +76,8 @@ class BiddingController extends Controller
 
     function getOnGoingBiddings()
     {
-        $this->checkWaitingBiddings();
-        $this->checkActiveBiddings();
+        // $this->checkWaitingBiddings();
+        // $this->checkActiveBiddings();
 
         $biddings = DB::select(
             "SELECT
@@ -125,8 +125,8 @@ class BiddingController extends Controller
 
     function getPopularBidding()
     {
-        $this->checkWaitingBiddings();
-        $this->checkActiveBiddings();
+        // $this->checkWaitingBiddings();
+        // $this->checkActiveBiddings();
 
         $biddings = DB::select(
             "SELECT
@@ -266,8 +266,8 @@ class BiddingController extends Controller
 
     function getBiddingsByStore(Request $req)
     {
-        $this->checkWaitingBiddings();
-        $this->checkActiveBiddings();
+        // $this->checkWaitingBiddings();
+        // $this->checkActiveBiddings();
         $result = Biddings::join("products", "biddings.product", "=", "products.uuid")->where("store", $req->uuid)->get();
         return $result;
     }
