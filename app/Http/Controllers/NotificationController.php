@@ -22,7 +22,7 @@ class NotificationController extends Controller
     {
         if ($req->user_type == "store") {
 
-            $customerNotification = new CustomerNotification();
+            $customerNotification = new StoreNotification();
             $customerNotification->uuid = Str::uuid();
             $customerNotification->store = $req->store;
             $customerNotification->type = $req->type;
@@ -32,7 +32,7 @@ class NotificationController extends Controller
             $customerNotification->save();
             return ["sucess" => "success"];
         } else {
-            $storeNotification = new StoreNotification();
+            $storeNotification = new CustomerNotification();
             $storeNotification->uuid = Str::uuid();
             $storeNotification->customer = $req->customer;
             $storeNotification->type = $req->type;
