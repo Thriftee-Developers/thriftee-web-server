@@ -55,7 +55,7 @@ class StoreController extends Controller
                 stores.uuid,
                 stores.store_id,
                 Count(DISTINCT ratings.uuid) as rating_count,
-                Count(DISTINCT products.uuid) as count,
+                Count(DISTINCT products.uuid) as product_count,
                 AVG(ratings.rate) as rating
             FROM stores
 
