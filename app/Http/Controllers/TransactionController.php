@@ -256,7 +256,7 @@ class TransactionController extends Controller
             ->leftJoin('customers','customers.uuid','=','bids.customer')
             ->leftJoin('biddings','biddings.uuid','=','bids.bidding')
             ->leftJoin('products','products.uuid','=','biddings.product')
-            ->where("uuid", $req->uuid)
+            ->where("transactions.uuid", $req->uuid)
             ->first();
 
         if ($transaction) {
