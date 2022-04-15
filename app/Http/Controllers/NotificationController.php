@@ -24,7 +24,7 @@ class NotificationController extends Controller
 
             $customerNotification = new CustomerNotification();
             $customerNotification->uuid = Str::uuid();
-            $customerNotification->customer = $req->customer;
+            $customerNotification->customer = $req->store;
             $customerNotification->type = $req->type;
             $customerNotification->details = $req->details;
             $customerNotification->date = date("Y-m-d H:i:s");
@@ -34,7 +34,7 @@ class NotificationController extends Controller
         } else {
             $storeNotification = new StoreNotification();
             $storeNotification->uuid = Str::uuid();
-            $storeNotification->store = $req->store;
+            $storeNotification->store = $req->customer;
             $storeNotification->type = $req->type;
             $storeNotification->details = $req->details;
             $storeNotification->date = date("Y-m-d H:i:s");
