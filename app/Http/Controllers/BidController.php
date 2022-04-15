@@ -83,9 +83,6 @@ class BidController extends Controller
     function getAllBidByCustomer(Request $req)
     {
 
-        $biddingCtrl = new BiddingController();
-        $biddingCtrl->checkActiveBiddings();
-
         $result = Bid::select('bids.*')
             ->leftJoin('biddings','biddings.uuid','bids.bidding')
             ->where("customer", $req->customer)
