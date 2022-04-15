@@ -11,6 +11,7 @@ use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\Store;
 use App\Models\StoreBillingMethod;
+use App\Models\StoreNotification;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -240,10 +241,43 @@ class TransactionController extends Controller
     function sendReference(Request $req)
     {
         $transaction = Transaction::where("uuid", $req->uuid)->first();
+
+        $transaction = Transaction
+            ::select(
+                'transactions.*',
+                'bids.customer',
+                'customers.fname',
+                'customers.lname',
+                'products.name as product_name',
+                'storebillingmethods.store'
+                )
+            ->leftJoin('storebillingmethods', 'storebillingmethods.uuid', '=', 'transactions.billing_method')
+            ->leftJoin('bids','bids.uuid','=','transactions.bid')
+            ->leftJoin('customers','customers.uuid','=','bids.customer')
+            ->leftJoin('biddings','biddings.uuid','=','bids.bidding')
+            ->leftJoin('products','products.uuid','=','biddings.product')
+            ->where("uuid", $req->uuid)
+            ->first();
+
         if ($transaction) {
             $result = $transaction->update(["reference" => $req->reference]);
             if ($result) {
                 $transaction->update(["status" => "for_validation"]);
+
+                //Send notif to store
+                $notif = new StoreNotification();
+                $notif->uuid = Str::uuid();
+                $notif->store = $transaction->store;
+                $notif->type = 'payment';
+                $notif->date = date("Y-m-d H:i:s");
+                $notif->details = json_encode([
+                    "customer" => $transaction->customer,
+                    "name" => $transaction->fname.' '.$transaction->lname,
+                    "transaction" => $transaction->uuid,
+                    "product_name" => $transaction->product_name
+                ]);
+                $result = $notif->save();
+
                 return ["success" => "success"];
             } else {
                 return ["error" => "Error updating reference!"];
