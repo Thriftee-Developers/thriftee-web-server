@@ -70,7 +70,9 @@ class StoreController extends Controller
             GROUP BY stores.uuid"
         );
 
-        if (count($result) < 1) {
+        if (count($result) > 0) {
+            $result = $result[0];
+        } else {
             return null;
         }
 
