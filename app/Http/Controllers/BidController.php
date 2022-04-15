@@ -186,16 +186,25 @@ class BidController extends Controller
             $claimerIndex = array_search($bidding->claimer, $bidders);
             $customerIndex = array_search($req->customer, $bidders);
 
-            if($claimerIndex > $customerIndex)
+            if($claimerIndex != null)
             {
-                return [
-                    "status" => "lose"
-                ];
+                if($claimerIndex > $customerIndex)
+                {
+                    return [
+                        "status" => "lose"
+                    ];
+                }
+                else
+                {
+                    return [
+                        "status" => "claim_failed"
+                    ];
+                }
             }
             else
             {
                 return [
-                    "status" => "claim_failed"
+                    "status" => "no_bid"
                 ];
             }
         }
