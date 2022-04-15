@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Bid;
 use App\Models\Biddings;
 use App\Models\Customer;
+use App\Models\CustomerNotification;
+use App\Models\Notification;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\Store;
@@ -305,9 +307,11 @@ class TransactionController extends Controller
                 $product->update(['status'=>'sold']);
 
                 //Send notification
-                $notif = new Request();
+                $notif = new CustomerNotification();
+                $notif->uuid = Str::uuid();
                 $notif->customer = $req->customer;
-                $notif->type = "payment_validate";
+                $notif->type = 'payment_validate';
+                $notif->date = date("Y-m-d H:i:s");
                 $notif->details = json_encode([
                     "customer" => $req->customer,
                     "transaction" => $transaction->uuid,
@@ -315,8 +319,8 @@ class TransactionController extends Controller
                     "store_name" =>  $store->store_name,
                     "bidding" =>  $transaction->bidding
                 ]);
-                $notifCtrl = new NotificationController();
-                $result = $notifCtrl->addCustomerNotification($notif);
+
+                $result = $notif->save();
 
                 if ($result) {
                     return [
@@ -360,9 +364,11 @@ class TransactionController extends Controller
                 $result = $transaction->update(["status" => "invalid_payment"]);
 
                 //Send notification
-                $notif = new Request();
+                $notif = new CustomerNotification();
+                $notif->uuid = Str::uuid();
                 $notif->customer = $req->customer;
-                $notif->type = "payment_revoked";
+                $notif->type = 'payment_revoked';
+                $notif->date = date("Y-m-d H:i:s");
                 $notif->details = json_encode([
                     "customer" => $req->customer,
                     "transaction" => $transaction->uuid,
@@ -370,8 +376,7 @@ class TransactionController extends Controller
                     "store_name" =>  $store->store_name,
                     "bidding" =>  $transaction->bidding
                 ]);
-                $notifCtrl = new NotificationController();
-                $result = $notifCtrl->addCustomerNotification($notif);
+                $result = $notif->save();
 
                 if ($result) {
                     return ["success" => "success"];
