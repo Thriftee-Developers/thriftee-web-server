@@ -161,8 +161,8 @@ class ProductController extends Controller
                 $biddingCtrl->addBidding($req);
 
 
-                $followers = Follower::where(['store', $req->store])->get();
-                $store = Store::where(['uuid', $req->store])->first();
+                $followers = Follower::where('store', $req->store)->get();
+                $store = Store::where('uuid', $req->store)->first();
 
                 foreach($followers as $item)
                 {
