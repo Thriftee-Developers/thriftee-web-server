@@ -20,7 +20,9 @@ class StoreController extends Controller
     {
         $result = DB::select(
             "SELECT
-                stores.*,
+                stores.store_name,
+                stores.uuid,
+                stores.store_id,
                 Count(DISTINCT ratings.uuid) as rating_count,
                 Count(DISTINCT products.uuid) as count,
                 AVG(ratings.rate) as rating
