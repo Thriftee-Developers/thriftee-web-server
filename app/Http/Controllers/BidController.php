@@ -44,13 +44,16 @@ class BidController extends Controller
             if ($highestBid != "") {
                 if ($req->amount >= ($highestBid->amount + $bidding->increment)) {
                     $bid->save();
+                    $bidding->update(['claimer' => $req->customer]);
                     return ["success" => "success"];
                 } else {
                     return ["error" => "Not enough bid amount."];
                 }
-            } else {
+            }
+            else {
                 if ($req->amount >= ($bidding->minimum)) {
                     $bid->save();
+                    $bidding->update(['claimer' => $req->customer]);
                     return ["success" => "success"];
                 } else {
                     return ["error" => "Bid Failed! Not Enough bid."];
@@ -82,9 +85,6 @@ class BidController extends Controller
 
     function getAllBidByCustomer(Request $req)
     {
-
-        $biddingCtrl = new BiddingController();
-        $biddingCtrl->checkActiveBiddings();
 
         $result = Bid::select('bids.*')
             ->leftJoin('biddings','biddings.uuid','bids.bidding')
@@ -168,5 +168,63 @@ class BidController extends Controller
             ->orderBy("amount", "desc")
             ->get();
         return $result;
+    }
+
+    function getCustomerBidStatus(Request $req)
+    {
+        $bidding = Biddings::where('uuid', $req->bidding)->first();
+        $bidders = $this->getBidders($bidding->uuid);
+
+        if($bidding->claimer == $req->customer)
+        {
+            return [
+                "status" => "claimer"
+            ];
+        }
+        else
+        {
+            $claimerIndex = array_search($bidding->claimer, $bidders);
+            $customerIndex = array_search($req->customer, $bidders);
+
+            if($claimerIndex != null)
+            {
+                if($claimerIndex < $customerIndex)
+                {
+                    return [
+                        "status" => "lose"
+                    ];
+                }
+                else
+                {
+                    return [
+                        "status" => "claim_failed"
+                    ];
+                }
+            }
+            else
+            {
+                return [
+                    "status" => "no_bid"
+                ];
+            }
+        }
+
+    }
+
+    function getBidders($bidding)
+    {
+        $bids = Bid
+            ::where('bidding', $bidding)
+            ->orderBy('date', 'desc')
+            ->get();
+        $bidder = array();
+
+        foreach ($bids as $bid) {
+            if (!in_array($bid->customer, $bidder)) {
+                array_push($bidder, $bid->customer);
+            }
+        }
+
+        return $bidder;
     }
 }

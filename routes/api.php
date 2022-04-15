@@ -106,6 +106,9 @@ Route::get('/bidding/waiting', [BiddingController::class, 'getWaitingBiddings'])
 Route::get('/bidding/on_going', [BiddingController::class, 'getOnGoingBiddings']);
 Route::get('/bidding/popular', [BiddingController::class, 'getPopularBidding']);
 Route::post('/bidding/store/active', [BiddingController::class, 'getActiveBiddingByStore']);
+Route::get('/bidding/specific_data', [BiddingController::class, 'getSpecificBiddingData']);
+Route::post('/bidding/store/waiting', [BiddingController::class, 'getWaitingBiddingsByStore']);
+Route::post('/bidding/store/on_going', [BiddingController::class, 'getOnGoingBiddingsByStore']);
 
 
 //Customer
@@ -127,6 +130,7 @@ Route::post('/bid/by_product', [BidController::class, 'getBidByProduct']);
 Route::post('/bid/by_customer_product', [BidController::class, 'getBidByProductAndCustomer']);
 Route::post('/bid/total_number_of_bids', [BidController::class, 'getTotalNumberOfBids']);
 Route::post('/bid/by_bidding_customer', [BidController::class, 'getBidByBiddingAndCustomer']);
+Route::post('/bid/status', [BidController::class, 'getCustomerBidStatus']);
 Route::post('/bid/sync', [BidController::class, 'syncBid']);
 
 //Rating

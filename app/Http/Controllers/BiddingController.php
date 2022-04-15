@@ -15,8 +15,6 @@ class BiddingController extends Controller
 {
     function getAllBidding()
     {
-        // $this->checkWaitingBiddings();
-        // $this->checkActiveBiddings();
         $result =  Biddings::all();
         return $result;
     }
@@ -39,9 +37,6 @@ class BiddingController extends Controller
 
     function getWaitingBiddings()
     {
-        // $this->checkWaitingBiddings();
-        // $this->checkActiveBiddings();
-
         $biddings = DB::select(
             "SELECT
                 biddings.*,
@@ -76,9 +71,6 @@ class BiddingController extends Controller
 
     function getOnGoingBiddings()
     {
-        // $this->checkWaitingBiddings();
-        // $this->checkActiveBiddings();
-
         $biddings = DB::select(
             "SELECT
                 biddings.*,
@@ -123,11 +115,88 @@ class BiddingController extends Controller
         return $biddings;
     }
 
+    function getWaitingBiddingsByStore(Request $req)
+    {
+        $biddings = DB::select(
+            "SELECT
+                biddings.*,
+                products.product_id,
+                products.name,
+                products.description,
+                products.store,
+                stores.uuid as store_uuid,
+                stores.store_name,
+                productimages.path as image_path
+            FROM biddings
+
+            INNER JOIN products
+            ON biddings.product = products.uuid
+
+            INNER JOIN stores
+            ON products.store = stores.uuid
+
+            LEFT JOIN (
+                SELECT path, product, MIN(name) AS name FROM productimages GROUP BY product
+            ) productimages
+            ON productimages.product = products.uuid
+
+            WHERE biddings.status = 'waiting' AND products.store='$req->store'
+
+            GROUP BY biddings.uuid
+            ORDER BY biddings.start_time ASC"
+        );
+
+        return $biddings;
+    }
+
+    function getOnGoingBiddingsByStore(Request $req)
+    {
+        $biddings = DB::select(
+            "SELECT
+                biddings.*,
+                products.product_id,
+                products.name,
+                products.description,
+                products.store,
+                stores.uuid as store_uuid,
+                stores.store_name,
+                productimages.path as image_path,
+                mBids.highest as highest_bid,
+                Count(bids.uuid) as bid_count
+            FROM biddings
+
+            LEFT JOIN bids
+            ON biddings.uuid = bids.bidding
+
+            INNER JOIN products
+            ON biddings.product = products.uuid
+
+            INNER JOIN stores
+            ON products.store = stores.uuid
+
+            LEFT JOIN (
+                SELECT path, product, MIN(name) AS name FROM productimages GROUP BY product
+            ) productimages
+            ON productimages.product = products.uuid
+
+            LEFT OUTER JOIN (
+                SELECT bidding, MAX(amount) AS highest
+                FROM bids
+                GROUP BY bidding
+            ) mBids
+            ON mBids.bidding = biddings.uuid
+
+            WHERE biddings.status = 'on_going' AND products.store='$req->store'
+
+            GROUP BY biddings.uuid
+            ORDER BY bid_count DESC"
+        );
+
+        return $biddings;
+    }
+
     function getPopularBidding()
     {
-        // $this->checkWaitingBiddings();
-        // $this->checkActiveBiddings();
-
         $biddings = DB::select(
             "SELECT
                 biddings.*,
@@ -297,8 +366,6 @@ class BiddingController extends Controller
 
     function getBiddingsByStore(Request $req)
     {
-        // $this->checkWaitingBiddings();
-        // $this->checkActiveBiddings();
         $result = Biddings::join("products", "biddings.product", "=", "products.uuid")->where("store", $req->uuid)->get();
         return $result;
     }
@@ -357,13 +424,13 @@ class BiddingController extends Controller
     {
         $bidding = Biddings::where([
             ['uuid', $req->bidding],
-            ['status', '<>', 'failed'],
-            ['status', '<>', 'no_claim']
+            ['status', '<>', 'no_bid'],
+            ['status', '<>', 'claim_failed']
         ])->first();
 
         if (!$bidding) {
             return [
-                "status" => "no_claim"
+                "status" => "claim_failed"
             ];
         }
 
@@ -399,13 +466,13 @@ class BiddingController extends Controller
                 if ($winnerIndex >= count($bidder)) {
 
                     //Update bidding status
-                    $bidding->update(['status' => "no_claim"]);
+                    $bidding->update(['status' => "claim_failed"]);
                     Product::where('uuid', $bidding->product)
                         ->first()
                         ->update(['status' => 'archived']);
 
                     return [
-                        "status" => "no_claim"
+                        "status" => "claim_failed"
                     ];
                 }
             } else {
@@ -451,13 +518,13 @@ class BiddingController extends Controller
                 if ($winnerIndex >= count($bidder)) {
 
                     //Update Status
-                    $bidding->update(['status' => "no_claim"]);
+                    $bidding->update(['status' => "claim_failed"]);
                     Product::where('uuid', $bidding->product)
                         ->first()
                         ->update(['status' => 'archived']);
 
                     return [
-                        "status" => "no_claim"
+                        "status" => "claim_failed"
                     ];
                 } else {
                     return [
@@ -503,39 +570,6 @@ class BiddingController extends Controller
         } else if ($bidding->status == 'on_going') {
             if ($current_time >= $end_time) {
                 $bidding->update(['status' => 'ended']);
-            }
-        }
-    }
-
-    function checkWaitingBiddings()
-    {
-        $biddings = Biddings::where('status', 'waiting')->get();
-
-        $current_time = strtotime(date("y-m-d H:i:s"));
-
-        foreach ($biddings as $item) {
-            $start_time = strtotime($item->start_time);
-            $end_time = strtotime($item->end_time);
-
-            if ($current_time >= $end_time) {
-                $item->update(['status' => 'ended']);
-            } else if ($current_time >= $start_time) {
-                $item->update(['status' => 'on_going']);
-            }
-        }
-    }
-
-    function checkActiveBiddings()
-    {
-        $biddings = Biddings::where('status', 'on_going')->get();
-
-        $current_time = strtotime(date("y-m-d H:i:s"));
-
-        foreach ($biddings as $item) {
-            $end_time = strtotime($item->end_time);
-
-            if ($current_time >= $end_time) {
-                $item->update(['status' => 'ended']);
             }
         }
     }
