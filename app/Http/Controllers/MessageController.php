@@ -13,10 +13,14 @@ use Illuminate\Support\Facades\DB;
 
 class MessageController extends Controller
 {
-    function sendChat(Request $req)
+    function tempSyncMessage(Request $req)
+    {
+        event(new Chat($req->customer, $req->store, $req->sender, $req->content));
+        return ["success" => "send success"];
+    }
+    function tempSyncChatList(Request $req)
     {
         event(new ChatBoxEvent($req->sender, $req->customer, $req->store));
-        event(new Chat($req->customer, $req->store, $req->sender, $req->content));
         return ["success" => "send success"];
     }
     //
@@ -41,7 +45,9 @@ class MessageController extends Controller
         $message->content = $req->content;
 
         $message->save();
-
+        // NOTE: This variable is temporary only for syncing chatlist
+        // It will be deleted if there's host for real time
+        $tempChatList = null;
         //Create Store Chatbox
         if (!$storeChatBox) {
             $storeChatBox = new ChatBox();
@@ -50,6 +56,7 @@ class MessageController extends Controller
             $storeChatBox->customer = $req->customer;
             $storeChatBox->store = $req->store;
             $storeChatBox->save();
+            $tempChatList = 1;
         }
         //Create Message Status
         $storeStatus = new MessageStatus();
@@ -72,6 +79,7 @@ class MessageController extends Controller
             $customerChatBox->customer = $req->customer;
             $customerChatBox->store = $req->store;
             $customerChatBox->save();
+            $tempChatList = 2;
         }
         //Create Message Status
         $customerStatus = new MessageStatus();
@@ -85,7 +93,9 @@ class MessageController extends Controller
         $customerStatus->save();
 
         // event(new Chat($req->customer, $req->store, $req->sender, $req->content));
-        return ["success" => "success"];
+        // return ["success" => "success"];
+        // This will return if the chat list is sync. 
+        return $tempChatList;
     }
 
     // function getMessages(Request $req)
@@ -100,12 +110,24 @@ class MessageController extends Controller
 
     function seenMessages(Request $req)
     {
-        $uuids = json_decode($req->messages);
+        // NOTE: Choose what you will prefer
 
-        foreach ($uuids as $uuid) {
-            $messages = Message::where('uuid', $uuid);
-            $messages->update(['status' => 1]);
+        //1: Using For Loop
+        // $uuids = json_decode($req->messages);
+        // foreach ($uuids as $uuid) {
+        //     $messages = Message::where('uuid', $uuid);
+        //     $messages->update(['status' => 1]);
+        // }
+
+        // 2: Using LARAVEL Eloquent, WHEREIN
+        $result = MessageStatus::where("message", $req->message)
+            ->where("chatbox", $req->chatbox)
+            ->whereIn('status', [0])
+            ->update(array('status' => "1"));
+        if ($result) {
+            return ["success" => "success"];
         }
+        return ["error" => "Message uuid not found"];
     }
 
     function getChatList(Request $req)

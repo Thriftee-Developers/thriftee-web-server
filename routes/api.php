@@ -38,6 +38,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //Stores
 Route::get('/store/all', [StoreController::class, 'getAllStores']);
 Route::post('/store/get', [StoreController::class, 'getStore']);
+Route::post('/store/products', [StoreController::class, 'getProductsByStore']);
 Route::post('/store/update', [StoreController::class, 'updateStore']);
 Route::post('/store/add', [StoreController::class, 'addStore']);
 Route::post('/store/delete', [StoreController::class, 'deleteStore']);
@@ -163,7 +164,8 @@ Route::post('/transaction/payment/revoked', [TransactionController::class, 'revo
 Route::post('/transaction/payment/cancel', [TransactionController::class, 'cancelPayment']);
 
 //Chat
-Route::post('/message/send_chat', [MessageController::class, 'sendChat']);
+Route::post('/message/sync_messages', [MessageController::class, 'tempSyncMessage']);
+Route::post('/message/sync_chatlist', [MessageController::class, 'tempSyncChatList']);
 Route::post('/message/get', [MessageController::class, 'getMessages']);
 Route::post('/message/send_message', [MessageController::class, 'sendMessage']);
 Route::post('/message/latest', [MessageController::class, 'getLatestMessage']);

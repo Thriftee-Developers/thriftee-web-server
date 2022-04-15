@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use App\Models\Store;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 use PHPMailer\PHPMailer\PHPMailer;
@@ -16,13 +17,34 @@ class StoreController extends Controller
     //
     function getAllStores()
     {
-        $result = Store::all();
+        $result = DB::select(
+            "SELECT
+                stores.*,
+                Count(DISTINCT ratings.uuid) as rating_count,
+                Count(DISTINCT products.uuid) as count,
+                AVG(ratings.rate) as rating
+            FROM stores
+
+            LEFT JOIN ratings
+            ON stores.uuid = ratings.store
+
+            LEFT JOIN products
+            ON  products.store = stores.uuid
+
+            GROUP BY stores.uuid"
+        );
+        return $result;
+    }
+
+    function getProductsByStore(Request $req)
+    {
+        $result = Store::where("uuid", $req->uuid)->get();
         return $result;
     }
 
     function getStore(Request $req)
     {
-        $result = Store::where('uuid',$req->uuid)->first();
+        $result = Store::where('uuid', $req->uuid)->first();
         return $result;
     }
 
@@ -48,23 +70,17 @@ class StoreController extends Controller
 
         //$store -> password = Hash::make($req -> input('password'));
 
-        if($this -> checkEmail($req->email))
-        {
-            if($this -> checkContactNo($req->contact_no))
-            {
-                $error = $this -> sendCompletionLink($store->uuid, $req->email);
-                if($error == "") {
-                    $store -> save();
+        if ($this->checkEmail($req->email)) {
+            if ($this->checkContactNo($req->contact_no)) {
+                $error = $this->sendCompletionLink($store->uuid, $req->email);
+                if ($error == "") {
+                    $store->save();
                     return ["success" => "success"];
                 }
-            }
-            else
-            {
+            } else {
                 return ["error" => "Contact number is already registered!"];
             }
-        }
-        else
-        {
+        } else {
             return ["error" => "Email is already registered!"];
         }
     }
@@ -80,14 +96,14 @@ class StoreController extends Controller
     function checkContactNo($contact_no)
     {
         $store = Store::where('contact_no', $contact_no)->get();
-        if(count($store) > 0) return false;
+        if (count($store) > 0) return false;
         else return true;
     }
 
 
     function resendCompletionLink(Request $req)
     {
-        $error = $this -> sendCompletionLink($req->uuid, $req->email);
+        $error = $this->sendCompletionLink($req->uuid, $req->email);
         return $error;
     }
 
@@ -97,10 +113,9 @@ class StoreController extends Controller
 
         $mail = new PHPMailer(true);
         $emailFrom = 'admin@thriftee.com';
-        $link = 'http://localhost:3000'.'/account_completion?'.$uuid;
+        $link = 'http://localhost:3000' . '/account_completion?' . $uuid;
 
-        try
-        {
+        try {
             //Recipients
             $mail->setFrom($emailFrom, 'Thriftee');
             $mail->addAddress($email);
@@ -110,23 +125,16 @@ class StoreController extends Controller
             $mail->Subject = 'Store Account Completion';
             $mail->Body    = 'Hi!<br>
                             Please click the link below to complete the creation of your store account for <h1>Thriftee</h1>.<br>
-                            <h1>'.$link.'</h1>';
+                            <h1>' . $link . '</h1>';
 
-            $mail->AltBody = 'Hi! Please click the link to complete the creation of your store account for Thriftee.'.$link;
+            $mail->AltBody = 'Hi! Please click the link to complete the creation of your store account for Thriftee.' . $link;
 
-            if($mail->send())
-            {
+            if ($mail->send()) {
                 return "";
-            }
-            else
-            {
+            } else {
                 return "Email not send";
             }
-
-
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             return $e;
         }
     }
@@ -134,58 +142,45 @@ class StoreController extends Controller
     function login(Request $req)
     {
         $store = Store::where('email', $req->email)->first();
-        if($store)
-        {
+        if ($store) {
 
-            if(Hash::check($req->password, $store->password)) {
-                if($store-> status == 1) {
+            if (Hash::check($req->password, $store->password)) {
+                if ($store->status == 1) {
                     return $store;
-                }
-                else {
-                    if($store->status == 0) {
+                } else {
+                    if ($store->status == 0) {
                         return ["error" => "Incorrect email or password!"];
-                    }
-                    else {
+                    } else {
                         return ["error" => "This account is terminated!"];
                     }
-
                 }
-
-            }
-            else {
+            } else {
                 return ["error" => "Incorrect email or password!"];
             }
-
-        }
-        else
-        {
+        } else {
             return ["error" => "There's no account associated with this email"];
         }
-
     }
 
     function updatePassword(Request $req)
     {
         $store = Store::where('uuid', $req->uuid)->first();
 
-        if($store) {
+        if ($store) {
             //New Account
-            if($store->status == 0) {
+            if ($store->status == 0) {
                 //Update password
                 $result = $store->update(['password' => Hash::make($req->password)]);
 
-                if($result) {
+                if ($result) {
                     //Update status
                     $result = $store->update(['status' => 1]);
-                    if($result){
+                    if ($result) {
                         return $result;
-                    }
-                    else {
+                    } else {
                         return ["error" => "Error updating status!"];
                     }
-
-                }
-                else{
+                } else {
                     return ["error" => "Error updating password!"];
                 }
             }
@@ -194,23 +189,20 @@ class StoreController extends Controller
             else {
 
                 //Check current password
-                if(Hash::check($req->current_password, $store->password)) {
+                if (Hash::check($req->current_password, $store->password)) {
 
                     //Update password
                     $result = $store->update(['password' => Hash::make($req->new_password)]);
-                    if($result){
+                    if ($result) {
                         return $result;
-                    }
-                    else {
+                    } else {
                         return ["error" => "Error updating password!"];
                     }
-                }
-                else {
+                } else {
                     return ["error" => "Incorrect password!"];
                 }
             }
-        }
-        else{
+        } else {
             return ["error" => "Store not found!"];
         }
     }
@@ -218,8 +210,8 @@ class StoreController extends Controller
     function checkPassword(Request $req)
     {
         $store = Store::where('uuid', $req->uuid)->first();
-        if(!Hash::check($req->password, $store->password)) {
-           return ["error" => "Incorrect password!"];
+        if (!Hash::check($req->password, $store->password)) {
+            return ["error" => "Incorrect password!"];
         }
         return true;
     }
