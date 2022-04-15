@@ -20,7 +20,9 @@ class StoreController extends Controller
     {
         $result = DB::select(
             "SELECT
-                stores.*,
+                stores.store_name,
+                stores.uuid,
+                stores.store_id,
                 Count(DISTINCT ratings.uuid) as rating_count,
                 Count(DISTINCT products.uuid) as count,
                 AVG(ratings.rate) as rating
@@ -32,20 +34,46 @@ class StoreController extends Controller
             LEFT JOIN products
             ON  products.store = stores.uuid
 
+            WHERE stores.status = 1
+
             GROUP BY stores.uuid"
         );
-        return $result;
-    }
-
-    function getProductsByStore(Request $req)
-    {
-        $result = Product::where("store", $req->uuid)->get();
         return $result;
     }
 
     function getStore(Request $req)
     {
         $result = Store::where('uuid', $req->uuid)->first();
+        return $result;
+    }
+
+    function getStoreByID(Request $req)
+    {
+        $result = DB::select(
+            "SELECT
+                stores.store_name,
+                stores.uuid,
+                stores.store_id,
+                Count(DISTINCT ratings.uuid) as rating_count,
+                Count(DISTINCT products.uuid) as count,
+                AVG(ratings.rate) as rating
+            FROM stores
+
+            LEFT JOIN ratings
+            ON stores.uuid = ratings.store
+
+            LEFT JOIN products
+            ON  products.store = stores.uuid
+
+            WHERE stores.store_id = '$req->store_id'
+
+            GROUP BY stores.uuid"
+        );
+
+        if (count($result) < 1) {
+            return null;
+        }
+
         return $result;
     }
 

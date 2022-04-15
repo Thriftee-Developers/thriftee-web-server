@@ -120,14 +120,13 @@ class MessageController extends Controller
         // }
 
         // 2: Using LARAVEL Eloquent, WHEREIN
-        $result = MessageStatus::where("message", $req->message)
-            ->where("chatbox", $req->chatbox)
+        $result = MessageStatus::where("chatbox", $req->chatbox)
             ->whereIn('status', [0])
             ->update(array('status' => "1"));
         if ($result) {
             return ["success" => "success"];
         }
-        return ["error" => "Message uuid not found"];
+        return ["error" => "All messages are seen or chatbox not found."];
     }
 
     function getChatList(Request $req)

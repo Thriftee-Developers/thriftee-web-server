@@ -201,17 +201,15 @@ class BiddingController extends Controller
             ORDER BY biddings.end_time DESC"
         );
 
-        if(count($result) > 0) {
+        if (count($result) > 0) {
             $result = $result[0];
-            if($result->highest_bid) {
-                $highest = Bid::where('uuid',$result->highest_bid)->first();
+            if ($result->highest_bid) {
+                $highest = Bid::where('uuid', $result->highest_bid)->first();
                 $result->highest_bid = $highest;
-            }
-            else {
+            } else {
                 $result->highest_bid = null;
             }
-        }
-        else {
+        } else {
             $result = null;
         }
 
@@ -248,19 +246,52 @@ class BiddingController extends Controller
         //     ORDER BY highest ASC"
         // );
 
-        if(count($result) > 0) {
+        if (count($result) > 0) {
             $result = $result[0];
             $highest = Bid
-                ::where('bidding',$bidding->uuid)
-                ->orderBy('amount','DESC')
+                ::where('bidding', $bidding->uuid)
+                ->orderBy('amount', 'DESC')
                 ->first();
             $result->highest_bid = $highest;
-        }
-        else {
+        } else {
             $result = null;
         }
 
         return $result;
+    }
+
+    function getActiveBiddingByStore(Request $req)
+    {
+        $biddings = DB::select(
+            "SELECT
+                biddings.*,
+                products.product_id,
+                products.name,
+                products.description,
+                products.store,
+                stores.uuid as store_uuid,
+                stores.store_name,
+                productimages.path as image_path
+            FROM biddings
+
+            INNER JOIN products
+            ON biddings.product = products.uuid
+
+            INNER JOIN stores
+            ON products.store = stores.uuid
+
+            LEFT JOIN (
+                SELECT path, product, MIN(name) AS name FROM productimages GROUP BY product
+            ) productimages
+            ON productimages.product = products.uuid
+
+            WHERE stores.uuid = '$req->store' AND (biddings.status = 'waiting' OR biddings.status = 'on_going')
+
+            GROUP BY biddings.uuid
+            ORDER BY biddings.start_time ASC"
+        );
+
+        return $biddings;
     }
 
 
@@ -339,14 +370,14 @@ class BiddingController extends Controller
         $transaction = Transaction
             ::join('bids', 'bids.uuid', '=', 'transactions.bid')
             ->where('bids.bidding', $req->bidding)
-            ->orderBy('transactions.created_at','DESC')
+            ->orderBy('transactions.created_at', 'DESC')
             ->first();
 
         $bidder = $this->getBidders($req->bidding);
         $current_time = strtotime(date("y-m-d H:i:s"));
 
-        if($transaction) {
-            if($transaction->status === "cancelled") {
+        if ($transaction) {
+            if ($transaction->status === "cancelled") {
                 $cancelled_at = strtotime($transaction->updated_at);
                 $hoursdiff = ($current_time - $cancelled_at) / 3600;
 
@@ -354,11 +385,10 @@ class BiddingController extends Controller
                 //Customer under the last claimer
                 $indexToAdd = $hoursdiff / 48;
                 $i = 1;
-                foreach($bidder as $item) {
-                    if($item->customer == $transaction->customer){
+                foreach ($bidder as $item) {
+                    if ($item->customer == $transaction->customer) {
                         break;
-                    }
-                    else {
+                    } else {
                         $i++;
                     }
                 }
@@ -366,7 +396,7 @@ class BiddingController extends Controller
                 $winnerIndex = $indexToAdd + $i;
 
                 //failed Bidding
-                if($winnerIndex >= count($bidder)) {
+                if ($winnerIndex >= count($bidder)) {
 
                     //Update bidding status
                     $bidding->update(['status' => "no_claim"]);
@@ -378,26 +408,24 @@ class BiddingController extends Controller
                         "status" => "no_claim"
                     ];
                 }
-            }
-            else {
+            } else {
                 return [
                     "status" => "under_transaction",
                     "claimer" => $transaction->customer,
                     "bidder" => $bidder
                 ];
             }
-        }
-        else {
+        } else {
 
             $start_time = strtotime($bidding->start_time);
             $end_time = strtotime($bidding->end_time);
 
 
-            if($bidding->status == "ended") {
+            if ($bidding->status == "ended") {
 
 
                 //No bids
-                if(count($bidder) == 0) {
+                if (count($bidder) == 0) {
 
                     //Update product status
                     $bidding->update(['status' => "failed"]);
@@ -416,9 +444,9 @@ class BiddingController extends Controller
                 $winnerIndex = $hoursdiff / 48;
 
                 $bids = Bid::where('bidding', $req->bidding)
-                ->orderBy('date', 'desc')
-                ->get()
-                ->groupBy('customer');
+                    ->orderBy('date', 'desc')
+                    ->get()
+                    ->groupBy('customer');
 
                 if ($winnerIndex >= count($bidder)) {
 
@@ -431,8 +459,7 @@ class BiddingController extends Controller
                     return [
                         "status" => "no_claim"
                     ];
-                }
-                else {
+                } else {
                     return [
                         "status" => "ended",
                         "winner" => ((int) $winnerIndex),
@@ -459,55 +486,55 @@ class BiddingController extends Controller
 
 
     //Check And Update Bidding Status
-    function checkBiddingStatus ($uuid) {
+    function checkBiddingStatus($uuid)
+    {
         $bidding = Biddings::where('uuid', $uuid)->first();
 
         $current_time = strtotime(date("y-m-d H:i:s"));
         $start_time = strtotime($bidding->start_time);
         $end_time = strtotime($bidding->end_time);
 
-        if($bidding->status == 'waiting') {
-            if($current_time >= $end_time) {
+        if ($bidding->status == 'waiting') {
+            if ($current_time >= $end_time) {
                 $bidding->update(['status' => 'ended']);
-            }
-            else if($current_time >= $start_time){
+            } else if ($current_time >= $start_time) {
                 $bidding->update(['status' => 'on_going']);
             }
-        }
-        else if($bidding->status == 'on_going') {
-            if($current_time >= $end_time) {
+        } else if ($bidding->status == 'on_going') {
+            if ($current_time >= $end_time) {
                 $bidding->update(['status' => 'ended']);
             }
         }
     }
 
-    function checkWaitingBiddings () {
-        $biddings = Biddings::where('status','waiting')->get();
+    function checkWaitingBiddings()
+    {
+        $biddings = Biddings::where('status', 'waiting')->get();
 
         $current_time = strtotime(date("y-m-d H:i:s"));
 
-        foreach($biddings as $item) {
+        foreach ($biddings as $item) {
             $start_time = strtotime($item->start_time);
             $end_time = strtotime($item->end_time);
 
-            if($current_time >= $end_time) {
+            if ($current_time >= $end_time) {
                 $item->update(['status' => 'ended']);
-            }
-            else if($current_time >= $start_time){
+            } else if ($current_time >= $start_time) {
                 $item->update(['status' => 'on_going']);
             }
         }
     }
 
-    function checkActiveBiddings () {
-        $biddings = Biddings::where('status','on_going')->get();
+    function checkActiveBiddings()
+    {
+        $biddings = Biddings::where('status', 'on_going')->get();
 
         $current_time = strtotime(date("y-m-d H:i:s"));
 
-        foreach($biddings as $item) {
+        foreach ($biddings as $item) {
             $end_time = strtotime($item->end_time);
 
-            if($current_time >= $end_time) {
+            if ($current_time >= $end_time) {
                 $item->update(['status' => 'ended']);
             }
         }

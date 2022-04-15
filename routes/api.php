@@ -47,7 +47,7 @@ Route::post('/store/login', [StoreController::class, 'login']);
 Route::post('/store/update_password', [StoreController::class, 'updatePassword']);
 Route::post('/store/check_password', [StoreController::class, 'checkPassword']);
 Route::post('/store/get_status', [StoreController::class, 'getStatus']);
-
+Route::post('/store/store_id', [StoreController::class, 'getStoreByID']);
 //Products
 Route::get('/product/all', [ProductController::class, 'getAllProducts']);
 Route::post('/product/get', [ProductController::class, 'getProduct']);
@@ -103,6 +103,7 @@ Route::get('/bidding/specific_data', [BiddingController::class, 'getSpecificBidd
 Route::get('/bidding/waiting', [BiddingController::class, 'getWaitingBiddings']);
 Route::get('/bidding/on_going', [BiddingController::class, 'getOnGoingBiddings']);
 Route::get('/bidding/popular', [BiddingController::class, 'getPopularBidding']);
+Route::post('/bidding/store/active', [BiddingController::class, 'getActiveBiddingByStore']);
 
 
 //Customer
@@ -170,7 +171,7 @@ Route::post('/message/get', [MessageController::class, 'getMessages']);
 Route::post('/message/send_message', [MessageController::class, 'sendMessage']);
 Route::post('/message/latest', [MessageController::class, 'getLatestMessage']);
 Route::post('/message/chatlist', [MessageController::class, 'getChatList']);
-
+Route::post('/message/seen', [MessageController::class, 'seenMessages']);
 //Notification
 Route::post('/notification/add', [NotificationController::class, 'addNotification']);
 Route::post('/notification/get', [NotificationController::class, 'getNotifications']);
