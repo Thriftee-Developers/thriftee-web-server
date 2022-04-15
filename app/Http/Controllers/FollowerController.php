@@ -83,6 +83,10 @@ class FollowerController extends Controller
         $result = Follower::where("customer", $req->customer)
             ->where("store", $req->store)
             ->first();
-        return $result;
+        if ($result) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
