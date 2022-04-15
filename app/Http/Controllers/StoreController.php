@@ -27,7 +27,7 @@ class StoreController extends Controller
             FROM stores
 
             LEFT JOIN ratings
-            ON stores.uuid = ratings.store
+            ON stores.uuid = ratings.store1
 
             LEFT JOIN products
             ON  products.store = stores.uuid
@@ -36,12 +36,6 @@ class StoreController extends Controller
 
             GROUP BY stores.uuid"
         );
-        return $result;
-    }
-
-    function getProductsByStore(Request $req)
-    {
-        $result = Product::where("store", $req->uuid)->get();
         return $result;
     }
 
