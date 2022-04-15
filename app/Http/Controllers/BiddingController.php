@@ -327,7 +327,7 @@ class BiddingController extends Controller
         $bidding = Biddings::where([
             ['uuid', $req->bidding],
             ['status', '<>', 'failed'],
-            ['status', '<>', 'no_claims']
+            ['status', '<>', 'no_claim']
         ])->first();
 
         if (!$bidding) {
@@ -369,7 +369,7 @@ class BiddingController extends Controller
                 if($winnerIndex >= count($bidder)) {
 
                     //Update bidding status
-                    $bidding->update(['status' => "no_claims"]);
+                    $bidding->update(['status' => "no_claim"]);
                     Product::where('uuid', $bidding->product)
                         ->first()
                         ->update(['status' => 'archived']);
@@ -423,7 +423,7 @@ class BiddingController extends Controller
                 if ($winnerIndex >= count($bidder)) {
 
                     //Update Status
-                    $bidding->update(['status' => "no_claims"]);
+                    $bidding->update(['status' => "no_claim"]);
                     Product::where('uuid', $bidding->product)
                         ->first()
                         ->update(['status' => 'archived']);
