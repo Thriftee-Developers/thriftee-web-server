@@ -65,7 +65,7 @@ class StoreController extends Controller
             LEFT JOIN products
             ON  products.store = stores.uuid
 
-            WHERE stores.store_id = '$req->store_idp'
+            WHERE stores.store_id = '$req->store_id'
 
             GROUP BY stores.uuid"
         );
