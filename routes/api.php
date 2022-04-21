@@ -101,12 +101,13 @@ Route::post('/bidding/latest_by_product', [BiddingController::class, 'getLatestB
 Route::post('/bidding/by_store', [BiddingController::class, 'getBiddingsByStore']);
 Route::post('/bidding/winner', [BiddingController::class, 'getBiddingWinner']);
 Route::get('/bidding/specific_data', [BiddingController::class, 'getSpecificBiddingData']);
-Route::get('/bidding/waiting', [BiddingController::class, 'getWaitingBiddings']);
+Route::get('/bidding/upcoming', [BiddingController::class, 'getUpcomingBiddings']);
 Route::get('/bidding/on_going', [BiddingController::class, 'getOnGoingBiddings']);
 Route::get('/bidding/popular', [BiddingController::class, 'getPopularBidding']);
+Route::post('/bidding/ending', [BiddingController::class, 'getEndingBiddings']);
 Route::post('/bidding/store/active', [BiddingController::class, 'getActiveBiddingByStore']);
 Route::get('/bidding/specific_data', [BiddingController::class, 'getSpecificBiddingData']);
-Route::post('/bidding/store/waiting', [BiddingController::class, 'getWaitingBiddingsByStore']);
+Route::post('/bidding/store/upcoming', [BiddingController::class, 'getUpcomingBiddingsByStore']);
 Route::post('/bidding/store/on_going', [BiddingController::class, 'getOnGoingBiddingsByStore']);
 Route::post('/bidding/store/products/sold', [BiddingController::class, 'getStoreSoldProducts']);
 

@@ -35,7 +35,7 @@ class BiddingController extends Controller
         return $result;
     }
 
-    function getWaitingBiddings()
+    function getUpcomingBiddings()
     {
         $biddings = DB::select(
             "SELECT
@@ -115,7 +115,46 @@ class BiddingController extends Controller
         return $biddings;
     }
 
-    function getWaitingBiddingsByStore(Request $req)
+    function getEndingBiddings()
+    {
+        $current_time = strtotime(date("y-m-d H:i:s"));
+
+        $biddings = DB::select(
+            "SELECT
+                biddings.*,
+                products.product_id,
+                products.name,
+                products.description,
+                products.store,
+                stores.uuid as store_uuid,
+                stores.store_name,
+                productimages.path as image_path
+            FROM biddings
+
+            INNER JOIN products
+            ON biddings.product = products.uuid
+
+            INNER JOIN stores
+            ON products.store = stores.uuid
+
+            LEFT JOIN (
+                SELECT path, product, MIN(name) AS name FROM productimages GROUP BY product
+            ) productimages
+            ON productimages.product = products.uuid
+
+            WHERE
+                TIMESTAMPDIFF(minute, $current_time, biddings.end_time) >= 0 AND
+                TIMESTAMPDIFF(minute, $current_time, biddings.end_time) < 1440 AND
+                biddings.status = 'on_going'
+
+            GROUP BY biddings.uuid
+            ORDER BY biddings.start_time ASC"
+        );
+
+        return $biddings;
+    }
+
+    function getUpcomingBiddingsByStore(Request $req)
     {
         $biddings = DB::select(
             "SELECT
