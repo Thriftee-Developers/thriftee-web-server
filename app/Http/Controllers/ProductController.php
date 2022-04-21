@@ -23,7 +23,7 @@ class ProductController extends Controller
     {
         $search = Product::where("name", "like", "%" . $req->search . "%")
             ->orWhere("tags", "like", "%" . $req->search . "%")
-            ->g11et();
+            ->get();
         return $search;
     }
     function getAllProducts()
