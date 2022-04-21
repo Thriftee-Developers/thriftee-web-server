@@ -104,7 +104,7 @@ Route::get('/bidding/specific_data', [BiddingController::class, 'getSpecificBidd
 Route::get('/bidding/upcoming', [BiddingController::class, 'getUpcomingBiddings']);
 Route::get('/bidding/on_going', [BiddingController::class, 'getOnGoingBiddings']);
 Route::get('/bidding/popular', [BiddingController::class, 'getPopularBidding']);
-Route::post('/bidding/ending', [BiddingController::class, 'getEndingBiddings']);
+Route::get('/bidding/ending', [BiddingController::class, 'getEndingBiddings']);
 Route::post('/bidding/store/active', [BiddingController::class, 'getActiveBiddingByStore']);
 Route::get('/bidding/specific_data', [BiddingController::class, 'getSpecificBiddingData']);
 Route::post('/bidding/store/upcoming', [BiddingController::class, 'getUpcomingBiddingsByStore']);
