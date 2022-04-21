@@ -126,8 +126,13 @@ class BiddingController extends Controller
                 products.store,
                 stores.uuid as store_uuid,
                 stores.store_name,
-                productimages.path as image_path
+                productimages.path as image_path,
+                mBids.highest as highest_bid,
+                Count(bids.uuid) as bid_count
             FROM biddings
+
+            LEFT JOIN bids
+            ON biddings.uuid = bids.bidding
 
             INNER JOIN products
             ON biddings.product = products.uuid
@@ -139,6 +144,13 @@ class BiddingController extends Controller
                 SELECT path, product, MIN(name) AS name FROM productimages GROUP BY product
             ) productimages
             ON productimages.product = products.uuid
+
+            LEFT OUTER JOIN (
+                SELECT bidding, MAX(amount) AS highest
+                FROM bids
+                GROUP BY bidding
+            ) mBids
+            ON mBids.bidding = biddings.uuid
 
             WHERE
                 TIMESTAMPDIFF(minute, '$current_time', biddings.end_time) >= 0 AND
