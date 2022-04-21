@@ -117,10 +117,8 @@ class BiddingController extends Controller
 
     function getEndingBiddings()
     {
-        $current_time = strtotime(date("y-m-d H:i:s"));
-
-        $biddings = DB::select(
-            "SELECT
+        $current_time = date("y-m-d H:i:s");
+        $query = "SELECT
                 biddings.*,
                 products.product_id,
                 products.name,
@@ -143,13 +141,14 @@ class BiddingController extends Controller
             ON productimages.product = products.uuid
 
             WHERE
-                TIMESTAMPDIFF(minute, $current_time, biddings.end_time) >= 0 AND
-                TIMESTAMPDIFF(minute, $current_time, biddings.end_time) < 1440 AND
+                TIMESTAMPDIFF(minute, '$current_time', biddings.end_time) >= 0 AND
+                TIMESTAMPDIFF(minute, '$current_time', biddings.end_time) < 1440 AND
                 biddings.status = 'on_going'
 
             GROUP BY biddings.uuid
-            ORDER BY biddings.start_time ASC"
-        );
+            ORDER BY biddings.start_time ASC";
+
+        $biddings = DB::select($query);
 
         return $biddings;
     }
