@@ -199,3 +199,4 @@ Route::post('/follower/status', [FollowerController::class, 'checkFollowStatus']
 
 //Dummy Route
 Route::get('/product/delete_all', [ProductController::class, 'deleteAllProduct']);
+Route::post('/search', [ProductController::class, 'search']);

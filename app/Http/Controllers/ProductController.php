@@ -19,37 +19,48 @@ use App\Models\Store;
 
 class ProductController extends Controller
 {
-    function getAllProducts(){
+    function search(Request $req)
+    {
+        $search = Product::where("name", "like", "%" . $req->search . "%")
+            ->orWhere("tags", "like", "%" . $req->search . "%")
+            ->g11et();
+        return $search;
+    }
+    function getAllProducts()
+    {
         $result = Product::all();
         return $result;
     }
 
-    function getProduct(Request $req){
+    function getProduct(Request $req)
+    {
         $result = Product::where("uuid", $req->uuid)->first();
         return $result;
     }
 
-    function getProductByID(Request $req){
+    function getProductByID(Request $req)
+    {
         $result = Product::select([
-                'products.*',
-                'stores.uuid as store_uuid',
-                'stores.store_id as store_id',
-                'stores.store_name'
-            ])
+            'products.*',
+            'stores.uuid as store_uuid',
+            'stores.store_id as store_id',
+            'stores.store_name'
+        ])
             ->where("product_id", $req->product_id)
-            ->join('stores','stores.uuid','products.store')
+            ->join('stores', 'stores.uuid', 'products.store')
             ->first();
 
         $images = ProductImage
-            ::where('product',$result->uuid)
-            ->orderBy('name','ASC')
+            ::where('product', $result->uuid)
+            ->orderBy('name', 'ASC')
             ->get();
         $result->images = $images;
 
         return $result;
     }
 
-    function getStoreActiveProducts(Request $req){
+    function getStoreActiveProducts(Request $req)
+    {
         $bidding = DB::select(
             "SELECT
                 products.*,
@@ -88,13 +99,13 @@ class ProductController extends Controller
             GROUP BY products.uuid"
         );
 
-        foreach($bidding as $item) {
+        foreach ($bidding as $item) {
             $result = Biddings
-                ::where('product',$item->uuid)
+                ::where('product', $item->uuid)
                 ->orderBy('created_at', 'desc')
                 ->first();
 
-            if($result) {
+            if ($result) {
                 $bids = Bid
                     ::where('bidding', $result->uuid)
                     ->orderBy('amount', 'desc')
@@ -109,7 +120,8 @@ class ProductController extends Controller
         return $bidding;
     }
 
-    function getStoreArchivedProducts(Request $req){
+    function getStoreArchivedProducts(Request $req)
+    {
         $result = Product::where([
             ['store', $req->store],
             ['status', 'archived']
@@ -118,7 +130,8 @@ class ProductController extends Controller
         return $result;
     }
 
-    function getStoreCompletedProducts(Request $req){
+    function getStoreCompletedProducts(Request $req)
+    {
         $result = Product::where([
             ['store', $req->store],
             ['status', 'sold']
@@ -127,30 +140,32 @@ class ProductController extends Controller
         return $result;
     }
 
-    function addProduct(Request $req){
+    function addProduct(Request $req)
+    {
         $product = new Product;
-        $product->uuid=Str::uuid();
-        $product->store=$req->store;
-        $product->product_id=$req->product_id;
-        $product->name=$req->name;
-        $product->description=$req->description;
+        $product->uuid = Str::uuid();
+        $product->store = $req->store;
+        $product->product_id = $req->product_id;
+        $product->name = $req->name;
+        $product->description = $req->description;
+        $product->tags = $req->tags;
 
-        if($this->checkProductID($req->product_id)){
-            if($product->save()) {
+        if ($this->checkProductID($req->product_id)) {
+            if ($product->save()) {
                 $conditionCtrl = new ConditionController();
                 $conditionCtrl->addProductCondition($product->uuid, $req->condition);
 
                 $categoryCtrl = new CategoryController();
                 $categories = json_decode($req->categories);
-                foreach($categories as $category) {
+                foreach ($categories as $category) {
                     $categoryCtrl->addProductCategory($product->uuid, $category);
                 }
 
-                $tagCtrl = new TagController();
-                $tags = json_decode($req->tags);
-                foreach($tags as $tag) {
-                    $tagCtrl->addProductTag($product->uuid, $tag);
-                }
+                // $tagCtrl = new TagController();
+                // $tags = json_decode($req->tags);
+                // foreach ($tags as $tag) {
+                //     $tagCtrl->addProductTag($product->uuid, $tag);
+                // }
 
                 $mediaCtrl = new MediaController();
                 $images = $req->allFiles();
@@ -164,8 +179,7 @@ class ProductController extends Controller
                 $followers = Follower::where('store', $req->store)->get();
                 $store = Store::where('uuid', $req->store)->first();
 
-                foreach($followers as $item)
-                {
+                foreach ($followers as $item) {
                     $notif = new CustomerNotification();
                     $notif->uuid = Str::uuid();
                     $notif->customer = $item->customer;
@@ -181,13 +195,10 @@ class ProductController extends Controller
                 }
 
                 return ["success" => "success"];
-            }
-            else {
+            } else {
                 return ["error" => "Error saving product."];
             }
-
-        }
-        else{
+        } else {
             return ["error" => "The product ID is not unique."];
         }
     }
@@ -198,27 +209,28 @@ class ProductController extends Controller
         return $result;
     }
 
-    function deleteAllProduct(){
+    function deleteAllProduct()
+    {
         $result = Bid::query()->delete();
-        if($result != ""){
+        if ($result != "") {
             echo "Bid Deleted!";
             $result = Biddings::query()->delete();
-            if($result != ""){
+            if ($result != "") {
                 echo "Biddings Deleted";
                 $result = ProductCategory::query()->delete();
-                if($result != ""){
+                if ($result != "") {
                     echo "ProductCategory Deleted!";
                     $result = ProductCondition::query()->delete();
-                    if($result != ""){
+                    if ($result != "") {
                         echo "ProductCondition Deleted!";
                         $result = ProductImage::query()->delete();
-                        if($result != ""){
+                        if ($result != "") {
                             echo "ProductImage Deleted!";
                             $result = ProductTag::query()->delete();
-                            if($result != ""){
+                            if ($result != "") {
                                 echo "ProductTag Deleted!";
                                 $result = Product::query()->delete();
-                                if($result!=""){
+                                if ($result != "") {
                                     echo "Prodyct Deleted!";
                                 }
                             }
@@ -229,9 +241,10 @@ class ProductController extends Controller
         }
     }
 
-    function checkProductID($product_id){
+    function checkProductID($product_id)
+    {
         $product = Product::where("product_id", $product_id)->get();
-        if(count($product) > 0 ) return false;
+        if (count($product) > 0) return false;
         return true;
     }
 }
