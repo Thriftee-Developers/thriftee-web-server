@@ -89,10 +89,39 @@ class CategoryController extends Controller
 
     function getProductsByCategory(Request $req)
     {
-        $result = ProductCategory::join('categories', 'productcategories.product_category', '=', 'categories.uuid')
-            ->join("products", "products.uuid", "=", "productcategories.product")
-            ->where("categories.uuid", $req->uuid)
-            ->get();
+        $result = DB::select(
+            "SELECT
+                categories.*,
+                products.product_id,
+                products.name,
+                products.description,
+                products.store,
+                stores.uuid as store_uuid,
+                stores.store_name,
+                productimages.path as image_path
+            FROM categories
+
+            INNER JOIN productcategories
+            ON productcategories.product_category = categories.uuid
+
+            INNER JOIN products
+            ON productcategories.product = products.uuid
+
+            INNER JOIN stores
+            ON products.store = stores.uuid
+
+            LEFT JOIN (
+                SELECT path, product, MIN(name) AS name FROM productimages GROUP BY product
+            ) productimages
+            ON productimages.product = products.uuid
+
+            WHERE categories.uuid='$req->uuid'
+            "
+        );
+        // $result = ProductCategory::join('categories', 'productcategories.product_category', '=', 'categories.uuid')
+        //     ->join("products", "products.uuid", "=", "productcategories.product")
+        //     ->where("categories.uuid", $req->uuid)
+        //     ->get();
         return $result;
     }
 
