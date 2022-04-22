@@ -21,11 +21,70 @@ class ProductController extends Controller
 {
     function search(Request $req)
     {
-        $search = Product::where("name", "like", "%" . $req->search . "%")
-            ->orWhere("tags", "like", "%" . $req->search . "%")
+        $store = Store::where("store_name", "like", "%" . $req->search . "%")
+            ->orWhere("store_id", "like", "%" . $req->search . "%")
             ->get();
-        return $search;
+
+        $result = [
+            "store_result" => $store,
+            "ongoing_result" => $this->filterBiddingsStatus($req->search, "biddings.status='on_going'"),
+            "upcoming_result" => $this->filterBiddingsStatus($req->search, "biddings.status='waiting'"),
+            "ended_result" => $this->filterBiddingsStatus($req->search, "biddings.status<>'on_going' AND biddings.status<>'waiting'"),
+        ];
+        return $result;
     }
+
+    function filterBiddingsStatus($search, $status)
+    {
+        $result = DB::select(
+            "SELECT
+                products.product_id,
+                products.name,
+                products.description,
+                products.store,
+                products.status,
+                stores.uuid as store_uuid,
+                stores.store_name,
+                productimages.path as image_path,
+
+                biddings.uuid as bidding_uuid,
+                biddings.minimum as bidding_minimum,
+                biddings.increment as bidding_increment,
+                biddings.claim as bidding_claim,
+                biddings.start_time as bidding_start_time,
+                biddings.end_time as bidding_end_time,
+                biddings.status as bidding_status,
+
+                mBids.highest as bid_highest
+
+            FROM products
+
+            INNER JOIN stores
+            ON products.store = stores.uuid
+
+            LEFT JOIN (
+                SELECT path, product, MIN(name) AS name FROM productimages GROUP BY product
+            ) productimages
+            ON productimages.product = products.uuid
+
+            LEFT JOIN (
+                SELECT *, MAX(created_at) AS max_created_at FROM biddings GROUP BY product
+            ) biddings
+            ON biddings.product = products.uuid
+
+            LEFT JOIN (
+                SELECT bidding, MAX(amount) AS highest
+                FROM bids
+                GROUP BY bidding
+            ) mBids
+            ON mBids.bidding = biddings.uuid
+
+            WHERE (products.name LIKE '%$search%' OR products.product_id LIKE '%$search%' OR products.tags LIKE '%$search%') AND $status
+            "
+        );
+        return $result;
+    }
+
     function getAllProducts()
     {
         $result = Product::all();
