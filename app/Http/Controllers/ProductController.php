@@ -37,21 +37,19 @@ class ProductController extends Controller
             LEFT JOIN products
             ON  products.store = stores.uuid
 
-            WHERE stores.store_name LIKE '%$req->search%'
+            WHERE stores.store_name LIKE '%$req->search%' OR stores.store_id LIKE '%$req->search%'
 
             GROUP BY stores.uuid"
         );
 
         $result = [
             "store_result" => $store,
-            "ongoing_result" => $this->filterBiddingsStatus($req->search, "biddings.status='on_going'"),
-            "upcoming_result" => $this->filterBiddingsStatus($req->search, "biddings.status='waiting'"),
-            "ended_result" => $this->filterBiddingsStatus($req->search, "biddings.status<>'on_going' AND biddings.status<>'waiting'"),
+            "product_result" => $this->filterBiddingsStatus($req->search),
         ];
         return $result;
     }
 
-    function filterBiddingsStatus($search, $status)
+    function getProductDetails($value)
     {
         $result = DB::select(
             "SELECT
@@ -96,7 +94,7 @@ class ProductController extends Controller
             ) mBids
             ON mBids.bidding = biddings.uuid
 
-            WHERE (products.name LIKE '%$search%' OR products.product_id LIKE '%$search%' OR products.tags LIKE '%$search%') AND $status
+            WHERE (products.name LIKE '%$value%' OR products.product_id LIKE '%$value%' OR products.tags LIKE '%$value%')
             "
         );
         return $result;
