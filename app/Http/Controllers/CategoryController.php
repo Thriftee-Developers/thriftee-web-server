@@ -109,8 +109,8 @@ class CategoryController extends Controller
                 biddings.end_time as bidding_end_time,
                 biddings.status as bidding_status,
 
-                Count(bids.uuid) as bid_count,
-                mBids.highest as bid_highest
+                Count(bids.uuid) as bid_count
+                -- mBids.highest as bid_highest
 
             FROM categories
 
@@ -133,8 +133,8 @@ class CategoryController extends Controller
             ) biddings
             ON biddings.product = products.uuid
 
-            LEFT JOIN bids
-            ON biddings.uuid = bids.bidding
+            -- LEFT JOIN bids
+            -- ON biddings.uuid = bids.bidding
 
             LEFT JOIN (
                 SELECT bidding, MAX(amount) AS highest
