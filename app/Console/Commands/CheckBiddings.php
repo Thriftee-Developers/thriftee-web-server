@@ -75,7 +75,6 @@ class CheckBiddings extends Command
 
             if ($current_time >= $end_time) {
                 $item->update(['status' => 'ended']);
-
                 //TODO: send notification to all bidders (BIDDING ENDED)
             }
         }
@@ -115,14 +114,20 @@ class CheckBiddings extends Command
                 //Failed to claim the product
                 if($winnerIndex >= count($bidders))
                 {
-                    $item->update([
-                        'claimer' => null,
-                        'status' => "claim_failed",
-                    ]);
 
-                    Product::where('uuid', $item->product)
-                        ->first()
-                        ->update(['status' => 'archived']);
+                    //UPDATE BIDDING
+                    DB::select(
+                        "UPDATE biddings
+                        SET status='claim_failed', claimer=null
+                        WHERE uuid='$item->uuid'
+                    ");
+
+                    //UPDATE PRODUCT
+                    DB::select(
+                        "UPDATE products
+                        SET status='archived'
+                        WHERE uuid='$item->product'
+                    ");
                 }
                 else
                 {
@@ -131,18 +136,32 @@ class CheckBiddings extends Command
                     //Update if current claimer is not equal to new claimer
                     if($claimer != $item->claimer)
                     {
-                        $item->update(['claimer'=>$claimer]);
-                        //TODO: send notification to current claimer (CLAIM FAILED)
+                        //UPDATE BIDDING
+                        DB::select(
+                            "UPDATE biddings
+                            SET claimer='$claimer'
+                            WHERE uuid='$item->uuid'
+                        ");
+
+                        //TODO: send notification to current claimer (CLAIM FAILED) AND new claimer
                     }
                 }
             }
             else
             {
-                $item->update(['status' => "no_bid"]);
+                //UPDATE BIDDING
+                DB::select(
+                    "UPDATE biddings
+                    SET status='no_bid'
+                    WHERE uuid='$item->uuid'
+                ");
 
-                Product::where('uuid', $item->product)
-                    ->first()
-                    ->update(['status' => 'archived']);
+                //UPDATE PRODUCT
+                DB::select(
+                    "UPDATE products
+                    SET status='archived'
+                    WHERE uuid='$item->product'
+                ");
             }
         }
     }
