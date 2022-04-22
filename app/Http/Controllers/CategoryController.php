@@ -145,11 +145,9 @@ class CategoryController extends Controller
             WHERE categories.uuid='$req->uuid'
             "
         );
-        // $result = ProductCategory::join('categories', 'productcategories.product_category', '=', 'categories.uuid')
-        //     ->join("products", "products.uuid", "=", "productcategories.product")
-        //     ->where("categories.uuid", $req->uuid)
-        //     ->get();
-        return $this->paginate($result);
+
+        return $result;
+        //return $this->paginate($result);
     }
 
     function paginate($items, $perPage = 15, $page = null, $options = [])
