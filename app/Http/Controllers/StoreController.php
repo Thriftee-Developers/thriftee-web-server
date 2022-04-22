@@ -177,6 +177,7 @@ class StoreController extends Controller
 
             if (Hash::check($req->password, $store->password)) {
                 if ($store->status == 1) {
+                    $store->success = "success";
                     return $store;
                 } else {
                     if ($store->status == 0) {

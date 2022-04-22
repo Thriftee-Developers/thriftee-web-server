@@ -121,6 +121,7 @@ class CustomerController extends Controller
 
             if(Hash::check($req->password, $customer->password)) {
                 if($customer-> status == 1) {
+                    $customer->success = "success";
                     return $customer;
                 }
                 else {
