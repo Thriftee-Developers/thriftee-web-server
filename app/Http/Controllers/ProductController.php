@@ -187,7 +187,8 @@ class ProductController extends Controller
                     $notif->details = json_encode([
                         "store" => $req->store,
                         "store_name" => $store->store_name,
-                        "product_name" => $req->name
+                        "product_name" => $req->name,
+                        "product_id" => $req->product_id
                     ]);
                     $notif->date = date("Y-m-d H:i:s");
 
