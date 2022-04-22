@@ -61,6 +61,7 @@ class ProductController extends Controller
                 stores.uuid as store_uuid,
                 stores.store_name,
                 productimages.path as image_path,
+                categories.name as category_name,
 
                 biddings.uuid as bidding_uuid,
                 biddings.minimum as bidding_minimum,
@@ -76,6 +77,12 @@ class ProductController extends Controller
 
             INNER JOIN stores
             ON products.store = stores.uuid
+
+            INNER JOIN productcategories
+            ON products.uuid = productcategories.product
+
+            LEFT JOIN categories
+            ON categories.uuid = productcategories.product_category
 
             LEFT JOIN (
                 SELECT path, product, MIN(name) AS name FROM productimages GROUP BY product
@@ -94,7 +101,7 @@ class ProductController extends Controller
             ) mBids
             ON mBids.bidding = biddings.uuid
 
-            WHERE (products.name LIKE '%$value%' OR products.product_id LIKE '%$value%' OR products.tags LIKE '%$value%')
+            WHERE (products.name LIKE '%$value%' OR products.product_id LIKE '%$value%' OR products.tags LIKE '%$value%' OR categories.name LIKE '%$value%')
             "
         );
         return $result;
