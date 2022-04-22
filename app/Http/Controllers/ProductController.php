@@ -44,7 +44,7 @@ class ProductController extends Controller
 
         $result = [
             "store_result" => $store,
-            "product_result" => $this->filterBiddingsStatus($req->search),
+            "product_result" => $this->getProductDetails($req->search),
         ];
         return $result;
     }
