@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Categories;
 use App\Models\ProductCategory;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 
@@ -146,7 +149,14 @@ class CategoryController extends Controller
         //     ->join("products", "products.uuid", "=", "productcategories.product")
         //     ->where("categories.uuid", $req->uuid)
         //     ->get();
-        return $result;
+        return $this->paginate($result);
+    }
+
+    function paginate($items, $perPage = 15, $page = null, $options = [])
+    {
+        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
+        $items = $items instanceof Collection ? $items : Collection::make($items);
+        return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
     }
 
     function checkExistingCategory(Request $req)
