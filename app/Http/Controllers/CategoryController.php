@@ -123,10 +123,10 @@ class CategoryController extends Controller
             INNER JOIN stores
             ON products.store = stores.uuid
 
-            -- LEFT JOIN (
-            --     SELECT path, product, MIN(name) AS name FROM productimages GROUP BY product
-            -- ) productimages
-            -- ON productimages.product = products.uuid
+            LEFT JOIN (
+                SELECT path, product, MIN(name) AS name FROM productimages GROUP BY product
+            ) productimages
+            ON productimages.product = products.uuid
 
             -- LEFT JOIN (
             --     SELECT *, MAX(created_at) AS max_created_at FROM biddings GROUP BY product
