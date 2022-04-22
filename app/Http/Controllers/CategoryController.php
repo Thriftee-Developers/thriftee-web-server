@@ -101,13 +101,13 @@ class CategoryController extends Controller
                 stores.store_name,
                 productimages.path as image_path
 
-                -- biddings.uuid as bidding_uuid,
-                -- biddings.minimum as bidding_minimum,
-                -- biddings.increment as bidding_increment,
-                -- biddings.claim as bidding_claim,
-                -- biddings.start_time as bidding_start_time,
-                -- biddings.end_time as bidding_end_time,
-                -- biddings.status as bidding_status,
+                biddings.uuid as bidding_uuid,
+                biddings.minimum as bidding_minimum,
+                biddings.increment as bidding_increment,
+                biddings.claim as bidding_claim,
+                biddings.start_time as bidding_start_time,
+                biddings.end_time as bidding_end_time,
+                biddings.status as bidding_status,
 
                 -- Count(bids.uuid) as bid_count,
                 -- mBids.highest as bid_highest
@@ -128,10 +128,10 @@ class CategoryController extends Controller
             ) productimages
             ON productimages.product = products.uuid
 
-            -- LEFT JOIN (
-            --     SELECT *, MAX(created_at) AS max_created_at FROM biddings GROUP BY product
-            -- ) biddings
-            -- ON biddings.product = products.uuid
+            LEFT JOIN (
+                SELECT *, MAX(created_at) AS max_created_at FROM biddings GROUP BY product
+            ) biddings
+            ON biddings.product = products.uuid
 
             -- LEFT JOIN bids
             -- ON biddings.uuid = bids.bidding
