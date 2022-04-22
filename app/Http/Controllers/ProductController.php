@@ -63,11 +63,11 @@ class ProductController extends Controller
                 categories.name as category_name,
 
                 biddings.uuid as bidding_uuid,
-                biddings.minimum as bidding_minimum,
-                biddings.increment as bidding_increment,
-                biddings.claim as bidding_claim,
-                biddings.start_time as bidding_start_time,
-                biddings.end_time as bidding_end_time,
+                biddings.minimum,
+                biddings.increment,
+                biddings.claim,
+                biddings.start_time,
+                biddings.end_time,
                 biddings.status,
 
                 mBids.highest as bid_highest
