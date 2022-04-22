@@ -96,9 +96,19 @@ class CategoryController extends Controller
                 products.name,
                 products.description,
                 products.store,
+                products.status,
                 stores.uuid as store_uuid,
                 stores.store_name,
-                productimages.path as image_path
+                productimages.path as image_path,
+
+                biddings.uuid as bidding_uuid,
+                biddings.minimum as bidding_minimum,
+                biddings.increment as bidding_increment,
+                biddings.claim as bidding_claim,
+                biddings.start_time as bidding_start_time,
+                biddings.end_time as bidding_end_time,
+                biddings.status as bidding_status,
+
             FROM categories
 
             INNER JOIN productcategories
@@ -114,6 +124,11 @@ class CategoryController extends Controller
                 SELECT path, product, MIN(name) AS name FROM productimages GROUP BY product
             ) productimages
             ON productimages.product = products.uuid
+
+            LEFT JOIN (
+                SELECT *, MAX(created_at) AS max_created_at FROM biddings GROUP BY product
+            ) biddings
+            ON biddings.product = products.uuid
 
             WHERE categories.uuid='$req->uuid'
             "
