@@ -57,7 +57,6 @@ class ProductController extends Controller
                 products.name,
                 products.description,
                 products.store,
-                products.status,
                 stores.uuid as store_uuid,
                 stores.store_name,
                 productimages.path as image_path,
@@ -69,7 +68,7 @@ class ProductController extends Controller
                 biddings.claim as bidding_claim,
                 biddings.start_time as bidding_start_time,
                 biddings.end_time as bidding_end_time,
-                biddings.status as bidding_status,
+                biddings.status,
 
                 mBids.highest as bid_highest
 
