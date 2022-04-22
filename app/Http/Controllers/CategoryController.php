@@ -109,6 +109,9 @@ class CategoryController extends Controller
                 biddings.end_time as bidding_end_time,
                 biddings.status as bidding_status,
 
+                Count(bids.uuid) as bid_count,
+                mBids.highest as bid_highest
+
             FROM categories
 
             INNER JOIN productcategories
@@ -129,6 +132,16 @@ class CategoryController extends Controller
                 SELECT *, MAX(created_at) AS max_created_at FROM biddings GROUP BY product
             ) biddings
             ON biddings.product = products.uuid
+
+            LEFT JOIN bids
+            ON biddings.uuid = bids.bidding
+
+            LEFT OUTER JOIN (
+                SELECT bidding, MAX(amount) AS highest
+                FROM bids
+                GROUP BY bidding
+            ) mBids
+            ON mBids.bidding = biddings.uuid
 
             WHERE categories.uuid='$req->uuid'
             "
