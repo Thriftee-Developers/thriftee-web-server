@@ -197,6 +197,7 @@ Route::post('/follower/customer/count', [FollowerController::class, 'getFollowed
 Route::post('/follower/store/count', [FollowerController::class, 'getAllFollowersCount']);
 Route::post('/follower/status', [FollowerController::class, 'checkFollowStatus']);
 
+Route::post('/product/search', [ProductController::class, 'search']);
+
 //Dummy Route
 Route::get('/product/delete_all', [ProductController::class, 'deleteAllProduct']);
-Route::post('/search', [ProductController::class, 'search']);
