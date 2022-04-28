@@ -17,6 +17,7 @@ use App\Http\Controllers\FollowerController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\SalesController;
 use App\Http\Controllers\SliderProductController;
 use App\Http\Controllers\StoreBillingMethodController;
 use App\Http\Controllers\TransactionController;
@@ -199,5 +200,6 @@ Route::post('/follower/status', [FollowerController::class, 'checkFollowStatus']
 
 Route::post('/product/search', [ProductController::class, 'search']);
 
+Route::post('/sales/admin/sold_items', [SalesController::class, 'filterSoldItemsSale']);
 //Dummy Route
 Route::get('/product/delete_all', [ProductController::class, 'deleteAllProduct']);
