@@ -75,6 +75,7 @@ Route::post('/product/archived/store', [ProductController::class, 'getStoreArchi
 // Route::post('/product_category/delete', [ProductCategoryController::class, 'deleteProductCategory']);
 
 //Condition
+Route::get('/category/list', [CategoryController::class, 'getAllCategoryName']);
 Route::get('/category/all', [CategoryController::class, 'getAllCategory']);
 Route::post('/category/add', [CategoryController::class, 'addCategory']);
 Route::post('/category/delete', [CategoryController::class, 'deleteCategory']);

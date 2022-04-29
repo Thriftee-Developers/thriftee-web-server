@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
 {
-    function getAllCategoryList()
+    function getAllCategoryName()
     {
-        $result = Categories::all()->sortBy("name", "asc");
+        $result = Categories::orderBy("name", "asc")->select("name")->get();
         return $result;
     }
 
