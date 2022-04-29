@@ -16,10 +16,6 @@ class CategoryController extends Controller
     function getAllCategoryName()
     {
         $result = Categories::orderBy("name", "asc")->select("name")->get();
-
-        $data = $result;
-        $data['name'] = "ALL";
-        $result = json_encode($data);
         return $data;
     }
 
