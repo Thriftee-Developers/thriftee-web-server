@@ -16,7 +16,7 @@ class SalesController extends Controller
 
     function filterSoldItemsAdminSale(Request $req)
     {
-        $result = $this->getProductDetails('= "success"', $req->search, $req->start_date, $req->end_date);
+        $result = $this->getProductDetails("= 'success'", $req->search, $req->start_date, $req->end_date);
         return $result;
     }
 
@@ -28,9 +28,9 @@ class SalesController extends Controller
 
     function getProductDetails($status, $value, $start_date, $end_date)
     {
-        // if ($value == "") {
-        //     $value = "|||";
-        // }
+        if ($value == "") {
+            $value = "|||";
+        }
         $result = DB::select(
             "SELECT
                 products.product_id,
@@ -80,7 +80,7 @@ class SalesController extends Controller
             ) mBids
             ON mBids.bidding = biddings.uuid
 
-            WHERE (biddings.status $status AND (biddings.end_time >= '$start_date' AND biddings.end_time <= '$end_date') OR stores.store_name LIKE '%$value$' OR categories.name LIKE '%$value%')
+            WHERE ( biddings.status $status OR (biddings.end_time >= '$start_date' AND biddings.end_time <= '$end_date') OR stores.store_name LIKE '%$value$' OR categories.name LIKE '%$value%')
             GROUP BY productcategories.product
             "
         );
@@ -96,12 +96,19 @@ class SalesController extends Controller
                 customers.lname
             FROM customers
 
-            INNER JOIN bids
-            (
-                SELECT *, MAX(amount) AS highest
+            -- INNER JOIN bids
+            -- (
+            --     SELECT uuid, bidding, customer, MAX(amount) AS highest
+            --     FROM bids
+            --     )
+            -- ON bids.customer = customers.uuid
+            
+            LEFT OUTER JOIN (
+                SELECT bidding, MAX(amount) AS highest
                 FROM bids
-                )
-            ON bids.customer = customers.uuid
+                GROUP BY bidding
+            ) mBids
+            ON mBids.bidding = biddings.uuid
 
             LEFT JOIN biddings
             ON bids.bidding = biddings.uuid
