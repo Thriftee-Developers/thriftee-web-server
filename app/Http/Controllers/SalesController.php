@@ -118,7 +118,7 @@ class SalesController extends Controller
             LEFT JOIN products
             ON biddings.product = products.uuid
 
-            -- WHERE biddings.status = 'under_transaction'
+            WHERE biddings.status = 'under_transaction'
             "
         );
 
