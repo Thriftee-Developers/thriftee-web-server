@@ -30,7 +30,7 @@ class SalesController extends Controller
                 stores.uuid as store_uuid,
                 stores.store_name,
                 productimages.path as image_path,
-                categories.name as category_name,
+                group_concat(categories.name),
 
                 biddings.uuid as bidding_uuid,
                 biddings.minimum,
@@ -71,6 +71,8 @@ class SalesController extends Controller
             ON mBids.bidding = biddings.uuid
 
             WHERE (products.name LIKE '%$value%' OR products.product_id LIKE '%$value%' OR products.tags LIKE '%$value%' OR categories.name LIKE '%$value%')
+            -- GROUP BY productcategories.product\
+
             "
         );
         return $result;
