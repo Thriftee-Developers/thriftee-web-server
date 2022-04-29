@@ -95,7 +95,10 @@ class SalesController extends Controller
                 customers.fname,
                 customers.lname,
                 bids.highest,
-                products.name
+                products.product_id,
+                products.name,
+                stores.store_name,
+                GROUP_CONCAT(DISTINCT categories.name SEPARATOR ', ') as categories_name
             FROM customers
 
             -- INNER JOIN bids
@@ -117,6 +120,15 @@ class SalesController extends Controller
 
             LEFT JOIN products
             ON biddings.product = products.uuid
+
+            INNER JOIN stores
+            ON products.store = stores.uuid
+
+            INNER JOIN productcategories
+            ON products.uuid = productcategories.product
+
+            LEFT JOIN categories
+            ON categories.uuid = productcategories.product_category
 
             WHERE biddings.status = 'under_transaction'
             "
