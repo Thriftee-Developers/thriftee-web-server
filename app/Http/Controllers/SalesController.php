@@ -92,8 +92,15 @@ class SalesController extends Controller
         return $result;
     }
 
-    function filterUserWithUnclaimItems()
+    function filterUserWithUnclaimItems(Request $req)
     {
+        $value = str_replace("'", "\'", $req->search);
+
+        if ($value == "") {
+            $showAll = "OR products.name != 'all'";
+        } else {
+            $showAll = "";
+        }
         $result = DB::select(
             "SELECT
                 customers.uuid,
@@ -135,7 +142,7 @@ class SalesController extends Controller
             LEFT JOIN categories
             ON categories.uuid = productcategories.product_category
 
-            WHERE biddings.status = 'under_transaction'
+            WHERE biddings.status = 'under_transaction' AND (customers.fname LIKE '%$value%' OR customers.lname LIKE '%$value%' OR products.name LIKE '%$value%' OR stores.store_name LIKE '%$value%' $showAll)
             GROUP BY productcategories.product
             "
         );
