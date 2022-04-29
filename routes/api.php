@@ -201,7 +201,7 @@ Route::post('/follower/status', [FollowerController::class, 'checkFollowStatus']
 Route::post('/product/search', [ProductController::class, 'search']);
 
 Route::post('/sales/admin/sold_items', [SalesController::class, 'filterSoldItemsAdminSale']);
-Route::post('/sales/admin/unclaimed_items', [SalesController::class, 'filterUnclaimedItemsAdminSale']);
+Route::post('/sales/admin/unclaim_items', [SalesController::class, 'filterUnclaimedItemsAdminSale']);
 
 //Dummy Route
 Route::get('/product/delete_all', [ProductController::class, 'deleteAllProduct']);
