@@ -13,6 +13,12 @@ use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
 {
+    function getAllCategoryList()
+    {
+        $result = Categories::all()->sortBy("name", "asc");
+        return $result;
+    }
+
     function getAllCategory()
     {
         $result = Categories::join("productcategories", "productcategories.product_category", "categories.uuid");
@@ -27,7 +33,9 @@ class CategoryController extends Controller
             LEFT JOIN productcategories
             ON categories.uuid = productcategories.product_category
 
-            GROUP BY categories.uuid"
+            GROUP BY categories.uuid
+            ORDER BY categories.name
+            "
         );
 
         return $result;

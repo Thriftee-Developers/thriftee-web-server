@@ -36,7 +36,9 @@ class StoreController extends Controller
 
             WHERE stores.status = 1
 
-            GROUP BY stores.uuid"
+            GROUP BY stores.uuid
+            ORDER BY stores.store_name
+            "
         );
         return $result;
     }

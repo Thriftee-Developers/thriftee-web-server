@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\DB;
 
 class SalesController extends Controller
 {
-    //
 
     function filterSoldItemsAdminSale(Request $req)
     {
