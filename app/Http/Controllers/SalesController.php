@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Bid;
 use App\Models\Biddings;
 use App\Models\Store;
+use App\Models\Customer;
 use Illuminate\Support\Facades\DB;
 
 class SalesController extends Controller
@@ -15,13 +16,13 @@ class SalesController extends Controller
 
     function filterSoldItemsAdminSale(Request $req)
     {
-        $result = $this->getProductDetails('= success', $req->search, $req->start_date, $req->end_date);
+        $result = $this->getProductDetails('= "success"', $req->search, $req->start_date, $req->end_date);
         return $result;
     }
 
     function filterUnclaimedItemsAdminSale(Request $req)
     {
-        $result = $this->getProductDetails('!= success', $req->search, $req->start_date, $req->end_date);
+        $result = $this->getProductDetails('!= "success"', $req->search, $req->start_date, $req->end_date);
         return $result;
     }
 
@@ -83,6 +84,35 @@ class SalesController extends Controller
             GROUP BY productcategories.product
             "
         );
+        return $result;
+    }
+
+    function filterUserWithUnclaimItems()
+    {
+        $result = DB::select(
+            "SELECT
+                customers.uuid,
+                customers.fname,
+                customers.lname
+            FROM customers
+
+            INNER JOIN bids
+            (
+                SELECT *, MAX(amount) AS highest
+                FROM bids
+                )
+            ON bids.customer = customers.uuid
+
+            LEFT JOIN biddings
+            ON bids.bidding = biddings.uuid
+
+            LEFT JOIN products
+            ON biddings.product = products.uuid
+
+            WHERE biddings.status = 'under_transaction'
+            "
+        );
+
         return $result;
     }
 }
