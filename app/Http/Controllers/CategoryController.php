@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
 {
-    function getAllCategoryName()
+    function getAllStoreName()
     {
         $result = Categories::orderBy("name", "asc")->select("name")->get();
         return $result;

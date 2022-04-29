@@ -15,6 +15,11 @@ use Illuminate\Support\Str;
 
 class StoreController extends Controller
 {
+    function getAllStoreName()
+    {
+        $result = Store::orderBy("store_name", "asc")->select("name")->get();
+        return $result;
+    }
     //
     function getAllStores()
     {
