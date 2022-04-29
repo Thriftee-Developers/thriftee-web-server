@@ -21,9 +21,9 @@ class SalesController extends Controller
 
     function getProductDetails($value, $start_date, $end_date)
     {
-        if ($value == "") {
-            $value = "|||";
-        }
+        // if ($value == "") {
+        //     $value = "|||";
+        // }
         $result = DB::select(
             "SELECT
                 products.product_id,
