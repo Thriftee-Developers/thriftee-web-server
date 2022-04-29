@@ -15,11 +15,17 @@ class SalesController extends Controller
 
     function filterSoldItemsAdminSale(Request $req)
     {
-        $result = $this->getProductDetails($req->search, $req->start_date, $req->end_date);
+        $result = $this->getProductDetails('= success', $req->search, $req->start_date, $req->end_date);
         return $result;
     }
 
-    function getProductDetails($value, $start_date, $end_date)
+    function filterUnclaimedItemsAdminSale(Request $req)
+    {
+        $result = $this->getProductDetails('!= success', $req->search, $req->start_date, $req->end_date);
+        return $result;
+    }
+
+    function getProductDetails($status, $value, $start_date, $end_date)
     {
         // if ($value == "") {
         //     $value = "|||";
@@ -72,8 +78,8 @@ class SalesController extends Controller
                 GROUP BY bidding
             ) mBids
             ON mBids.bidding = biddings.uuid
-            
-            WHERE (biddings.status = 'success' AND (biddings.end_time >= '$start_date' AND biddings.end_time <= '$end_date') OR stores.store_name LIKE '%$value$' OR categories.name LIKE '%$value%')
+
+            WHERE (biddings.status $status AND (biddings.end_time >= '$start_date' AND biddings.end_time <= '$end_date') OR stores.store_name LIKE '%$value$' OR categories.name LIKE '%$value%')
             GROUP BY productcategories.product
             "
         );
