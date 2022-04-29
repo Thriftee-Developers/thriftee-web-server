@@ -22,7 +22,7 @@ class SalesController extends Controller
 
     function filterUnclaimedItemsAdminSale(Request $req)
     {
-        $result = $this->getProductDetails('!= "success"', $req->search, $req->start_date, $req->end_date);
+        $result = $this->getProductDetails('= "under_transaction"', $req->search, $req->start_date, $req->end_date);
         return $result;
     }
 
@@ -93,7 +93,9 @@ class SalesController extends Controller
             "SELECT
                 customers.uuid,
                 customers.fname,
-                customers.lname
+                customers.lname,
+                bids.highest,
+                products.name
             FROM customers
 
             -- INNER JOIN bids
@@ -104,11 +106,11 @@ class SalesController extends Controller
             -- ON bids.customer = customers.uuid
             
             LEFT OUTER JOIN (
-                SELECT bidding, MAX(amount) AS highest
+                SELECT customer, bidding, MAX(amount) AS highest
                 FROM bids
                 GROUP BY bidding
-            ) mBids
-            ON mBids.bidding = biddings.uuid
+            ) bids
+            ON bids.customer = customers.uuid
 
             LEFT JOIN biddings
             ON bids.bidding = biddings.uuid
@@ -116,7 +118,7 @@ class SalesController extends Controller
             LEFT JOIN products
             ON biddings.product = products.uuid
 
-            WHERE biddings.status = 'under_transaction'
+            -- WHERE biddings.status = 'under_transaction'
             "
         );
 
