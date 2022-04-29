@@ -17,7 +17,7 @@ class StoreController extends Controller
 {
     function getAllStoreName()
     {
-        $result = Store::orderBy("store_name", "asc")->select("name")->get();
+        $result = Store::orderBy("store_name", "asc")->select("store_name")->get();
         return $result;
     }
     //

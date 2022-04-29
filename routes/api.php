@@ -39,7 +39,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 //Stores
 
-Route::get('/store/list', [CategoryController::class, 'getAllStoreName']);
+Route::get('/store/list', [StoreController::class, 'getAllStoreName']);
 Route::get('/store/all', [StoreController::class, 'getAllStores']);
 Route::post('/store/get', [StoreController::class, 'getStore']);
 Route::post('/store/products', [StoreController::class, 'getProductsByStore']);
