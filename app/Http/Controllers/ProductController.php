@@ -52,7 +52,7 @@ class ProductController extends Controller
     function getProductDetails($value)
     {
         $result = DB::select(
-            "SELECT
+            "SELECT DISTINCT
                 products.product_id,
                 products.name,
                 products.description,
@@ -60,7 +60,6 @@ class ProductController extends Controller
                 stores.uuid as store_uuid,
                 stores.store_name,
                 productimages.path as image_path,
-                categories.name as category_name,
 
                 biddings.uuid as bidding_uuid,
                 biddings.minimum,

@@ -13,7 +13,7 @@ class SalesController extends Controller
 {
     //
 
-    function filterSoldItemsSale(Request $req)
+    function filterSoldItemsAdminSale(Request $req)
     {
         $result = $this->getProductDetails($req->search);
         return $result;
