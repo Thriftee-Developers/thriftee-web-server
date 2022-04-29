@@ -131,6 +131,7 @@ class SalesController extends Controller
             ON categories.uuid = productcategories.product_category
 
             WHERE biddings.status = 'under_transaction'
+            GROUP BY productcategories.product
             "
         );
 
