@@ -40,7 +40,7 @@ class SalesController extends Controller
                 stores.uuid as store_uuid,
                 stores.store_name,
                 productimages.path as image_path,
-                group_concat(categories.name) as categories_name,
+                GROUP_CONCAT(DISTINCT categories.name SEPARATOR ', ') as categories_name,
 
                 biddings.uuid as bidding_uuid,
                 biddings.minimum,
