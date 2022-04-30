@@ -7,40 +7,48 @@ use Illuminate\Support\Str;
 use App\Models\FeaturedProduct;
 use App\Models\Products;
 use App\Models\ProductImage;
+use Illuminate\Support\Facades\DB;
 
 class FeaturedProductController extends Controller
 {
     function getAllFeaturedProduct()
     {
-        $featuredProducts = FeaturedProduct::join("biddings", "biddings.uuid", "=", "featuredproducts.bidding")
-            ->join("products", "products.uuid", "=", "biddings.product")
-            ->select(
-                "products.name",
-                "featuredproducts.description",
-                "biddings.product",
-                "biddings.start_time",
-                "biddings.end_time",
-                "products.uuid",
-                "featuredproducts.bidding"
-            )
-            ->get();
-        $result = array();
-        $i = 0;
-        if ($featuredProducts != "") {
-            foreach ($featuredProducts as $value) {
-                $productImage = ProductImage::where("product", $value->product)->first();
-                $result[$i] = [
-                    "bidding" => $featuredProducts[$i]->bidding,
-                    "name" => $featuredProducts[$i]->name,
-                    "description" => $featuredProducts[$i]->description,
-                    "product" => $featuredProducts[$i]->uuid,
-                    "path" => $productImage->path,
-                    "start_time" => $featuredProducts[$i]->start_time,
-                    "end_time" => $featuredProducts[$i]->end_time
-                ];
-                $i += 1;
-            }
-        }
+        $result = DB::select(
+            "SELECT
+                products.product_id,
+                products.name,
+                featuredproducts.description,
+                stores.store_name,
+                products.store,
+                stores.uuid as store_uuid,
+                productimages.path as image_path,
+
+                biddings.uuid as bidding_uuid,
+                biddings.minimum,
+                biddings.increment,
+                biddings.claim,
+                biddings.start_time,
+                biddings.end_time,
+                biddings.status
+
+            FROM featuredproducts
+
+            LEFT JOIN biddings
+            ON biddings.uuid = featuredproducts.bidding
+
+            INNER JOIN products
+            ON biddings.product = products.uuid
+
+            INNER JOIN stores
+            ON products.store = stores.uuid
+
+            LEFT JOIN (
+                SELECT path, product, MIN(name) AS name FROM productimages GROUP BY product
+            ) productimages
+            ON productimages.product = products.uuid
+            "
+        );
+
 
         return $result;
     }
