@@ -28,10 +28,41 @@ class BiddingController extends Controller
 
     function getSpecificBiddingData()
     {
-        $result = Biddings::join("products", "products.uuid", "=", "biddings.product")
-            ->join("stores", "stores.uuid", "=", "products.store")
-            ->select("biddings.uuid as bidding", "products.product_id", "products.name", "stores.store_name")
-            ->get();
+        $result = DB::select(
+            "SELECT
+                products.product_id,
+                products.name,
+                stores.store_name,
+                products.store,
+                stores.uuid as store_uuid,
+                productimages.path as image_path,
+
+                biddings.uuid as bidding_uuid,
+                biddings.minimum,
+                biddings.increment,
+                biddings.claim,
+                biddings.start_time,
+                biddings.end_time,
+                biddings.status
+
+            FROM biddings
+
+            INNER JOIN products
+            ON biddings.product = products.uuid
+
+            INNER JOIN stores
+            ON products.store = stores.uuid
+
+            LEFT JOIN (
+                SELECT path, product, MIN(name) AS name FROM productimages GROUP BY product
+            ) productimages
+            ON productimages.product = products.uuid
+
+            WHERE (biddings.status = 'on_going' OR biddings.status = 'waiting')
+            "
+        );
+
+
         return $result;
     }
 
