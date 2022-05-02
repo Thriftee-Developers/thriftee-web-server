@@ -15,25 +15,27 @@ class SalesController extends Controller
 
     function filterSoldItemsAdminSale(Request $req)
     {
-        $result = $this->getProductDetails("success", str_replace("'", "\'", $req->search), $req->from_date, $req->to_date);
+        $result = $this->getProductDetails("success", str_replace("'", "\'", $req->search), str_replace("'", "\'", $req->filter), $req->from_date, $req->to_date);
         return $result;
     }
 
     function filterUnclaimedItemsAdminSale(Request $req)
     {
-        $result = $this->getProductDetails('under_transaction', str_replace("'", "\'", $req->search), $req->from_date, $req->to_date);
+        $result = $this->getProductDetails('under_transaction', str_replace("'", "\'", $req->search), str_replace("'", "\'", $req->filter), $req->from_date, $req->to_date);
         return $result;
     }
 
-    function getProductDetails($status, $value, $from_date, $to_date)
+    function getProductDetails($status, $search, $filter, $from_date, $to_date)
     {
-        if ($value == "") {
-            $value = "All";
+        $no_search = "";
+        $no_filter = "";
+        if ($search == "") {
+            $no_search = "OR categories.name != 'all'";
         }
-        if ($value != "All" || ($from_date != "" || $to_date != "")) {
-            $showAll = "";
+        if ($filter == "All") {
+            $no_filter = "OR categories.name != 'all'";
         } else {
-            $showAll = "OR categories.name != 'all'";
+            $filter = "||||";
         }
         $result = DB::select(
             "SELECT
@@ -84,7 +86,7 @@ class SalesController extends Controller
             ) mBids
             ON mBids.bidding = biddings.uuid
 
-            WHERE ( biddings.status = '$status' AND ((biddings.end_time >= '$from_date' AND biddings.end_time <= '$to_date') OR products.product_id LIKE '%$value%' OR products.name LIKE '%$value%' OR stores.store_name LIKE '%$value%' OR categories.name LIKE '%$value%' $showAll))
+            WHERE ( (products.product_id LIKE '%$search%' OR products.name LIKE '%$search%' $no_search) AND biddings.status = '$status' AND ((biddings.end_time >= '$from_date' AND biddings.end_time <= '$to_date') OR stores.store_name LIKE '%$filter%' OR categories.name LIKE '%$filter%' $no_filter))
             GROUP BY productcategories.product
             "
         );
