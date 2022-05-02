@@ -16,13 +16,13 @@ class SalesController extends Controller
     function filterSoldItemsAdminSale(Request $req)
     {
 
-        $result = $this->getProductDetails("success",  str_replace("'", "\'", $req->search), $req->from_date, $req->to_date);
+        $result = $this->getProductDetails("success",  str_replace("'", "\'", $req->search), $req->fromDate, $req->toDate);
         return $result;
     }
 
     function filterUnclaimedItemsAdminSale(Request $req)
     {
-        $result = $this->getProductDetails('under_transaction', str_replace("'", "\'", $req->search), $req->from_date, $req->to_date);
+        $result = $this->getProductDetails('under_transaction', str_replace("'", "\'", $req->search), $req->fromDate, $req->toDate);
         return $result;
     }
 
