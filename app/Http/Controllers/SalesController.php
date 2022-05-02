@@ -22,11 +22,11 @@ class SalesController extends Controller
 
     function filterUnclaimedItemsAdminSale(Request $req)
     {
-        $result = $this->getProductDetails('= "under_transaction"', str_replace("'", "\'", $req->search), $req->start_date, $req->end_date);
+        $result = $this->getProductDetails('= "under_transaction"', str_replace("'", "\'", $req->search), $req->from_date, $req->to_date);
         return $result;
     }
 
-    function getProductDetails($status, $value, $start_date, $end_date)
+    function getProductDetails($status, $value, $from_date, $to_date)
     {
         if ($value == "") {
             $value = "All";
@@ -85,7 +85,7 @@ class SalesController extends Controller
             ) mBids
             ON mBids.bidding = biddings.uuid
 
-            WHERE ( biddings.status $status AND ((biddings.end_time >= '$start_date' AND biddings.end_time <= '$end_date') OR products.product_id LIKE '%$value%' OR products.name LIKE '%$value%' OR stores.store_name LIKE '%$value%' OR categories.name LIKE '%$value%' $showAll))
+            WHERE ( biddings.status $status AND ((biddings.end_time >= '$from_date' AND biddings.end_time <= '$to_date') OR products.product_id LIKE '%$value%' OR products.name LIKE '%$value%' OR stores.store_name LIKE '%$value%' OR categories.name LIKE '%$value%' $showAll))
             GROUP BY productcategories.product
             "
         );
