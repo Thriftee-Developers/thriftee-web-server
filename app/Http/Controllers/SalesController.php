@@ -17,7 +17,7 @@ class SalesController extends Controller
     {
 
         $result = $this->getProductDetails("success",  str_replace("'", "\'", $req->search), $req->from_date, $req->to_date);
-        return $req;
+        return $result;
     }
 
     function filterUnclaimedItemsAdminSale(Request $req)
