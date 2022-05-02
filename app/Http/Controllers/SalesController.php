@@ -16,24 +16,22 @@ class SalesController extends Controller
     function filterSoldItemsAdminSale(Request $req)
     {
 
-        $result = $this->getProductDetails("= 'success'",  str_replace("'", "\'", $req->search), $req->from_date, $req->to_date);
+        $result = $this->getProductDetails("success",  str_replace("'", "\'", $req->search), $req->from_date, $req->to_date);
         return $result;
     }
 
     function filterUnclaimedItemsAdminSale(Request $req)
     {
-        $result = $this->getProductDetails('= "under_transaction"', str_replace("'", "\'", $req->search), $req->from_date, $req->to_date);
+        $result = $this->getProductDetails('under_transaction', str_replace("'", "\'", $req->search), $req->from_date, $req->to_date);
         return $result;
     }
 
     function getProductDetails($status, $value, $from_date, $to_date)
     {
-        if ($value == "") {
-            $value = "All";
-        }
-        if ($value == "All") {
+        if ($value == "" && ($from_date == "" && $to_date == "")) {
             $showAll = "OR categories.name != 'all'";
         } else {
+            $value = "All";
             $showAll = "";
         }
         $result = DB::select(
@@ -85,7 +83,7 @@ class SalesController extends Controller
             ) mBids
             ON mBids.bidding = biddings.uuid
 
-            WHERE ( biddings.status $status AND ((biddings.end_time >= '$from_date' AND biddings.end_time <= '$to_date') OR products.product_id LIKE '%$value%' OR products.name LIKE '%$value%' OR stores.store_name LIKE '%$value%' OR categories.name LIKE '%$value%' $showAll))
+            WHERE ( biddings.status = '$status' AND ((biddings.end_time >= '$from_date' AND biddings.end_time <= '$to_date') OR products.product_id LIKE '%$value%' OR products.name LIKE '%$value%' OR stores.store_name LIKE '%$value%' OR categories.name LIKE '%$value%' $showAll))
             GROUP BY productcategories.product
             "
         );
