@@ -34,8 +34,6 @@ class SalesController extends Controller
         }
         if ($filter == "All") {
             $no_filter = "OR categories.name != 'all'";
-        } else {
-            $filter = "||||";
         }
         $result = DB::select(
             "SELECT
