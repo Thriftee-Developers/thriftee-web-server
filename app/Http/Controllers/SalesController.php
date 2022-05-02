@@ -28,11 +28,13 @@ class SalesController extends Controller
 
     function getProductDetails($status, $value, $from_date, $to_date)
     {
-        if ($value == "" && ($from_date == "" && $to_date == "")) {
-            $showAll = "OR categories.name != 'all'";
-        } else {
+        if ($value == "") {
             $value = "All";
+        }
+        if ($value != "All" || ($from_date != "" || $to_date != "")) {
             $showAll = "";
+        } else {
+            $showAll = "OR categories.name != 'all'";
         }
         $result = DB::select(
             "SELECT
