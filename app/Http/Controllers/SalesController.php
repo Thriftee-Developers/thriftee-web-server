@@ -15,8 +15,7 @@ class SalesController extends Controller
 
     function filterSoldItemsAdminSale(Request $req)
     {
-
-        $result = $this->getProductDetails("success",  str_replace("'", "\'", $req->search), $req->fromDate, $req->toDate);
+        $result = $this->getProductDetails("success", str_replace("'", "\'", $req->search), $req->fromDate, $req->toDate);
         return $result;
     }
 
