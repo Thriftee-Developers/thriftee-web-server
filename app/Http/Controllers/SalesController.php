@@ -32,7 +32,7 @@ class SalesController extends Controller
         if ($search == "") {
             $no_search = "OR categories.name != 'all'";
         }
-        if ($filter == "") {
+        if ($filter == "All") {
             $no_filter = "OR categories.name != 'all'";
         } else {
             $filter = "||||";
