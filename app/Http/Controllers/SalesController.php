@@ -85,7 +85,7 @@ class SalesController extends Controller
             ) mBids
             ON mBids.bidding = biddings.uuid
 
-            WHERE ( biddings.status = '$status' AND ((biddings.end_time >= '$from_date' AND biddings.end_time <= '$to_date') OR products.product_id LIKE '%$value%' OR products.name LIKE '%$value%' $showAll))
+            WHERE ( biddings.status = '$status' AND ((biddings.end_time >= '$from_date' AND biddings.end_time <= '$to_date') OR products.product_id LIKE '%$value%' OR products.name LIKE '%$value%' OR stores.store_name LIKE '%$value%' OR categories.name LIKE '%$value%' $showAll))
             GROUP BY productcategories.product
             "
         );
