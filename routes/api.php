@@ -210,7 +210,7 @@ Route::post('/sales/admin/unclaim_items', [SalesController::class, 'filterUnclai
 Route::post('/sales/admin/user_unclaim_items', [SalesController::class, 'filterUserWithUnclaimItems']);
 
 //Content
-Route::get('/content/all', [ContentController::class, 'getAllContetnts']);
+Route::get('/content/all', [ContentController::class, 'getAllContents']);
 Route::post('/content/add', [ContentController::class, 'addContent']);
 Route::post('/content/update', [ContentController::class, 'updateContent']);
 Route::post('/content/delete', [ContentController::class, 'deleteContent']);
