@@ -21,7 +21,7 @@ class FeaturedProductController extends Controller
                 stores.store_name,
                 products.store,
                 stores.uuid as store_uuid,
-                productimages.path as image_path,
+                productimages.path as path,
 
                 biddings.uuid as bidding_uuid,
                 biddings.minimum,
