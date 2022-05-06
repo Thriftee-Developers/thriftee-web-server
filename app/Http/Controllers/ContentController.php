@@ -9,7 +9,7 @@ use App\Models\Content;
 class ContentController extends Controller
 {
     //
-    function getAllContents(Request $req)
+    function getAllContents()
     {
         $result = Content::all();
         return $result;
