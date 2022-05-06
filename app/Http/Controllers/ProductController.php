@@ -304,7 +304,7 @@ class ProductController extends Controller
             $add = $biddingCtrl->addBidding($req);
 
             if($add) {
-                $update = $product->update('status', 'for_bidding');
+                $update = $product->update(['status'=>'for_bidding']);
 
                 if($update) {
                     return ["success" => "success"];
