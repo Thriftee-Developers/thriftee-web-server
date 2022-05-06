@@ -24,6 +24,8 @@ class ContentController extends Controller
         $content->content = $req->content;
 
         $content->save();
+
+        return ['success' => 'success'];
     }
 
     function updateContent(Request $req)
