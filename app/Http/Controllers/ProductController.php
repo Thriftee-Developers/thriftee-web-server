@@ -135,6 +135,12 @@ class ProductController extends Controller
             ->get();
         $result->categories = $categories;
 
+        $conditions = ProductCondition
+            ::where('product', $result->uuid)
+            ->leftJoin('conditions','conditions.uuid','productconditions.product_condition')
+            ->get();
+        $result->conditions = $conditions;
+
         $images = ProductImage
             ::where('product', $result->uuid)
             ->orderBy('name', 'ASC')
