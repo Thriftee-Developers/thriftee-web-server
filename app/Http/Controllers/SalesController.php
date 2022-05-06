@@ -13,28 +13,20 @@ use Illuminate\Support\Facades\DB;
 class SalesController extends Controller
 {
 
-    function filterSoldItemsAdminSale(Request $req)
+    function getSoldItemsAdminSale()
     {
-        $result = $this->getProductDetails("success", str_replace("'", "\'", $req->search), str_replace("'", "\'", $req->filter), $req->from_date, $req->to_date);
+        $result = $this->getProductDetails("success");
         return $result;
     }
 
-    function filterUnclaimedItemsAdminSale(Request $req)
+    function getUnclaimedItemsAdminSale()
     {
-        $result = $this->getProductDetails('under_transaction', str_replace("'", "\'", $req->search), str_replace("'", "\'", $req->filter), $req->from_date, $req->to_date);
+        $result = $this->getProductDetails('under_transaction');
         return $result;
     }
 
-    function getProductDetails($status, $search, $filter, $from_date, $to_date)
+    function getProductDetails($status)
     {
-        $no_search = "";
-        $no_filter = "";
-        if ($search == "") {
-            $no_search = "OR categories.name != 'all'";
-        }
-        if ($filter == "All") {
-            $no_filter = "OR categories.name != 'all'";
-        }
         $result = DB::select(
             "SELECT
                 products.product_id,
@@ -84,22 +76,15 @@ class SalesController extends Controller
             ) mBids
             ON mBids.bidding = biddings.uuid
 
-            WHERE ( (products.product_id LIKE '%$search%' OR products.name LIKE '%$search%' $no_search) AND biddings.status = '$status' AND ((biddings.end_time >= '$from_date' AND biddings.end_time <= '$to_date') OR stores.store_name LIKE '%$filter%' OR categories.name LIKE '%$filter%' $no_filter))
+            WHERE biddings.status = '$status'
             GROUP BY productcategories.product
             "
         );
         return $result;
     }
 
-    function filterUserWithUnclaimItems(Request $req)
+    function getUserWithUnclaimItems()
     {
-        $value = str_replace("'", "\'", $req->search);
-
-        if ($value == "") {
-            $showAll = "OR products.name != 'all'";
-        } else {
-            $showAll = "";
-        }
         $result = DB::select(
             "SELECT
                 customers.uuid,
@@ -141,7 +126,7 @@ class SalesController extends Controller
             LEFT JOIN categories
             ON categories.uuid = productcategories.product_category
 
-            WHERE biddings.status = 'under_transaction' AND (customers.fname LIKE '%$value%' OR customers.lname LIKE '%$value%' OR products.name LIKE '%$value%' OR stores.store_name LIKE '%$value%' $showAll)
+            WHERE biddings.status = 'under_transaction'
             GROUP BY productcategories.product
             "
         );

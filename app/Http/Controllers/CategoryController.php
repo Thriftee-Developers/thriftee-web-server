@@ -53,6 +53,8 @@ class CategoryController extends Controller
         $categories->uuid = Str::uuid();
         $categories->name = $req->name;
         $categories->description = $req->description;
+        $categories->image_path = $req->image_path;
+        $categories->type = $req->type;
 
         if ($this->checkExistingCategory($req)) {
             $categories->save();
@@ -68,7 +70,9 @@ class CategoryController extends Controller
         if ($category) {
             $result = $category->update([
                 "name" => $req->name,
-                "description" => $req->description
+                "description" => $req->description,
+                "image_path" => $req->image_path,
+                "type" => $req->type,
             ]);
             if ($result) {
                 return ["success" => "success"];

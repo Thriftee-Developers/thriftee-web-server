@@ -205,9 +205,9 @@ Route::post('/follower/status', [FollowerController::class, 'checkFollowStatus']
 Route::post('/product/search', [ProductController::class, 'search']);
 
 //Sales
-Route::post('/sales/admin/sold_items', [SalesController::class, 'filterSoldItemsAdminSale']);
-Route::post('/sales/admin/unclaim_items', [SalesController::class, 'filterUnclaimedItemsAdminSale']);
-Route::post('/sales/admin/user_unclaim_items', [SalesController::class, 'filterUserWithUnclaimItems']);
+Route::get('/sales/admin/sold_items', [SalesController::class, 'getSoldItemsAdminSale']);
+Route::get('/sales/admin/unclaim_items', [SalesController::class, 'getUnclaimedItemsAdminSale']);
+Route::get('/sales/admin/user_unclaim_items', [SalesController::class, 'getUserWithUnclaimItems']);
 
 //Content
 Route::get('/content/all', [ContentController::class, 'getAllContents']);
