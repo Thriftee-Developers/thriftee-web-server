@@ -11,4 +11,10 @@ class Content extends Model
 
     protected $primaryKey = 'uuid';
     public $timestamps = false;
+
+    protected $fillable = [
+        "title",
+        "subtitle",
+        "content",
+    ];
 }
