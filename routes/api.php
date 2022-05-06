@@ -53,11 +53,13 @@ Route::post('/store/update_password', [StoreController::class, 'updatePassword']
 Route::post('/store/check_password', [StoreController::class, 'checkPassword']);
 Route::post('/store/get_status', [StoreController::class, 'getStatus']);
 Route::post('/store/store_id', [StoreController::class, 'getStoreByID']);
+
 //Products
 Route::get('/product/all', [ProductController::class, 'getAllProducts']);
 Route::post('/product/get', [ProductController::class, 'getProduct']);
 Route::post('/product/id', [ProductController::class, 'getProductByID']);
 Route::post('/product/add', [ProductController::class, 'addProduct']);
+Route::post('/product/rebid', [ProductController::class, 'rebidProduct']);
 Route::post('/product/delete', [ProductController::class, 'deleteProduct']);
 Route::post('/product/category', [CategoryController::class, 'getCategoryByProduct']);
 Route::post('/product/condition', [ConditionController::class, 'getConditionByProduct']);

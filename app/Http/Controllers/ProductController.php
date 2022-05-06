@@ -295,6 +295,20 @@ class ProductController extends Controller
         }
     }
 
+    function rebidProduct(Request $req)
+    {
+        $product = Product::where('uuid', $req->product)->first();
+
+        if($product) {
+            $biddingCtrl = new BiddingController();
+            $biddingCtrl->addBidding($req);
+
+            $product->update('status', 'for_bidding');
+        }
+
+
+    }
+
     function deleteProduct(Request $req)
     {
         $result = Product::where('uuid', $req->uuid)->delete();
