@@ -301,9 +301,24 @@ class ProductController extends Controller
 
         if($product) {
             $biddingCtrl = new BiddingController();
-            $biddingCtrl->addBidding($req);
+            $add = $biddingCtrl->addBidding($req);
 
-            $product->update('status', 'for_bidding');
+            if($add) {
+                $update = $product->update('status', 'for_bidding');
+
+                if($update) {
+                    return ["success" => "success"];
+                }
+                else {
+                    return ["error" => "Product status not updated"];
+                }
+            }
+            else {
+                return ["error" => "Bidding not created"];
+            }
+        }
+        else {
+            return ["error" => "Product not found"];
         }
 
 
