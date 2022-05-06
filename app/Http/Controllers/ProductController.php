@@ -185,7 +185,7 @@ class ProductController extends Controller
 
             WHERE
                 products.store = '$req->store'
-                AND products.status = 'active'
+                AND (products.status = 'for_bidding' OR products.status = 'under_transaction')
 
             GROUP BY products.uuid"
         );
