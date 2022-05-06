@@ -129,6 +129,12 @@ class ProductController extends Controller
             ->join('stores', 'stores.uuid', 'products.store')
             ->first();
 
+        $categories = ProductCategory
+            ::where('product', $result->uuid)
+            ->leftJoin('categories','categories.uuid','productcategories.product_category')
+            ->get();
+        $result->categories = $categories;
+
         $images = ProductImage
             ::where('product', $result->uuid)
             ->orderBy('name', 'ASC')
