@@ -12,6 +12,7 @@ use App\Http\Controllers\MediaController;
 use App\Http\Controllers\BiddingController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\BidController;
+use App\Http\Controllers\ContentController;
 use App\Http\Controllers\FeaturedProductController;
 use App\Http\Controllers\FollowerController;
 use App\Http\Controllers\MessageController;
@@ -203,9 +204,16 @@ Route::post('/follower/status', [FollowerController::class, 'checkFollowStatus']
 
 Route::post('/product/search', [ProductController::class, 'search']);
 
+//Sales
 Route::post('/sales/admin/sold_items', [SalesController::class, 'filterSoldItemsAdminSale']);
 Route::post('/sales/admin/unclaim_items', [SalesController::class, 'filterUnclaimedItemsAdminSale']);
 Route::post('/sales/admin/user_unclaim_items', [SalesController::class, 'filterUserWithUnclaimItems']);
+
+//Content
+Route::get('/content/all', [ContentController::class, 'getAllContetnts']);
+Route::post('/content/add', [ContentController::class, 'addContent']);
+Route::post('/content/update', [ContentController::class, 'updateContent']);
+Route::post('/content/delete', [ContentController::class, 'deleteContent']);
 
 //Dummy Route
 Route::get('/product/delete_all', [ProductController::class, 'deleteAllProduct']);
