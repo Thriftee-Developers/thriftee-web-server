@@ -213,7 +213,7 @@ Route::post('/sales/admin/user_unclaim_items', [SalesController::class, 'filterU
 Route::get('/content/all', [ContentController::class, 'getAllContents']);
 Route::post('/content/add', [ContentController::class, 'addContent']);
 Route::post('/content/update', [ContentController::class, 'updateContent']);
-Route::post('/content/delete', [ContentController::class, 'deleteContent']);
+Route::post('/content/delete', [ContentController::class, 'removeContent']);
 
 //Dummy Route
 Route::get('/product/delete_all', [ProductController::class, 'deleteAllProduct']);
