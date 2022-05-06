@@ -68,8 +68,8 @@ class CategoryController extends Controller
         if ($category) {
             $result = $category->update([
                 "name" => $req->name,
-                "description" => $req->description,
                 "image_path" => $req->image_path,
+                "description" => $req->description,
                 "type" => $req->type,
             ]);
             if ($result) {
