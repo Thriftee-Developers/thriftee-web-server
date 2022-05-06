@@ -24,9 +24,7 @@ class CategoryController extends Controller
         $result = Categories::join("productcategories", "productcategories.product_category", "categories.uuid");
         $result = DB::select(
             "SELECT
-                categories.uuid,
-                categories.name,
-                categories.description,
+                categories.*,
                 Count(productcategories.uuid) as count
             FROM categories
 
