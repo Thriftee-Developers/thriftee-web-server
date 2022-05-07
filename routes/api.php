@@ -200,7 +200,6 @@ Route::post('/follower/store', [FollowerController::class, 'getAllFollowers']);
 Route::post('/follower/follow', [FollowerController::class, 'followStore']);
 Route::post('/follower/unfollow', [FollowerController::class, 'unfollowStore']);
 Route::post('/follower/customer', [FollowerController::class, 'getFollowedStore']);
-Route::post('/follower/store', [FollowerController::class, 'getFollowedStore']);
 Route::post('/follower/customer/count', [FollowerController::class, 'getFollowedStoreCount']);
 Route::post('/follower/store/count', [FollowerController::class, 'getAllFollowersCount']);
 Route::post('/follower/status', [FollowerController::class, 'checkFollowStatus']);

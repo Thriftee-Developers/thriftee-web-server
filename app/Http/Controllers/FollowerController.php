@@ -51,20 +51,6 @@ class FollowerController extends Controller
         }
     }
 
-    function getStoreFollowers(Request $req)
-    {
-        $result = Follower::join("customers", "followers.customer", "customers.uuid")
-            ->select(
-                "followers.*",
-                "customers.uuid as customer_uuid",
-                "customers.lname",
-                "customers.fname"
-            )
-            ->where("store", $req->store)
-            ->get();
-        return $result;
-    }
-
     function getFollowedStore(Request $req)
     {
         $result = Follower::join("stores", "followers.store", "=", "stores.uuid")
