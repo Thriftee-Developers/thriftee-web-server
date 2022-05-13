@@ -22,6 +22,7 @@ use App\Http\Controllers\SalesController;
 use App\Http\Controllers\SliderProductController;
 use App\Http\Controllers\StoreBillingMethodController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -216,6 +217,11 @@ Route::get('/content/all', [ContentController::class, 'getAllContents']);
 Route::post('/content/add', [ContentController::class, 'addContent']);
 Route::post('/content/update', [ContentController::class, 'updateContent']);
 Route::post('/content/delete', [ContentController::class, 'removeContent']);
+
+//User
+Route::post('/user/add', [UserController::class, 'addUser']);
+Route::post('/user/login', [UserController::class, 'loginUser']);
+Route::post('/user/delete', [UserController::class, 'deleteUser']);
 
 //Dummy Route
 Route::get('/product/delete_all', [ProductController::class, 'deleteAllProduct']);
