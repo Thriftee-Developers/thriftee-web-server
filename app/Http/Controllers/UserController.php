@@ -36,6 +36,7 @@ class UserController extends Controller
         $user = User::where('username', $req->username)->first();
         if ($user) {
             if ($req->password == $user->password) {
+                $user->success = "success";
                 return $user;
             } else {
                 return ["error" => "Incorrect username or password!"];
