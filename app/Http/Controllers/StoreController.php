@@ -25,9 +25,7 @@ class StoreController extends Controller
     {
         $result = DB::select(
             "SELECT
-                stores.store_name,
-                stores.uuid,
-                stores.store_id,
+                stores.*,
                 Count(DISTINCT ratings.uuid) as rating_count,
                 Count(DISTINCT products.uuid) as count,
                 AVG(ratings.rate) as rating
@@ -39,7 +37,7 @@ class StoreController extends Controller
             LEFT JOIN products
             ON  products.store = stores.uuid
 
-            WHERE stores.status = 1
+            WHERE stores.status <> -1
 
             GROUP BY stores.uuid
             ORDER BY stores.store_name
@@ -123,6 +121,32 @@ class StoreController extends Controller
         }
     }
 
+    function updateStore(Request $req)
+    {
+        $store = Store::where('uuid', $req->uuid)->first();
+
+        if($store) {
+            $result = $store->update([
+                'store_name' => $req->store_name,
+                'phone_code' => $req->phone_code,
+                'contact_no' => $req->contact_no,
+                'country' => $req->country,
+                'state' => $req->state,
+                'city' => $req->city,
+                'street' => $req->street,
+            ]);
+
+            return [
+                "success" => $result
+            ];
+        }
+        else {
+            return [
+                "error" => "Store not found!"
+            ];
+        }
+    }
+
     function checkEmail($email)
     {
         $customer = Customer::where('email', $email)->get();
@@ -141,17 +165,17 @@ class StoreController extends Controller
 
     function resendCompletionLink(Request $req)
     {
-        $error = $this->sendCompletionLink($req->uuid, $req->email);
-        return $error;
+        $res = $this->sendCompletionLink($req->uuid, $req->email);
+        return $res;
     }
 
-    function sendCompletionLink()
+    function sendCompletionLink($uuid, $email)
     {
         require base_path("vendor/autoload.php");
 
         $mail = new PHPMailer(true);
         $emailFrom = 'admin@thriftee.com';
-        $link = env('APP_URL') . '/account_completion?';
+        $link = env('APP_URL') . '/#/account_completion?'.$uuid;
 
         try {
 
@@ -172,15 +196,8 @@ class StoreController extends Controller
             $mail->Password = env('MAIL_PASSWORD');
 
             //Recipients
-            // $mail->setFrom($emailFrom, 'Thriftee');
-            // $mail->addAddress('emersondalwampo1120@gmail.com');
-
-            //Typical mail data
-            $mail->AddAddress('edalwampo20@gmail.com', 'Emerson Dalwampo');
+            $mail->AddAddress($email);
             $mail->SetFrom($emailFrom, 'Thriftee');
-            $mail->Subject = "My Subject";
-            $mail->Body = "Mail contents";
-
 
             //Content
             $mail->isHTML(true);                                  //Set email format to HTML
@@ -292,19 +309,5 @@ class StoreController extends Controller
     {
         $result = Store::where('uuid', $req->uuid)->delete();
         return $result;
-    }
-
-    function updateStore(Request $req)
-    {
-        $store = Store::where('uuid', $req->uuid)->first();
-        $result = $store->update([
-            'store_name' => $req->store_name,
-            'phone_code' => $req->phone_code,
-            'contact_no' => $req->contact_no,
-            'country' => $req->country,
-            'state' => $req->state,
-            'city' => $req->city,
-            'street' => $req->street,
-        ]);
     }
 }
