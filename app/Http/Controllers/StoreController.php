@@ -145,18 +145,42 @@ class StoreController extends Controller
         return $error;
     }
 
-    function sendCompletionLink($uuid, $email)
+    function sendCompletionLink()
     {
         require base_path("vendor/autoload.php");
 
         $mail = new PHPMailer(true);
         $emailFrom = 'admin@thriftee.com';
-        $link = 'http://localhost:3000' . '/account_completion?' . $uuid;
+        $link = env('APP_URL') . '/account_completion?';
 
         try {
+
+            // $mail->isSMTP();
+            // $mail->SMTPAuth = true;
+            // $mail->Host = 'smtp.gmail.com';
+            // $mail->Username = 'info@thriftees.co';
+            // $mail->Password = 'LetsGoGreen2022!/!';
+            // $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
+            // $mail->Port = 465;
+
+            $mail->IsSMTP();
+            $mail->SMTPAuth = true;
+            $mail->SMTPSecure = "ssl";
+            $mail->Host = env('MAIL_HOST');
+            $mail->Port = env('MAIL_PORT');
+            $mail->Username = env('MAIL_USERNAME');
+            $mail->Password = env('MAIL_PASSWORD');
+
             //Recipients
-            $mail->setFrom($emailFrom, 'Thriftee');
-            $mail->addAddress($email);
+            // $mail->setFrom($emailFrom, 'Thriftee');
+            // $mail->addAddress('emersondalwampo1120@gmail.com');
+
+            //Typical mail data
+            $mail->AddAddress('edalwampo20@gmail.com', 'Emerson Dalwampo');
+            $mail->SetFrom($emailFrom, 'Thriftee');
+            $mail->Subject = "My Subject";
+            $mail->Body = "Mail contents";
+
 
             //Content
             $mail->isHTML(true);                                  //Set email format to HTML
@@ -172,6 +196,8 @@ class StoreController extends Controller
             } else {
                 return "Email not send";
             }
+
+
         } catch (Exception $e) {
             return $e;
         }
